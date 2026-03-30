@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+  <title>Civic Watch Dashboard</title>
+   <style>
+  body {
+   margin: 0;
+     font-family: Arial, sans-serif;
+     background-color: #121212; /* WhatsApp dark background */
+      color: #e0e0e0;
+       }
+
+    .app {
+      max-width: 900px;
+      margin: 20px auto;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #1e1e1e;
+    }
+
+    header {
+      background-color: #2a2f32;
+      padding: 15px;
+      text-align: center;
+      color: #25D366;
+    }
+
+    .section {
+      padding: 15px;
+    }
+
+    .section h2 {
+      color: #25D366;
+      margin-top: 0;
+    }
+
+    .search-bar {
+      padding: 10px;
+      background-color: #2a2a2a;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+      outline: none;
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+
+    .search-bar button {
+      background-color: #25D366;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #121212;
+     font-weight: bold;
+   }
+
+    .issue, .staff {
+      border-bottom: 1px solid #2a2a2a;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .issue h3, .staff h3 {
+      margin: 0;
+      font-size: 16px;
+      color: #25D366;
+   }
+
+ .issue p, .staff p {
+      margin: 5px 0 0;
+      font-size: 14px;
+      color: #b1b1b1;
+    }
+
+    .status {
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+  .available {
+  background-color: #25D366;
+      color: #121212;
+    }
+
+    .unavailable {
+      background-color: #ff4d4d;
+      color: #121212;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 20px;
+            color: #888;
+ }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Staff</h1>
+    </header>
+    <div class="section">
+      <h2>Reported Issues</h2>
+      <div class="search-bar">
+        <input type="text" id="issueSearch" placeholder="Search issues...">
+        <button onclick="downloadIssues()">Download Issues</button>
+      </div>
+      <main id="issues-list"></main>
+    </div>
+
+    <div class="section">
+      <h2>Staff Availability</h2>
+      <div class="search-bar">
+        <input type="text" id="staffSearch" placeholder="Search staff...">
+      </div>
+      <main id="staff-list"></main>
+    </div>
+  </div>
+  <div style="text-align:center;">
+    <a href="DASHBOARD.html" class="back-button" data-i18n="back_to_dashboard">← Back to Dashboard</a>
+  </div>
+
+  <script>
+    const issues = [
+      { id: 1, description: "Pothole on Main Street", assigned_to: "James Otieno" },
+      { id: 2, description: "Broken street light near market", assigned_to: "Alice Mwangi" },
+      { id: 3, description: "Drainage blockage at River Road", assigned_to: "Mary Nduku" }
+    ];
+
+    const staffMembers = [
+      { name: "Alice Mwangi", role: "Lighting Dept", available: true },
+      { name: "James Otieno", role: "Roads Dept", available: false },
+      { name: "Mary Nduku", role: "Drainage Dept", available: true },
+      { name: "Peter Kamau", role: "General Maintenance", available: false }
+    ];
+
+    function renderIssues(filter = "") {
+      const container = document.getElementById("issues-list");
+      container.innerHTML = "";
+
+      const filtered = issues.filter(issue =>
+        issue.description.toLowerCase().includes(filter.toLowerCase()) ||
+        issue.assigned_to.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="no-results">No matching issues found</div>';
+        return;
+      }
+
+      filtered.forEach(issue => {
+        const div = document.createElement("div");
+        div.className = "issue";
+        div.innerHTML = `
+          <div>
+            <h3>Issue #${issue.id}: ${issue.description}</h3>
+            <p>Assigned to: ${issue.assigned_to}</p>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function renderStaff(filter = "") {
+      const container = document.getElementById("staff-list");
+      container.innerHTML = "";
+
+      const filtered = staffMembers.filter(staff =>
+        staff.name.toLowerCase().includes(filter.toLowerCase()) ||
+        staff.role.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="no-results">No staff found</div>';
+        return;
+      }
+
+      filtered.forEach(staff => {
+        const div = document.createElement("div");
+        div.className = "staff";
+        div.innerHTML = `
+          <div>
+            <h3>${staff.name}</h3>
+            <p>${staff.role}</p>
+          </div>
+          <span class="status ${staff.available ? 'available' : 'unavailable'}">
+            ${staff.available ? 'Available' : 'Unavailable'}
+          </span>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function downloadIssues() {
+      let content = "Civic Watch - Reported Issues\n\n";
+      issues.forEach(issue => {
+        content += `Issue #${issue.id}: ${issue.description}\nAssigned to: ${issue.assigned_to}\n\n`;
+      });
+
+      const blob = new Blob([content], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "civic_watch_issues.txt";
+      link.click();
+   }
+
+    renderIssues();
+    renderStaff();
+
+    document.getElementById("issueSearch").addEventListener("input", (e) => {
+      renderIssues(e.target.value);
+    });
+
+    document.getElementById("staffSearch").addEventListener("input", (e) => {
+      renderStaff(e.target.value);
+    });
+  </script>
+</body>
+</html>
+
+

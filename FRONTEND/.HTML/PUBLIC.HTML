@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CivicWatch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #121b22;
+      color: #e9edef;
+    }
+    header {
+      background-color: #1f2c34;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      color: #25d366;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    nav a {
+      color: #e9edef;
+      margin-left: 1.5rem;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    #langSelector {
+      padding: 0.5rem;
+      background-color: #25d366;
+      color: #1f2c34;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .hero {
+      background-color: #0b141a;
+      padding: 2rem;
+      text-align: center;
+    }
+    .hero h2 {
+      color: #25d366;
+    }
+    .issues {
+      padding: 2rem;
+    }
+    .issues h3 {
+      color: #25d366;
+      margin-bottom: 1rem;
+    }
+    .issue-card {
+      background-color: #1f2c34;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .issue-card img {
+      width: 120px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+    .issue-card .info {
+      flex: 1;
+    }
+    .issue-card .info h4 {
+      margin: 0 0 0.5rem;
+      color: #e9edef;
+    }
+    .issue-card .info p {
+      margin: 0;
+      color: #cfd8dc;
+    }
+    footer {
+      background-color: #1f2c34;
+      text-align: center;
+      padding: 1rem;
+      color: #cfd8dc;
+      margin-top: 2rem;
+    }
+  </style>
+  <script src="FRONTEND/.JS/i18n.js"></script>
+  <script>window.TRANSLATIONS_PATH = 'FRONTEND/i18n/translations.json';</script>
+</head>
+<body>
+
+  <header>
+    <img src="LOGO.PNG"  width="150" height="150">
+    <h1 data-i18n="welcome"> civic watch portal..</h1>
+    <div class="header-right">
+      <select id="langSelector">
+        <option value="en">English</option>
+        <option value="sw">Swahili</option>
+      </select>
+      <nav>
+        <a href=".HTML/ADMIN.HTML/DASHBOARD.HTML" data-i18n="admin">Admin</a>
+        <a href=".HTML/DEPARTMENT.HTML/DASHBOARD.HTML" data-i18n="department">Department</a>
+        <a href=".HTML/CITIZEN.HTML/DASHBOARD.HTML" data-i18n="citizens">Citizens</a>
+      </nav>
+    </div>
+  </header>
+  <div class="hero">
+    <h2 data-i18n="report_track">Report and Track Local Issues</h2>
+    <p data-i18n="empowering">Empowering citizens to improve their communities</p>
+  </div>
+
+  <section class="issues">
+    <h3 data-i18n="recently_reported">Recently Reported Issues</h3>
+
+    <div class="issue-card">
+          <img src="POTHOLE.PNG"  width="100" height="100">
+      <div class="info">
+        <h4 data-i18n="pothole_main">Pothole on Main Street</h4>
+        <p data-i18n="pothole_desc">Large pothole causing traffic delays. Reported 2 hours ago.</p>
+      </div>
+    </div>
+
+    <div class="issue-card">
+    <img src="BROKEN STREET LIGHT.PNG" width="100" height="100">
+      <div class="info">
+        <h4 data-i18n="broken_light">Broken Streetlight</h4>
+        <p data-i18n="light_desc">Streetlight not working near the park. Reported yesterday.</p>
+      </div>
+    </div>
+
+    <div class="issue-card">
+    <img src="DUMPING.PNG"  width="100" height="100">
+      <div class="info">
+        <h4 data-i18n="illegal_dump">Illegal Dumping</h4>
+        <p data-i18n="dump_desc">Garbage dumped near riverbank. Needs urgent cleanup.</p>
+      </div>
+    </div>
+    <div class="hero">
+    <h2 data-i18n="photos_recent">Photos of recent events</h2>
+    <div class="issue-card">
+    
+     <img src="S2.PNG"  width="100" height="100">
+      <div class="info">
+        <h4 data-i18n="muranga">Muranga Country</h4>
+        <p data-i18n="muranga_desc">Garbage dumped near riverbank. Needs urgent cleanup.</p>
+      </div><br>
+        <img src="S3.PNG"  width="100" height="100">
+      <div class="info">
+        <h4 data-i18n="nairobi">Nairobi city sweeping program</h4>
+        <p data-i18n="nairobi_desc">keeping our streets clean at UCESCO Africa-kenya</p>
+      </div>
+  </section>
+</body>
+</html>

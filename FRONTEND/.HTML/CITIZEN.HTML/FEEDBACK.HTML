@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang=”en”>
+<head>
+  <meta charset=”UTF-8” />
+  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <title>Feedback & Responses | CivicWatch</title>
+  <style>
+    Body {
+      Margin: 0;
+      Font-family: ‘Segoe UI’, sans-serif;
+      Background-color: #111B21;
+      Color: #FFFFFF;
+    }
+
+    Header {
+      Background-color: #25D366;
+      Padding: 20px;
+      Text-align: center;
+    }
+
+    Header h1 {
+      Margin: 0;
+      Color: #111B21;
+    }
+
+    Nav {
+      Background-color: #1A1A1A;
+      Padding: 15px;
+      Display: flex;
+      Justify-content: center;
+      Flex-wrap: wrap;
+      Gap: 20px;
+    }
+
+    Nav a {
+      Color: #25D366;
+      Text-decoration: none;
+      Font-weight: bold;
+    }
+
+    Nav a:hover {
+      Text-decoration: underline;
+    }
+
+    Main {
+      Padding: 30px;
+      Max-width: 900px;
+      Margin: auto;
+    }
+
+    Section {
+      Background-color: #1F2C34;
+      Padding: 25px;
+      Border-radius: 8px;
+      Margin-bottom: 30px;
+    }
+
+    Section h2 {
+      Color: #25D366;
+      Margin-top: 0;
+    }
+
+    Label {
+      Display: block;
+      Margin-top: 15px;
+      Font-weight: bold;
+      Color: #25D366;
+    }
+
+    Input, textarea {
+      Width: 100%;
+      Padding: 10px;
+      Margin-top: 5px;
+      Border: none;
+      Border-radius: 4px;
+      Background-color: #263238;
+      Color: #FFFFFF;
+    }
+
+    Button {
+      Margin-top: 20px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border: none;
+      Border-radius: 4px;
+      Font-weight: bold;
+      Cursor: pointer;
+    }
+
+    Button:hover {
+      Background-color: #1EB980;
+    }
+
+    .response {
+      Background-color: #263238;
+      Padding: 15px;
+      Border-radius: 6px;
+      Margin-bottom: 15px;
+      Border-left: 4px solid #25D366;
+    }
+
+    .response p {
+      Margin: 5px 0;
+      Font-size: 0.95em;
+    }
+
+    .response strong {
+      Color: #25D366;
+    }
+    .back-button {
+      Display: inline-block;
+      Margin-top: 30px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border-radius: 6px;
+      Text-decoration: none;
+      Font-weight: bold;
+      Box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Feedback & Responses</h1>
+  </header>
+
+
+  
+
+  <main>
+    <section>
+      <h2>Submit Your Feedback</h2>
+      <form action=”feedback_submitted.html” method=”post”>
+        <label for=”subject”>Subject</label>
+        <input type=”text” id=”subject” name=”subject” required />
+
+        <label for=”message”>Message</label>
+        <textarea id=”message” name=”message” rows=”5” required></textarea>
+
+        <button type=”submit”>Send Feedback</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Responses from CivicWatch</h2>
+
+      <div class=”response”>
+        <p><strong>Your Feedback:</strong> The garbage collection in our area has been inconsistent.</p>
+        <p><strong>Response:</strong> Thank you for your feedback. We’ve escalated this to the sanitation department for immediate review.</p>
+      </div>
+
+      <div class=”response”>
+        <p><strong>Your Feedback:</strong> Please add a way to track report progress in real-time.</p>
+        <p><strong>Response:</strong> Great suggestion! We’re working on a live status tracker for all submitted reports.</p>
+      </div>
+
+    </section>
+  </main>
+<div style="text-align: center;">
+        <a href="DASHBOARD.html#DASHBOARD" class="back-button">← Back to Dashboard</a>
+      </div>
+</body>
+</html>
+

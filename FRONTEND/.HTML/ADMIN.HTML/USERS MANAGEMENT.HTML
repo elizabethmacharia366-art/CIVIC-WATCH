@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CivicWatch Admin – User Management</title>
+  <style>
+    body { margin:0; font-family: 'Segoe UI', sans-serif; background-color:#111B21; color:#EDEDED; }
+    header { background-color:#25D366; padding:20px; display:flex; justify-content:space-between; align-items:center; }
+    header h1 { margin:0; color:#111B21 }
+
+    #langSelector {
+      Padding: 0.5rem 1rem;
+      Background-color: #111B21;
+      Color: #25D366;
+      Border: 2px solid #25D366;
+      Border-radius: 4px;
+      Font-weight: bold;
+      Cursor: pointer;
+    }
+
+    main { padding:30px; max-width:1200px; margin:auto }
+    section { background-color:#1F2C34; margin-bottom:25px; padding:20px; border-radius:8px }
+    section h2 { color:#25D366; margin-top:0 }
+
+    table { width:100%; border-collapse:collapse; margin-top:20px; background-color:#1F2C34; color:#EDEDED }
+    th, td { padding:12px; text-align:left; border-bottom:1px solid #37474F }
+    thead { background-color:#263238 }
+    tbody tr:hover { background-color:#2E3B40 }
+
+    .status-active {
+      Color: #25D366;
+      Font-weight: bold;
+    }
+
+    .btn { padding:6px 12px; border:none; border-radius:4px; cursor:pointer; font-weight:bold }
+    .btn-edit { background-color:#25D366; color:#111 }
+    .btn-delete { background-color:#FF5252; color:#fff; margin-left:8px }
+    .btn-suspend { background-color:#ffb300; color:#111; margin-left:8px }
+
+    .back-button {
+      Display: inline-block;
+      Margin-top: 30px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border-radius: 6px;
+      Text-decoration: none;
+      Font-weight: bold;
+      Box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+  </style>
+  <script src="../../.JS/i18n.js"></script>
+  <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
+</style>
+</head>
+<body>
+</head>
+<body>
+
+  <header>
+    <h1 data-i18n="user_mgmt">User Management</h1>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <button id="addUserBtn" class="btn btn-edit" data-i18n="add_user">Add User</button>
+      <label for="langSelector" style="color:#111;margin-right:6px;" data-i18n="ui_language">Language</label>
+      <select id="langSelector"><option value="en">English</option><option value="sw">Swahili</option></select>
+    </div>
+  </header>
+
+  <main>
+    <section id="users">
+      <h2 data-i18n="user_mgmt">User Management</h2>
+      <p data-i18n="manage_users">Manage registered users, assign roles, and monitor activity.</p>
+
+      <form id="userForm" style="display:none; margin-top:16px; background:#263238; padding:12px; border-radius:6px;">
+        <input type="hidden" name="id" />
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;"><label>Name</label><input name="name" required style="width:100%;padding:8px;margin-top:6px;border-radius:4px;border:none;background:#1f2c34;color:#fff"/></div>
+          <div style="flex:1;min-width:200px;"><label>Email</label><input name="email" type="email" required style="width:100%;padding:8px;margin-top:6px;border-radius:4px;border:none;background:#1f2c34;color:#fff"/></div>
+          <div style="flex:1;min-width:150px;"><label>Role</label><select name="role" style="width:100%;padding:8px;margin-top:6px;border-radius:4px;border:none;background:#1f2c34;color:#fff"><option value="admin">Admin</option><option value="moderator">Moderator</option><option value="user">User</option></select></div>
+          <div style="flex:1;min-width:150px;"><label>Status</label><select name="status" style="width:100%;padding:8px;margin-top:6px;border-radius:4px;border:none;background:#1f2c34;color:#fff"><option value="active">Active</option><option value="suspended">Suspended</option></select></div>
+        </div>
+        <div style="margin-top:12px;"><button type="submit" class="btn btn-edit">Save</button><button type="button" id="cancelUserForm" class="btn btn-delete" style="margin-left:8px;">Cancel</button></div>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="usersList"></tbody>
+      </table>
+
+      <div style="text-align: center; margin-top:18px;">
+        <a href="INDEX.HTML" class="back-button" data-i18n="back_to_index">← Back to Main page</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="../../.JS/ADMIN.JS"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang=”en”>
+<head>
+  <meta charset=”UTF-8” />
+  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <title>CivicWatch Admin – Reports Management</title>
+  <style>
+    Body {
+      Margin: 0;
+      Font-family: ‘Segoe UI’, sans-serif;
+      Background-color: #111B21;
+      Color: #EDEDED;
+    }
+
+    Header {
+      Background-color: #25D366;
+      Padding: 20px;
+      Text-align: center;
+    }
+
+    Header h1 {
+      Margin: 0;
+      Color: #111B21;
+    }
+
+    Main {
+      Padding: 30px;
+      Max-width: 1200px;
+      Margin: auto;
+    }
+
+    Section {
+      Background-color: #1F2C34;
+      Margin-bottom: 25px;
+      Padding: 20px;
+      Border-radius: 8px;
+    }
+
+    Section h2 {
+      Color: #25D366;
+      Margin-top: 0;
+    }
+
+    Label, select {
+      Font-size: 1em;
+    }
+
+    Select {
+      Padding: 6px 12px;
+      Background-color: #1F2C34;
+      Color: #EDEDED;
+      Border: 1px solid #37474F;
+      Border-radius: 4px;
+    }
+
+    Table {
+      Width: 100%;
+      Border-collapse: collapse;
+      Margin-top: 20px;
+      Background-color: #1F2C34;
+      Color: #EDEDED;
+    }
+
+    Th, td {
+      Padding: 12px;
+      Text-align: left;
+      Border-bottom: 1px solid #37474F;
+    }
+
+    Thead {
+      Background-color: #263238;
+    }
+
+    Tbody tr:hover {
+      Background-color: #2E3B40;
+    }
+
+    .btn {
+      Padding: 6px 10px;
+      Border: none;
+      Border-radius: 4px;
+      Cursor: pointer;
+      Font-weight: bold;
+    }
+
+    .btn-approve {
+      Background-color: #25D366;
+      Color: #111B21;
+    }
+
+    .btn-reject {
+      Background-color: #FF5252;
+      Color: #FFFFFF;
+      Margin-left: 5px;
+    }
+
+    .btn-resolve {
+      Background-color: #2196F3;
+      Color: #FFFFFF;
+      Margin-left: 5px;
+    }
+
+    .back-button {
+      Display: inline-block;
+      Margin-top: 30px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border-radius: 6px;
+      Text-decoration: none;
+      Font-weight: bold;
+      Box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>CivicWatch Admin Panel</h1>
+  </header>
+
+  <main>
+    <section id=”reports”>
+      <h2>Reports and Submissions Management</h2>
+      <p>Review, filter and manage all civic reports submitted by citizens.</p>
+
+      <div style="margin: 20px 0;">
+        <label for=”filter”>Filter by status:</label>
+        <select id=”filter”>
+          <option value=”all”>All</option>
+          <option value=”pending”>Pending</option>
+          <option value=”approved”>Approved</option>
+          <option value=”resolved”>Resolved</option>
+          <option value=”rejected”>Rejected</option>
+        </select>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Report ID</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>RPT-1023</td>
+              <td>Pothole on 5th Avenue</td>
+              <td>Roads</td>
+              <td>2025-12-27</td>
+              <td style="color: #FFC107;"">Pending</td>
+              <td>
+                <button class=”btn btn-approve”>Approve</button>
+                <button class=”btn btn-reject”>Reject</button>
+                <button class=”btn btn-resolve”>Resolve</button>
+              </td>
+            </tr>
+            <!—More rows can be added dynamically 
+          </tbody>
+        </table>
+      </div>
+
+      <div style="text-align: center;">
+        <a href="INDEX.HTML" class="back-button" data-i18n="back_to_index">← Back to Main page</a>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>
+

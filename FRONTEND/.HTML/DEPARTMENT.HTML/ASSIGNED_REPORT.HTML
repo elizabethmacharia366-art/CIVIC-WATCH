@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang=”en”>
+<head>
+  <meta charset=”UTF-8” />
+  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <title>Assigned Reports | CivicWatch</title>
+  <style>
+    Body {
+      Margin: 0;
+      Font-family: ‘Segoe UI’, sans-serif;
+      Background-color: #111B21;
+      Color: #FFFFFF;
+    }
+
+    Header {
+      Background-color: #25D366;
+      Padding: 20px;
+      Text-align: center;
+    }
+
+    Header h1 {
+      Margin: 0;
+      Color: #111B21;
+    }
+
+    Nav {
+      Background-color: #1A1A1A;
+      Padding: 15px;
+      Display: flex;
+      Justify-content: center;
+      Flex-wrap: wrap;
+      Gap: 20px;
+    }
+
+    Nav a {
+      Color: #25D366;
+      Text-decoration: none;
+      Font-weight: bold;
+    }
+
+    Nav a:hover {
+      Text-decoration: underline;
+    }
+
+    Main {
+      Padding: 30px;
+      Max-width: 1000px;
+      Margin: auto;
+    }
+
+    Section {
+      Background-color: #1F2C34;
+      Padding: 25px;
+      Border-radius: 8px;
+    }
+
+    Section h2 {
+      Color: #25D366;
+      Margin-top: 0;
+    }
+
+    Table {
+      Width: 100%;
+      Border-collapse: collapse;
+      Background-color: #263238;
+      Border-radius: 6px;
+      Overflow: hidden;
+      Margin-top: 20px;
+    }
+
+    Th, td {
+      Padding: 12px 15px;
+      Text-align: left;
+      Border-bottom: 1px solid #1F2C34;
+      Vertical-align: top;
+    }
+
+    Th {
+      Background-color: #1F2C34;
+      Color: #25D366;
+    }
+
+    Td {
+      Color: #EDEDED;
+    }
+
+    Tr:hover {
+      Background-color: #2E3B40;
+    }
+
+    Select, textarea {
+      Width: 100%;
+      Padding: 6px;
+      Border-radius: 4px;
+      Border: none;
+      Background-color: #37474F;
+      Color: #FFFFFF;
+      Font-size: 0.9em;
+    }
+
+    .action-buttons {
+      Display: flex;
+      Gap: 10px;
+      Margin-top: 5px;
+    }
+
+    .action-buttons button {
+      Padding: 6px 10px;
+      Border: none;
+      Border-radius: 4px;
+      Font-weight: bold;
+      Cursor: pointer;
+    }
+
+    .accept {
+      Background-color: #25D366;
+      Color: #111B21;
+    }
+
+    .reject {
+      Background-color: #FF5252;
+      Color: #FFFFFF;
+    }
+    .back-button {
+      Display: inline-block;
+      Margin-top: 30px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border-radius: 6px;
+      Text-decoration: none;
+      Font-weight: bold;
+      Box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Assigned Reports</h1>
+  </header>
+
+
+  <main>
+    <section>
+      <h2>Reports Assigned to Your Department</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Report ID</th>
+            <th>Issue Details</th>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Actions</th>
+            <th>Internal Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#RPT-1023</td>
+            <td>
+              <strong>Pothole on Juja Road</strong><br>
+              Large pothole causing traffic congestion near the roundabout.
+            </td>
+            <td>-1.2540, 36.8452</td>
+            <td>2025-12-25</td>
+            <td>High</td>
+            <td>
+              <select name=”status”>
+                <option>Pending</option>
+                <option selected>In Progress</option>
+                <option>Resolved</option>
+              </select>
+            </td>
+            <td>
+              <div class=”action-buttons”>
+                <button class=”accept”>Accept</button>
+                <button class=”reject”>Reject</button>
+              </div>
+            </td>
+            <td>
+              <textarea rows=”3” placeholder=”Add internal notes…”>Scheduled for repair on Jan 2</textarea>
+            </td>
+          </tr>
+
+          <tr>
+            <td>#RPT-1017</td>
+            <td>
+              <strong>Faded Zebra Crossing</strong><br>
+              Pedestrian crossing lines are barely visible near the school gate.
+            </td>
+            <td>-1.2921, 36.8219</td>
+            <td>2025-12-22</td>
+            <td>Medium</td>
+            <td>
+              <select name=”status”>
+                <option selected>Pending</option>
+                <option>In Progress</option>
+                <option>Resolved</option>
+              </select>
+            </td>
+            <td>
+              <div class=”action-buttons”>
+                <button class=”accept”>Accept</button>
+                <button class=”reject”>Reject</button>
+              </div>
+            </td>
+            <td>
+              <textarea rows=”3” placeholder=”Add internal notes…”></textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+<div style="text-align: center;">
+        <a href="DASHBOARD.html#DASHBOARD" class="back-button">← Back to Dashboard</a>
+      </div>
+</body>
+</html>
+

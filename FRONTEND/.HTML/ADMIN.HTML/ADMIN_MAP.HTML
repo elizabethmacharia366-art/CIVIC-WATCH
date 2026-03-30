@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Map | CivicWatch</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #111B21; color: #FFFFFF; }
+    header { background-color: #25D366; padding: 20px; text-align: center; }
+    header h1 { margin: 0; color: #111B21; }
+    main { padding: 20px; max-width: 1200px; margin: auto; }
+    #map { height: 600px; width: 100%; border-radius: 6px; }
+    .controls { margin: 12px 0; display:flex; gap:12px; align-items:center; }
+    .controls select, .controls button { padding:8px; border-radius:4px; border:none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
+      <h1 data-i18n="admin_map_title">Admin Map Overview</h1>
+      <div>
+        <label for="langSelector" style="margin-right:8px;color:#ccc;" data-i18n="ui_language">Language</label>
+        <select id="langSelector">
+          <option value="en">English</option>
+          <option value="sw">Kiswahili</option>
+        </select>
+      </div>
+    </div>
+  </header>
+  <main>
+    <div class="controls">
+      <select id="admin-filter-dept"><option value="all" data-i18n="all">All</option></select>
+      <select id="admin-filter-status"><option value="all" data-i18n="all">All</option><option value="Pending" data-i18n="pending">Pending</option><option value="In Progress" data-i18n="in_progress">In Progress</option><option value="Resolved" data-i18n="resolved">Resolved</option></select>
+      <button id="refreshBtn" data-i18n="refresh">Refresh</button>
+    </div>
+    <div id="map"></div>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../../.JS/i18n.js"></script>
+  <script>
+    const map = L.map('map');
+    const kenyaBounds = [[-4.7,33.5],[5.0,41.9]];
+    map.fitBounds(kenyaBounds);
+    map.setMaxBounds(kenyaBounds);
+    map.options.maxBoundsViscosity = 1;
+    map.setMinZoom(6);
+    map.setMaxZoom(15);
+    const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' });
+    const lightLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { attribution: '&copy; CartoDB, OpenStreetMap contributors' });
+    const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CartoDB, OpenStreetMap contributors' });
+    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics' });
+    satelliteLayer.addTo(map);
+    L.rectangle(kenyaBounds, { color: '#FFD54F', weight: 2, fill: false, dashArray: '6 4' }).addTo(map);
+    const baseLayers = { 'Light': lightLayer, 'Dark': darkLayer, 'Street': streetLayer, 'Satellite': satelliteLayer };
+    L.control.layers(baseLayers, null, { position: 'topright' }).addTo(map);
+    const markersLayer = L.layerGroup().addTo(map);
+    let userMarker = null;
+    function isInsideKenya(latlng) { const bounds = L.latLngBounds(kenyaBounds); return bounds.contains(latlng); }
+    function clampLatLng(latlng) { const b = L.latLngBounds(kenyaBounds); const lat = Math.max(b.getSouth(), Math.min(b.getNorth(), latlng.lat)); const lng = Math.max(b.getWest(), Math.min(b.getEast(), latlng.lng)); return L.latLng(lat, lng); }
+    function placeUserMarker(latlng, label='Your location') {
+      if (!isInsideKenya(latlng)) return alert('Selected location is outside Kenya bounds.');
+      if (userMarker) userMarker.remove();
+      userMarker = L.marker(latlng, { draggable: true }).addTo(map).bindPopup(`${label}<br>${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`).openPopup();
+      userMarker.on('dragend', (e) => {
+        const newLatLng = e.target.getLatLng();
+        if (!isInsideKenya(newLatLng)) { alert('Marker moved outside Kenya. Returning to previous position.'); userMarker.setLatLng(latlng); return; }
+        userMarker.openPopup();
+      });
+    }
+
+    async function loadDepartments() {
+      try {
+        const res = await fetch('http://localhost:3000/api/departments');
+        if (!res.ok) return;
+        const depts = await res.json();
+        const sel = document.getElementById('admin-filter-dept');
+        depts.forEach(d => {
+          const opt = document.createElement('option'); opt.value = d.id; opt.textContent = d.name; sel.appendChild(opt);
+        });
+      } catch(e) { console.warn('loadDepartments', e); }
+    }
+
+    function placeUserMarker(latlng, label='Your location') {
+      if (userMarker) userMarker.remove();
+      userMarker = L.marker(latlng, { draggable: true }).addTo(map).bindPopup(`${label}<br>${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`).openPopup();
+      userMarker.on('dragend', () => userMarker.openPopup());
+    }
+
+    async function loadReports() {
+      markersLayer.clearLayers();
+      const dept = document.getElementById('admin-filter-dept').value;
+      const status = document.getElementById('admin-filter-status').value;
+      try {
+        const res = await fetch('http://localhost:3000/api/reports');
+        if (!res.ok) throw new Error('Failed fetch');
+        const data = await res.json();
+        data.forEach(r => {
+          if (dept && dept !== 'all' && r.departmentId !== dept) return;
+          if (status && status !== 'all' && (r.status || '').toLowerCase() !== status.toLowerCase()) return;
+          const statusVal = (r.status || r.Status || '').toString();
+          const lat = r.lat || (r.location && r.location.lat) || r.latitude;
+          const lng = r.lng || (r.location && r.location.lng) || r.longitude;
+          if (!lat || !lng) return;
+          const boundsCheck = L.latLngBounds(kenyaBounds);
+          if (!boundsCheck.contains([lat, lng])) return;
+          const s = statusVal.toLowerCase();
+          let color = '#2196f3';
+          if (s.includes('resolved')) color = '#4caf50';
+          else if (s.includes('in progress') || s.includes('progress')) color = '#ff9800';
+          else if (s.includes('pending')) color = '#fdd835';
+          else if (s.includes('unsolved') || s.includes('open')) color = '#f44336';
+          const circle = L.circle([lat, lng], { radius: 60, color, fillColor: color, fillOpacity: 0.35 });
+          circle.bindPopup(`<strong>${r.title || r.name || 'Report'}</strong><br>Dept: ${r.departmentName || r.departmentId || 'N/A'}<br>Status: ${statusVal || 'Unknown'}<br>Priority: ${r.priority || ''}`);
+          markersLayer.addLayer(circle);
+        });
+      } catch(e) { console.error('admin loadReports', e); }
+    }
+
+    document.getElementById('refreshBtn').addEventListener('click', loadReports);
+    document.getElementById('admin-filter-dept').addEventListener('change', loadReports);
+    document.getElementById('admin-filter-status').addEventListener('change', loadReports);
+
+    map.on('click', (e) => placeUserMarker(e.latlng, 'Selected location'));
+    const geoBtn = document.createElement('button'); geoBtn.setAttribute('data-i18n','mark_location'); geoBtn.style.marginRight = '8px';
+    document.querySelector('.controls').insertBefore(geoBtn, document.getElementById('admin-filter-dept'));
+    geoBtn.addEventListener('click', () => {
+      if (!navigator.geolocation) return alert('Geolocation not supported');
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const ll = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        const clamped = clampLatLng(ll);
+        map.setView(clamped, 12);
+        placeUserMarker(clamped, 'My location');
+      }, (err) => alert('Unable to get location: ' + err.message));
+    });
+
+    const saveBtn = document.createElement('button'); saveBtn.id = 'saveLocation'; saveBtn.setAttribute('data-i18n','save_location'); saveBtn.style.marginLeft = '8px';
+    document.querySelector('.controls').appendChild(saveBtn);
+    if (window.i18n && typeof window.i18n.applyTranslations === 'function') window.i18n.applyTranslations();
+
+    function applyUITheme(theme) {
+      document.body.classList.toggle('theme-light', theme === 'light');
+      document.body.classList.toggle('theme-dark', theme !== 'light');
+      localStorage.setItem('cw_theme', theme);
+      if (theme === 'light') {
+        if (!map.hasLayer(lightLayer)) { map.addLayer(lightLayer); }
+        if (map.hasLayer(darkLayer)) map.removeLayer(darkLayer);
+      } else {
+        if (!map.hasLayer(darkLayer)) { map.addLayer(darkLayer); }
+        if (map.hasLayer(lightLayer)) map.removeLayer(lightLayer);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const sel = document.getElementById('uiTheme');
+      const saved = localStorage.getItem('cw_theme') || 'dark';
+      sel.value = saved;
+      applyUITheme(saved);
+      sel.addEventListener('change', (e) => applyUITheme(e.target.value));
+    });
+    saveBtn.addEventListener('click', async () => {
+      if (!userMarker) return alert('No marker to save. Click the map or use "Mark My Location".');
+      const ll = userMarker.getLatLng();
+      const deptId = document.getElementById('admin-filter-dept').value || null;
+      try {
+        const payload = { latitude: ll.lat, longitude: ll.lng, source: 'admin_map' };
+        if (deptId && deptId !== 'all') payload.departmentId = deptId;
+        const res = await fetch('http://localhost:3000/api/locations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        if (!res.ok) throw new Error('Save failed');
+        alert('Location saved successfully');
+      } catch (e) { alert('Failed to save location: ' + e.message); }
+    });
+
+    (async () => { await loadDepartments(); await loadReports(); })();
+  </script>
+</body>
+</html>

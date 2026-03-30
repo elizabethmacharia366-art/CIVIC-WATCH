@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CivicWatch Admin – Analytics</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111B21;
+      color: #EDEDED;
+    }
+
+    header {
+      background-color: #25D366;
+      padding: 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    header h1 { margin: 0; color: #111B21; }
+
+    Main {
+      Padding: 30px;
+      Max-width: 1000px;
+      Margin: auto;
+    }
+
+    Section {
+      Background-color: #1F2C34;
+      Margin-bottom: 25px;
+      Padding: 20px;
+      Border-radius: 8px;
+    }
+
+    Section h2 {
+      Color: #25D366;
+      Margin-top: 0;
+    }
+
+    .stat-grid {
+      Display: flex;
+      Flex-wrap: wrap;
+      Gap: 20px;
+      Margin-top: 20px;
+    }
+
+    .stat-box {
+      Background-color: #263238;
+      Padding: 15px;
+      Border-radius: 6px;
+      Flex: 1 1 250px;
+    }
+
+    .stat-box h3 {
+      Margin: 0;
+      Color: #25D366;
+    }
+
+    .stat-box p {
+      Font-size: 1.2em;
+      Margin: 5px 0 0;
+    }
+
+    .chart-placeholder {
+      margin-top: 30px;
+      background-color: #2C3E50;
+      height: 250px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #AAAAAA;
+      font-style: italic;
+    }
+
+    .download-buttons {
+      Margin-top: 30px;
+    }
+
+    .download-buttons button {
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 16px;
+      Border: none;
+      Border-radius: 6px;
+      Font-weight: bold;
+      Cursor: pointer;
+      Margin-right: 10px;
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .download-buttons button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+
+     .back-button {
+      Display: inline-block;
+      Margin-top: 30px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border-radius: 6px;
+      Text-decoration: none;
+      Font-weight: bold;
+      Box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+  </style>
+  <script src="../../.JS/i18n.js"></script>
+  <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <header>
+    <h1 data-i18n="analytics">CivicWatch Admin Panel</h1>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <label for="langSelector" style="color:#111;margin-right:6px;" data-i18n="ui_language">Language</label>
+      <select id="langSelector"><option value="en">English</option><option value="sw">Swahili</option></select>
+      <button onclick="window.clearAccess && window.clearAccess('admin')" style="background:#fff;color:#111;padding:6px;border:none;border-radius:4px;font-weight:bold;" data-i18n="reset_auth">Reset Auth</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="analytics">
+      <h2 data-i18n="analytics">Analytics / Reports</h2>
+      <p>Track trends, monitor engagement and export data for deeper insights.</p>
+
+      <div class="stat-grid">
+        <div class="stat-box">
+          <h3>Most Reported Issue</h3>
+          <p>Blocked Drainage</p>
+        </div>
+        <div class="stat-box">
+          <h3>Top Region</h3>
+          <p>Nairobi central</p>
+        </div>
+        <div class="stat-box">
+          <h3>Avg. Resolution Time</h3>
+          <p>3.2 days</p>
+        </div>
+        <div class="stat-box">
+          <h3>Active Users</h3>
+          <p>4</p>
+        </div>
+      </div>
+
+      <div id="chartsContainer" style="display:flex;flex-wrap:wrap;gap:20px;margin-top:24px;">
+        <div style="flex:1;min-width:300px"><h4 data-i18n="reports_by_region">Reports by Region</h4><canvas id="chartReportsByRegion"></canvas></div>
+        <div style="flex:1;min-width:300px"><h4 data-i18n="report_categories">Report Categories</h4><canvas id="chartCategories"></canvas></div>
+        <div style="flex:1 1 100%;min-width:300px"><h4 data-i18n="monthly_submissions">Monthly Submissions</h4><canvas id="chartMonthly"></canvas></div>
+      </div>
+
+      <div class="download-buttons">
+        <button>Download PDF</button>
+        <button>Download Excel</button>
+      </div>
+
+     <div style="text-align: center;">
+        <a href="INDEX.HTML" class="back-button" data-i18n="back_to_index">← Back to Main page</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    async function fetchDashboardData() {
+      try {
+        const res = await fetch('http://localhost:3000/api/admin/dashboard');
+        if (!res.ok) throw new Error('no-data');
+        return await res.json();
+      } catch (e) {
+        return {
+          userGrowthSeries: { labels: ['Jan','Feb','Mar','Apr'], values: [10,15,20,30] },
+          submissionsByDept: { Roads: 25, Sanitation: 15, Water: 8, Education: 5 },
+          submissionsByStatus: { Pending: 10, 'In Progress': 20, Resolved: 23 }
+        };
+      }
+    }
+
+    function drawCharts(data) {
+      const byRegion = data.submissionsByDept || { 'Region A': 12, 'Region B': 8, 'Region C': 5 };
+      new Chart(document.getElementById('chartReportsByRegion').getContext('2d'), { type: 'pie', data: { labels: Object.keys(byRegion), datasets: [{ data: Object.values(byRegion), backgroundColor: ['#2196f3','#ff9800','#4caf50','#f44336'] }] } });
+
+      const categories = data.submissionsByDept || { Roads: 12, Sanitation: 8, Water: 5 };
+      new Chart(document.getElementById('chartCategories').getContext('2d'), { type: 'doughnut', data: { labels: Object.keys(categories), datasets: [{ data: Object.values(categories), backgroundColor: ['#4caf50','#2196f3','#ff9800'] }] } });
+
+      const monthly = data.userGrowthSeries || { labels: ['Jan','Feb','Mar'], values: [5,10,8] };
+      new Chart(document.getElementById('chartMonthly').getContext('2d'), { type: 'line', data: { labels: monthly.labels, datasets: [{ label: 'Submissions', data: monthly.values, borderColor: '#673ab7', fill:false }] } });
+    }
+
+    (async () => { const d = await fetchDashboardData(); drawCharts(d); window.i18n?.applyTranslations(); })();
+  </script>
+
+</body>
+</html>
+

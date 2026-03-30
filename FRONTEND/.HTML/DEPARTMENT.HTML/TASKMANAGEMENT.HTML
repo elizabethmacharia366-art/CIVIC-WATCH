@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Civic Watch Task Manager</title>
+  <style>
+    :root{
+      --bg: #0b1411;      
+      --card: #0f1a18;      
+      --muted: #bdbdbd;     
+      --accent: #128c7e;    
+      --accent-2: #075e54;  
+      --glass: rgba(255,255,255,0.02);
+      --ok: #25d366;
+      --warn: #f59e0b;
+      --danger: #ff6b6b;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; min-height:100vh;
+      background:
+        radial-gradient(600px 300px at 10% 10%, rgba(18,140,126,0.03), transparent),
+        var(--bg);
+      color:#e6efe9;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    .wrap{max-width:1100px;margin:18px auto;padding:18px;}
+    header{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:44px;height:44px;border-radius:12px;background:linear-gradient(180deg,var(--accent),var(--accent-2));
+      display:grid;place-items:center;font-weight:700;color:white;font-size:18px;box-shadow:0 6px 18px rgba(2,6,6,0.6)
+    }
+    h1{font-size:1.1rem;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:.88rem}
+    .top-controls{display:flex;gap:12px;align-items:center}
+
+    .card{
+      background:linear-gradient(180deg,var(--card), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.03); padding:14px;border-radius:12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+    }
+
+    .main{display:grid;grid-template-columns:360px 1fr;gap:14px}
+    @media (max-width:880px){ .main{grid-template-columns:1fr} .sidebar{order:2} }
+
+    label{display:block;font-size:.85rem;margin-top:8px;color:var(--muted)}
+    .row{display:flex;gap:8px}
+    .input, input[type="text"], input[type="date"], select, textarea{
+      width:100%;padding:9px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:#08120f;color:inherit;
+    }
+    textarea{min-height:84px;resize:vertical}
+    .actions{display:flex;gap:8px;margin-top:10px}
+    .btn{
+      background:var(--accent); color:white;border:0;padding:8px 12px;border-radius:10px;cursor:pointer;
+      box-shadow: 0 2px 6px rgba(8,88,78,0.18);
+    }
+    .btn.secondary{background:transparent;color:var(--accent);border:1px solid rgba(18,140,126,0.12)}
+    .btn.danger{background:transparent;border:1px solid rgba(255,107,107,0.12);color:var(--danger)}
+    .small{font-size:.85rem;padding:6px 8px;border-radius:8px}
+
+    .filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .filters .search{min-width:180px;flex:1}
+    .filters select{min-width:160px}
+
+    .list{margin-top:12px;display:grid;gap:10px}
+    .task{
+      display:flex;gap:12px;align-items:flex-start;padding:10px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .task.dragging{opacity:.6;transform:scale(.995)}
+    .left{display:flex;gap:10px;align-items:flex-start}
+    .checkbox{
+      width:22px;height:22px;border-radius:6px;border:1px solid rgba(255,255,255,0.06);display:inline-grid;place-items:center;cursor:pointer;
+      background:transparent;color:transparent;font-weight:700;
+    }
+    .checkbox.checked{background:linear-gradient(90deg,var(--ok),#08b66a);color:#022b20;border:0}
+    .meta{flex:1}
+    .title{font-weight:700;color:#f0fff6}
+    .desc{color:var(--muted);font-size:.92rem;margin-top:4px}
+    .tags{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+    .tag{background:rgba(255,255,255,0.02);padding:4px 8px;border-radius:999px;font-size:.78rem;color:var(--muted)}
+    .task-meta{display:flex;gap:8px;align-items:center;margin-left:auto}
+    .due{padding:6px 8px;border-radius:8px;font-weight:700;font-size:.78rem}
+    .due.ok{background:rgba(37,211,102,0.06);color:var(--ok)}
+    .due.warn{background:rgba(245,158,11,0.06);color:var(--warn)}
+    .due.danger{background:rgba(255,107,107,0.06);color:var(--danger)}
+    .controls{display:flex;gap:6px;margin-left:8px}
+    .iconbtn{background:transparent;border:0;color:var(--muted);cursor:pointer;padding:6px;border-radius:8px}
+    .iconbtn:hover{background:rgba(255,255,255,0.02);color:var(--accent)}
+
+    .empty{padding:28px;text-align:center;color:var(--muted);border-radius:10px}
+
+    .hint{font-size:.85rem;color:var(--muted);margin-top:8px}
+
+    @media (max-width:520px){
+      .logo{width:40px;height:40px}
+      .main{gap:10px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+          <h1>Civic Watch Tasks</h1>
+        </div>
+      </div>
+    </header>
+    <section class="main">
+      <aside class="sidebar">
+        <div class="card">
+          <form id="task-form" aria-label="Add or edit task">
+            <input type="hidden" id="task-id" />
+            <label for="title">Title</label>
+            <input id="title" type="text" class="input" placeholder="e.g. Report streetlight outage" required />
+
+            <label for="desc">Description</label>
+            <textarea id="desc" placeholder="Optional details..."></textarea>
+
+            <div class="row">
+              <div style="flex:1">
+                <label for="due">Due date</label>
+                <input id="due" type="date" />
+              </div>
+              <div>
+                <label for="priority">Priority</label>
+                <select id="priority">
+                  <option value="low">Low</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+            </div>
+
+            <label for="tags">Tags (comma separated)</label>
+            <input id="tags" type="text" placeholder="road, safety, urgent" />
+
+            <div class="actions">
+              <button class="btn" id="save-btn" type="submit">Add task</button>
+              <button class="btn secondary" id="clear-btn" type="button">Clear</button>
+              <button class="btn danger" id="delete-btn" type="button" style="display:none">Delete</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <strong>Tips</strong>
+            <small class="hint">Drag tasks to reorder</small>
+          </div>
+          <p class="hint" style="margin-top:8px">- Double-click a task to edit quickly.<br>- Use filters to focus on urgent civic issues.</p>
+        </div>
+      </aside>
+
+      <main>
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div class="filters" role="region" aria-label="Filters">
+              <input id="search" class="input search" placeholder="Search tasks..." aria-label="Search tasks" />
+              <select id="filter-priority" class="small" aria-label="Filter by priority">
+                <option value="all">All priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+
+              <select id="sort-by" class="small" aria-label="Sort tasks">
+                <option value="order">Manual order</option>
+                <option value="due-asc">Due date ↑</option>
+                <option value="due-desc">Due date ↓</option>
+                <option value="priority-desc">Priority</option>
+                <option value="created-desc">Newest</option>
+              </select>
+
+              <label style="display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:.9rem;margin-left:6px">
+                <input id="show-completed" type="checkbox" /> Show completed
+              </label>
+            </div>
+
+            <div style="display:flex;gap:8px;align-items:center">
+              <button id="clear-completed" class="btn secondary small">Clear completed</button>
+              <button id="export-btn" class="btn small">Export</button>
+              <button id="import-btn" class="btn secondary small">Import</button>
+              <input id="import-file" type="file" accept="application/json" style="display:none" />
+            </div>
+          </div>
+
+          <div id="task-list" class="list" aria-live="polite" style="margin-top:12px"></div>
+
+          <div id="empty" class="empty" style="display:none">No tasks — add your first task on the left.</div>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "taskmanager:civic-watch";
+    const STORAGE_DISPLAY = "Civic Watch";
+    const PRIORITY_WEIGHT = { high: 3, medium: 2, low: 1 };
+
+    document.getElementById('storage-user').textContent = STORAGE_DISPLAY;
+
+    const form = document.getElementById('task-form');
+    const titleEl = document.getElementById('title');
+    const descEl = document.getElementById('desc');
+    const dueEl = document.getElementById('due');
+    const priorityEl = document.getElementById('priority');
+    const tagsEl = document.getElementById('tags');
+    const taskIdEl = document.getElementById('task-id');
+    const saveBtn = document.getElementById('save-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const deleteBtn = document.getElementById('delete-btn');
+
+    const searchEl = document.getElementById('search');
+    const filterPriorityEl = document.getElementById('filter-priority');
+    const sortByEl = document.getElementById('sort-by');
+    const showCompletedEl = document.getElementById('show-completed');
+    const taskListEl = document.getElementById('task-list');
+    const emptyEl = document.getElementById('empty');
+    const clearCompletedBtn = document.getElementById('clear-completed');
+    const exportBtn = document.getElementById('export-btn');
+    const importBtn = document.getElementById('import-btn');
+    const importFileEl = document.getElementById('import-file');
+
+    let tasks = loadTasks();
+
+    function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+
+    function saveTasks(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    }
+
+    function loadTasks(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(!raw) return [];
+        return JSON.parse(raw).map(normalizeTask);
+      }catch(e){
+        console.error("Failed to load tasks", e);
+        return [];
+      }
+    }
+
+    function normalizeTask(t){
+      return {
+        id: t.id || uid(),
+        title: t.title || '',
+        desc: t.desc || '',
+        due: t.due || '',
+        priority: t.priority || 'medium',
+        tags: Array.isArray(t.tags) ? t.tags : (t.tags ? String(t.tags).split(',').map(s=>s.trim()).filter(Boolean) : []),
+        completed: !!t.completed,
+        createdAt: t.createdAt || Date.now(),
+        order: typeof t.order === 'number' ? t.order : (t.order === undefined ? Date.now() : t.order)
+      };
+    }
+
+    function formatDueLabel(due){
+      if(!due) return 'No due';
+      const dt = new Date(due+"T00:00:00");
+      const today = new Date(); today.setHours(0,0,0,0);
+      const diff = (dt - today)/(24*60*60*1000);
+      if(diff < 0) return 'Overdue';
+      if(diff === 0) return 'Today';
+      return dt.toLocaleDateString();
+    }
+
+    function dueClass(due){
+      if(!due) return 'ok';
+      const dt = new Date(due+"T00:00:00");
+      const today = new Date(); today.setHours(0,0,0,0);
+      const diff = (dt - today)/(24*60*60*1000);
+      if(diff < 0) return 'danger';
+      if(diff === 0) return 'warn';
+      return 'ok';
+    }
+
+    function render(){
+      const q = searchEl.value.trim().toLowerCase();
+      const filterPriority = filterPriorityEl.value;
+      const showCompleted = showCompletedEl.checked;
+      let list = tasks.slice();
+
+      list = list.filter(t => {
+        if(!showCompleted && t.completed) return false;
+        if(filterPriority !== 'all' && t.priority !== filterPriority) return false;
+        if(q){
+          const hay = (t.title + ' ' + t.desc + ' ' + (t.tags||[]).join(' ')).toLowerCase();
+          return hay.includes(q);
+        }
+        return true;
+      });
+
+      const sortBy = sortByEl.value;
+      if(sortBy === 'due-asc') list.sort((a,b) => (a.due||'9999-12-31').localeCompare(b.due||'9999-12-31') || b.order - a.order);
+      else if(sortBy === 'due-desc') list.sort((a,b) => (b.due||'9999-12-31').localeCompare(a.due||'9999-12-31') || b.order - a.order);
+      else if(sortBy === 'priority-desc') list.sort((a,b) => (PRIORITY_WEIGHT[b.priority] - PRIORITY_WEIGHT[a.priority]) || b.order - a.order);
+      else if(sortBy === 'created-desc') list.sort((a,b) => b.createdAt - a.createdAt);
+      else list.sort((a,b) => a.order - b.order); 
+
+      taskListEl.innerHTML = '';
+      if(list.length === 0){
+        emptyEl.style.display = '';
+      } else {
+        emptyEl.style.display = 'none';
+      }
+
+      list.forEach(t => {
+        const item = document.createElement('div');
+        item.className = 'task';
+        item.setAttribute('draggable','true');
+        item.dataset.id = t.id;
+
+        item.addEventListener('dragstart', onDragStart);
+        item.addEventListener('dragend', onDragEnd);
+        item.addEventListener('dblclick', () => quickEdit(t.id));
+
+        const left = document.createElement('div'); left.className='left';
+        const cb = document.createElement('button');
+        cb.className = 'checkbox' + (t.completed ? ' checked' : '');
+        cb.setAttribute('aria-pressed', String(!!t.completed));
+        cb.title = t.completed ? 'Mark as active' : 'Mark as completed';
+        cb.addEventListener('click', () => {
+          t.completed = !t.completed;
+          saveTasks(); render();
+        });
+        cb.innerHTML = t.completed ? '&#10003;' : '';
+        left.appendChild(cb);
+
+        const meta = document.createElement('div'); meta.className='meta';
+        const title = document.createElement('div'); title.className='title';
+        title.textContent = t.title || '(no title)';
+        if(t.completed) title.style.textDecoration = 'line-through';
+        meta.appendChild(title);
+
+        if(t.desc){
+          const desc = document.createElement('div'); desc.className='desc'; desc.textContent = t.desc;
+          meta.appendChild(desc);
+        }
+
+        if(t.tags && t.tags.length){
+          const tagsWrap = document.createElement('div'); tagsWrap.className='tags';
+          t.tags.forEach(tag => {
+            const tagEl = document.createElement('span'); tagEl.className='tag'; tagEl.textContent = tag;
+            tagsWrap.appendChild(tagEl);
+          });
+          meta.appendChild(tagsWrap);
+        }
+
+        left.appendChild(meta);
+
+        const right = document.createElement('div'); right.className='task-meta';
+
+        const due = document.createElement('div');
+        due.className = 'due ' + dueClass(t.due);
+        due.textContent = formatDueLabel(t.due);
+        right.appendChild(due);
+
+        // Priority chip
+        const pchip = document.createElement('div');
+        pchip.className = 'tag';
+        pchip.style.fontWeight = 700;
+        pchip.textContent = t.priority.toUpperCase();
+        right.appendChild(pchip);
+
+        const controls = document.createElement('div'); controls.className='controls';
+        const editBtn = document.createElement('button'); editBtn.className='iconbtn'; editBtn.title='Edit';
+        editBtn.innerHTML = '✎';
+        editBtn.addEventListener('click', () => loadIntoForm(t.id));
+        controls.appendChild(editBtn);
+
+        const delBtn = document.createElement('button'); delBtn.className='iconbtn'; delBtn.title='Delete';
+        delBtn.innerHTML = '🗑';
+        delBtn.addEventListener('click', () => {
+          if(confirm('Delete this task?')){ tasks = tasks.filter(x => x.id !== t.id); saveTasks(); render(); }
+        });
+        controls.appendChild(delBtn);
+
+        right.appendChild(controls);
+
+        item.appendChild(left);
+        item.appendChild(right);
+
+        taskListEl.appendChild(item);
+      });
+    }
+
+    let dragSrc = null;
+    function onDragStart(e){
+      dragSrc = e.currentTarget;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', dragSrc.dataset.id);
+      setTimeout(()=>dragSrc.classList.add('dragging'), 10);
+      document.querySelectorAll('.task').forEach(t => {
+        if(t !== dragSrc){
+          t.addEventListener('dragover', onDragOver);
+          t.addEventListener('drop', onDrop);
+        }
+      });
+    }
+    function onDragEnd(e){
+      if(dragSrc) dragSrc.classList.remove('dragging');
+      document.querySelectorAll('.task').forEach(t => {
+        t.removeEventListener('dragover', onDragOver);
+        t.removeEventListener('drop', onDrop);
+      });
+      dragSrc = null;
+    }
+    function onDragOver(e){ e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+    function onDrop(e){
+      e.preventDefault();
+      const target = e.currentTarget;
+      const srcId = e.dataTransfer.getData('text/plain');
+      const dstId = target.dataset.id;
+      if(srcId === dstId) return;
+      const srcIndex = tasks.findIndex(t=>t.id===srcId);
+      const dstIndex = tasks.findIndex(t=>t.id===dstId);
+      if(srcIndex < 0 || dstIndex < 0) return;
+      const [item] = tasks.splice(srcIndex,1);
+      tasks.splice(dstIndex,0,item);
+      tasks.forEach((t,i)=> t.order = i);
+      saveTasks(); render();
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const id = taskIdEl.value;
+      const data = {
+        title: titleEl.value.trim(),
+        desc: descEl.value.trim(),
+        due: dueEl.value || '',
+        priority: priorityEl.value,
+        tags: tagsEl.value.split(',').map(s=>s.trim()).filter(Boolean),
+      };
+      if(!data.title){ alert('Please enter a title'); return; }
+      if(id){
+        const t = tasks.find(x=>x.id===id);
+        if(t){
+          Object.assign(t, data);
+        }
+        saveBtn.textContent = 'Add task';
+        deleteBtn.style.display='none';
+      } else {
+        const t = normalizeTask({
+          id: uid(),
+          ...data,
+          completed: false,
+          createdAt: Date.now(),
+          order: tasks.length
+        });
+        tasks.push(t);
+      }
+      resetForm();
+      saveTasks();
+      render();
+    });
+
+    clearBtn.addEventListener('click', resetForm);
+
+    deleteBtn.addEventListener('click', () => {
+      const id = taskIdEl.value;
+      if(!id) return;
+      if(confirm('Delete this task?')){
+        tasks = tasks.filter(t => t.id !== id);
+        saveTasks();
+        resetForm();
+        render();
+      }
+    });
+
+    function resetForm(){
+      taskIdEl.value = '';
+      titleEl.value = '';
+      descEl.value = '';
+      dueEl.value = '';
+      priorityEl.value = 'medium';
+      tagsEl.value = '';
+      saveBtn.textContent = 'Add task';
+      deleteBtn.style.display='none';
+    }
+
+    function loadIntoForm(id){
+      const t = tasks.find(x=>x.id===id);
+      if(!t) return;
+      taskIdEl.value = t.id;
+      titleEl.value = t.title;
+      descEl.value = t.desc;
+      dueEl.value = t.due || '';
+      priorityEl.value = t.priority || 'medium';
+      tagsEl.value = (t.tags || []).join(', ');
+      saveBtn.textContent = 'Save changes';
+      deleteBtn.style.display='';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function quickEdit(id){
+      loadIntoForm(id);
+      titleEl.focus();
+    }
+
+    [searchEl, filterPriorityEl, sortByEl, showCompletedEl].forEach(el => el.addEventListener('input', render));
+    clearCompletedBtn.addEventListener('click', () => {
+      if(confirm('Remove all completed tasks?')){
+        tasks = tasks.filter(t => !t.completed);
+        saveTasks(); render();
+      }
+    });
+
+    exportBtn.addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(tasks, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'tasks-civic-watch.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    importBtn.addEventListener('click', () => importFileEl.click());
+    importFileEl.addEventListener('change', async (e) => {
+      const f = e.target.files[0]; if(!f) return;
+      try{
+        const txt = await f.text();
+        const imported = JSON.parse(txt);
+        if(!Array.isArray(imported)) throw new Error('Invalid file');
+        const normalized = imported.map(normalizeTask);
+        const existingIds = new Set(tasks.map(t=>t.id));
+        normalized.forEach(t => { if(!existingIds.has(t.id)) tasks.push(t); });
+        tasks.forEach((t,i)=>t.order = i);
+        saveTasks(); render();
+        alert('Import successful');
+      }catch(err){
+        console.error(err);
+        alert('Failed to import file: ' + err.message);
+      } finally {
+        importFileEl.value = '';
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if(e.key.toLowerCase() === 'n' && !e.metaKey && !e.ctrlKey && !e.altKey){
+        e.preventDefault();
+        resetForm();
+        titleEl.focus();
+      }
+    });
+
+    window.addEventListener('beforeunload', () => saveTasks());
+
+    render();
+
+    window.TaskManager = {
+      tasks, save: saveTasks, load: () => (tasks = loadTasks(), render())
+    };
+  </script>
+</body>
+</html>

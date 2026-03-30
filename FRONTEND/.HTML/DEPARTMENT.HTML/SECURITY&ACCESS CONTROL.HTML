@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang=”en”>
+<head>
+  <meta charset=”UTF-8” />
+  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <title>Security & Access Control | CivicWatch</title>
+  <style>
+    Body {
+      Margin: 0;
+      Font-family: ‘Segoe UI’, sans-serif;
+      Background-color: #111B21;
+      Color: #FFFFFF;
+    }
+
+    Header {
+      Background-color: #25D366;
+      Padding: 20px;
+      Text-align: center;
+    }
+
+    Header h1 {
+      Margin: 0;
+      Color: #111B21;
+    }
+
+    Nav {
+      Background-color: #1A1A1A;
+      Padding: 15px;
+      Display: flex;
+      Justify-content: center;
+      Flex-wrap: wrap;
+      Gap: 20px;
+    }
+
+    Nav a {
+      Color: #25D366;
+      Text-decoration: none;
+      Font-weight: bold;
+    }
+
+    Nav a:hover {
+      Text-decoration: underline;
+    }
+
+    Main {
+      Padding: 30px;
+      Max-width: 1000px;
+      Margin: auto;
+    }
+
+    Section {
+      Background-color: #1F2C34;
+      Padding: 25px;
+      Border-radius: 8px;
+      Margin-bottom: 30px;
+    }
+
+    Section h2 {
+      Color: #25D366;
+      Margin-top: 0;
+    }
+
+    Label {
+      Display: block;
+      Margin-top: 15px;
+      Font-weight: bold;
+      Color: #25D366;
+    }
+
+    Input, select {
+      Width: 100%;
+      Padding: 10px;
+      Margin-top: 5px;
+      Border: none;
+      Border-radius: 4px;
+      Background-color: #263238;
+      Color: #FFFFFF;
+    }
+
+    Button {
+      Margin-top: 20px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border: none;
+      Border-radius: 4px;
+      Font-weight: bold;
+      Cursor: pointer;
+    }
+
+    Button:hover {
+      Background-color: #1EB980;
+    }
+
+    .log-entry {
+      Background-color: #263238;
+      Padding: 10px;
+      Border-radius: 4px;
+      Margin-bottom: 10px;
+      Font-size: 0.9em;
+      Color: #CCCCCC;
+    }
+
+    .debug-panel {
+      Display: none;
+      Background-color: #FF5252;
+      Color: #111B21;
+      Padding: 10px;
+      Border-radius: 4px;
+      Margin-top: 15px;
+      Font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Security & Access Control</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Login Credentials</h2>
+      <form id=”credentials-form”>
+        <label for=”username”>Username</label>
+        <input type=”text” id=”username” value=”dept_head” data-credential=”username” />
+
+        <label for=”password”>New Password</label>
+        <input type=”password” id=”password” placeholder=”Enter new password” data-credential=”password” />
+
+        <button type=”submit”>Update Credentials</button>
+        <div class=”debug-panel” id=”credentials-error”></div>
+      </form>
+    </section>
+
+    <section>
+      <h2>Role-Based Access</h2>
+      <form id=”role-form”>
+        <label for=”staff-name”>Staff Username</label>
+        <input type=”text” id=”staff-name” placeholder=”e.g. j.kimani” data-role-user />
+
+        <label for=”staff-role”>Assign Role</label>
+        <select id=”staff-role” data-role-assign>
+          <option value=”head”>Department Head</option>
+          <option value=”officer”>Officer</option>
+          <option value=”field”>Field Staff</option>
+        </select>
+
+        <button type=”submit”>Assign Role</button>
+        <div class=”debug-panel” id=”role-error”></div>
+      </form>
+    </section>
+
+    <section>
+      <h2>Activity Logs</h2>
+      <div class=”log-entry” data-log>
+        [2025-12-28 09:12] Officer M. Wanjiku updated status of Report #RPT-1023 to “In Progress”
+      </div>
+      <div class=”log-entry” data-log>
+        [2025-12-27 16:45] Field Staff J. Kiptoo uploaded after photo for Report #RPT-1017
+      </div>
+      <div class=”log-entry” data-log>
+        [2025-12-27 10:30] Department Head updated working hours
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>
+
+
+

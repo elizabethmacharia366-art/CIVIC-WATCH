@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang=”en”>
+<head>
+  <meta charset=”UTF-8” />
+  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <title>Analytics & Performance | CivicWatch</title>
+  <style>
+    body { margin:0;
+      Font-family: ‘Segoe UI’, sans-serif;
+      Background-color: #111B21;
+      Color: #FFFFFF;
+    }
+
+    Header {
+      Background-color: #25D366;
+      Padding: 20px;
+      Text-align: center;
+    }
+
+    Header h1 {
+      Margin: 0;
+      Color: #111B21;
+    }
+
+    Nav {
+      Background-color: #1A1A1A;
+      Padding: 15px;
+      Display: flex;
+      Justify-content: center;
+      Flex-wrap: wrap;
+      Gap: 20px;
+    }
+
+    Nav a {
+      Color: #25D366;
+      Text-decoration: none;
+      Font-weight: bold;
+    }
+
+    Nav a:hover {
+      Text-decoration: underline;
+    }
+
+    Main {
+      Padding: 30px;
+      Max-width: 1100px;
+      Margin: auto;
+    }
+
+    Section {
+      Background-color: #1F2C34;
+      Padding: 25px;
+      Border-radius: 8px;
+      Margin-bottom: 30px;
+    }
+
+    Section h2 {
+      Color: #25D366;
+      Margin-top: 0;
+    }
+
+    .kpi-grid {
+      Display: flex;
+      Flex-wrap: wrap;
+      Gap: 20px;
+      Margin-bottom: 30px;
+    }
+
+    .kpi-card {
+      Background-color: #263238;
+      Flex: 1 1 200px;
+      Padding: 20px;
+      Border-radius: 6px;
+      Text-align: center;
+    }
+
+    .kpi-card h4 {
+      Margin: 0;
+      Color: #25D366;
+      Font-size: 1em;
+    }
+
+    .kpi-card p {
+      Font-size: 1.8em;
+      Margin: 10px 0 0;
+      Color: #EDEDED;
+    }
+
+    .chart-container {
+      Background-color: #263238;
+      Border-radius: 6px;
+      Padding: 20px;
+      Margin-top: 20px;
+    }
+
+    .chart-container h3 {
+      Color: #25D366;
+      Margin-top: 0;
+    }
+
+    .chart-wrapper { position:relative; width:100%; height:350px }
+    .back-button { display:inline-block; margin-top:30px; background-color:#25D366; color:#111; padding:10px 20px; border-radius:6px; text-decoration:none; font-weight:bold; box-shadow:0 2px 5px rgba(0,0,0,0.3) }
+    .back-button:hover { background-color:#1da851; transform:scale(1.05) }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../../.JS/i18n.js"></script>
+  <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
+</head>
+<body>
+
+  <header>
+    <h1 data-i18n="analytics">Analytics & Performance</h1>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <label for="langSelector" style="color:#111;margin-right:6px;" data-i18n="ui_language">Language</label>
+      <select id="langSelector"><option value="en">English</option><option value="sw">Swahili</option></select>
+    </div>
+  </header>
+  <main>
+    <section>
+      <h2 data-i18n="key_metrics">Key Performance Indicators</h2>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <h4 data-i18n="total_tasks">Total Tasks</h4>
+          <p id="totalTasksKPI">12</p>
+        </div>
+        <div class="kpi-card">
+          <h4 data-i18n="completion_rate">Completion Rate</h4>
+          <p id="completionRateKPI">75%</p>
+        </div>
+        <div class="kpi-card">
+          <h4 data-i18n="on_time_tasks">On-Time Completion</h4>
+          <p id="onTimeKPI">58%</p>
+        </div>
+        <div class="kpi-card">
+          <h4 data-i18n="overdue_tasks">Overdue Tasks</h4>
+          <p id="overdueKPI">2</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 data-i18n="visual_insights">Visual Insights</h2>
+
+      <div class=”chart-container”>
+        <h3 data-i18n="tasks_by_status">Tasks by Status</h3>
+        <div class="chart-wrapper">
+          <canvas id="taskStatusChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <h3 data-i18n="tasks_by_assignee">Tasks by Assignee</h3>
+        <div class="chart-wrapper">
+          <canvas id="taskAssigneeChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <h3 data-i18n="tasks_over_time">Tasks Over Time</h3>
+        <div class="chart-wrapper">
+          <canvas id="taskTimelineChart"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+<div style="text-align:center;">
+    <a href="DASHBOARD.html" class="back-button" data-i18n="back_to_dashboard">← Back to Dashboard</a>
+  </div>
+
+  <script>
+    (async ()=>{ const api='http://localhost:3000/api/departments/analytics'; const demo={kpis:{totalTasks:12,completionRate:75,onTimeCompletion:58,overdueCount:2},tasksByStatus:{'pending':4,'in-progress':5,'completed':3},tasksByAssignee:{'Officer A':5,'Officer B':4,'Officer C':3},taskTimeline:{labels:['Week 1','Week 2','Week 3','Week 4'],data:[2,5,4,1]}};
+      try{const r=await fetch(api);if(!r.ok)throw 0;render(await r.json());}catch(e){render(demo);}
+      function render(d){if(d.kpis){document.getElementById('totalTasksKPI').textContent=d.kpis.totalTasks||12;document.getElementById('completionRateKPI').textContent=(d.kpis.completionRate||75)+'%';document.getElementById('onTimeKPI').textContent=(d.kpis.onTimeCompletion||58)+'%';document.getElementById('overdueKPI').textContent=d.kpis.overdueCount||2;}
+        if(d.tasksByStatus)new Chart(document.getElementById('taskStatusChart'),{type:'doughnut',data:{labels:Object.keys(d.tasksByStatus),datasets:[{data:Object.values(d.tasksByStatus),backgroundColor:['#ff9800','#2196f3','#4caf50']}]},options:{responsive:true,maintainAspectRatio:false}});
+        if(d.tasksByAssignee)new Chart(document.getElementById('taskAssigneeChart'),{type:'bar',data:{labels:Object.keys(d.tasksByAssignee),datasets:[{label:'Tasks',data:Object.values(d.tasksByAssignee),backgroundColor:'#673ab7'}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y'}});
+        if(d.taskTimeline)new Chart(document.getElementById('taskTimelineChart'),{type:'line',data:{labels:d.taskTimeline.labels||['Week 1','Week 2','Week 3','Week 4'],datasets:[{label:'Completed',data:d.taskTimeline.data||[2,5,4,1],borderColor:'#4caf50',backgroundColor:'rgba(76,175,80,0.1)',fill:true}]},options:{responsive:true,maintainAspectRatio:false}});}
+    })();
+  </script>
+</body>
+</html>
+

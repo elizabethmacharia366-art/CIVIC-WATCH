@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang=”en”>
+<head>
+  <meta charset=”UTF-8” />
+  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <title>Submit Report | CivicWatch</title>
+  <style>
+    Body {
+      Margin: 0;
+      Font-family: ‘Segoe UI’, sans-serif;
+      Background-color: #111B21;
+      Color: #FFFFFF;
+    }
+
+    Header {
+      Background-color: #25D366;
+      Padding: 20px;
+      Display: flex;
+      Justify-content: space-between;
+      Align-items: center;
+    }
+
+    Header h1 {
+      Margin: 0;
+      Color: #111B21;
+    }
+
+    #langSelector {
+      Padding: 0.5rem 1rem;
+      Background-color: #111B21;
+      Color: #25D366;
+      Border: 2px solid #25D366;
+      Border-radius: 4px;
+      Font-weight: bold;
+      Cursor: pointer;
+    }
+
+    Nav {
+      Background-color: #1A1A1A;
+      Padding: 15px;
+      Display: flex;
+      Justify-content: center;
+      Flex-wrap: wrap;
+      Gap: 20px;
+    }
+
+    Nav a {
+      Color: #25D366;
+      Text-decoration: none;
+      Font-weight: bold;
+    }
+
+    Nav a:hover {
+      Text-decoration: underline;
+    }
+
+    Main {
+      Padding: 30px;
+      Max-width: 800px;
+      Margin: auto;
+    }
+
+    Section {
+      Background-color: #1F2C34;
+      Padding: 25px;
+      Border-radius: 8px;
+    }
+
+    Section h2 {
+      Color: #25D366;
+      Margin-top: 0;
+    }
+
+    Label {
+      Display: block;
+      Margin-top: 15px;
+      Font-weight: bold;
+      Color: #25D366;
+    }
+
+    Input, textarea, select {
+      Width: 100%;
+      Padding: 10px;
+      Margin-top: 5px;
+      Border: none;
+      Border-radius: 4px;
+      Background-color: #263238;
+      Color: #FFFFFF;
+    }
+
+    Input[type=”file”] {
+      Padding: 5px;
+    }
+
+    Button {
+      Margin-top: 20px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border: none;
+      Border-radius: 4px;
+      Font-weight: bold;
+      Cursor: pointer;
+    }
+
+    Button:hover {
+      Background-color: #1EB980;
+    }
+    .back-button {
+      Display: inline-block;
+      Margin-top: 30px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border-radius: 6px;
+      Text-decoration: none;
+      Font-weight: bold;
+      Box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+  </style>
+  <script src="../../.JS/i18n.js"></script>
+  <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
+</head>
+<body>
+
+  <header>
+    <div style="flex: 1;">
+      <h1 data-i18n="submit_report">Submit a Civic Report</h1>
+    </div>
+    <select id="langSelector">
+      <option value="en">English</option>
+      <option value="sw">Swahili</option>
+    </select>
+  </header>
+
+  
+
+  <main>
+    <section>
+      <h2>Report an Issue</h2>
+      <form action=”submit_success.html” method=”post” enctype=”multipart/form-data”>
+        <label for=”title”>Title of Issue</label>
+        <input type=”text” id=”title” name=”title” required />
+
+        <label for=”description”>Description</label>
+        <textarea id=”description” name=”description” rows=”4” required></textarea>
+
+        <label for=”category”>Category</label>
+        <select id=”category” name=”category” required>
+          <option value=””>-- Select Category --</option>
+          <option value=”roads”>Roads</option>
+          <option value=”water”>Water</option>
+          <option value=”sanitation”>Sanitation</option>
+          <option value=”education”>Education</option>
+          <option value=”other”>Other</option>
+        </select>
+
+        <label for=”location”>Location (optional)</label>
+        <input type=”text” id=”location” name=”location” placeholder=”e.g. GPS coordinates or estate name” />
+     <label>Upload Image</label>
+      <input type="file" />
+
+        <button type=”submit”>Submit Report</button>
+      </form>
+    </section>
+  </main>
+  <div style="text-align: center;">
+        <a href="DASHBOARD.html#DASHBOARD" class="back-button">← Back to Dashboard</a>
+      </div>
+
+</body>
+</html>
+

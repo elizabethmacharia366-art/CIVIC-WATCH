@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang=”en”>
+<head>
+  <meta charset=”UTF-8” />
+  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <title>CivicWatch Admin – Content Management</title>
+  <style>
+    Body {
+      Margin: 0;
+      Font-family: ‘Segoe UI’, sans-serif;
+      Background-color: #111B21;
+      Color: #EDEDED;
+    }
+
+    Header {
+      Background-color: #25D366;
+      Padding: 20px;
+      Text-align: center;
+    }
+
+    Header h1 {
+      Margin: 0;
+      Color: #111B21;
+    }
+
+    Main {
+      Padding: 30px;
+      Max-width: 1000px;
+      Margin: auto;
+    }
+
+    Section {
+      Background-color: #1F2C34;
+      Margin-bottom: 25px;
+      Padding: 20px;
+      Border-radius: 8px;
+    }
+
+    Section h2 {
+      Color: #25D366;
+      Margin-top: 0;
+    }
+
+    .form-group {
+      Margin-bottom: 20px;
+    }
+
+    Label {
+      Display: block;
+      Margin-bottom: 8px;
+      Font-weight: bold;
+    }
+
+    Input[type=”text”],
+    Textarea {
+      Width: 100%;
+      Padding: 10px;
+      Background-color: #263238;
+      Color: #EDEDED;
+      Border: 1px solid #37474F;
+      Border-radius: 4px;
+      Resize: vertical;
+    }
+
+    Button {
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border: none;
+      Border-radius: 6px;
+      Font-weight: bold;
+      Cursor: pointer;
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    Button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+
+    .content-list {
+      Margin-top: 30px;
+    }
+
+    .content-item {
+      Background-color: #263238;
+      Padding: 15px;
+      Border-radius: 6px;
+      Margin-bottom: 15px;
+    }
+
+    .content-item h4 {
+      Margin: 0 0 5px;
+      Color: #25D366;
+    }
+
+    .content-item p {
+      Margin: 0 0 10px;
+    }
+
+    .content-item .actions button {
+      Margin-right: 10px;
+    }
+
+    .back-button {
+      Display: inline-block;
+      Margin-top: 30px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border-radius: 6px;
+      Text-decoration: none;
+      Font-weight: bold;
+      Box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>CivicWatch Admin Panel</h1>
+  </header>
+
+  <main>
+    <section id=”content”>
+      <h2>Content Management</h2>
+      <p>Add, edit, or remove civic articles, FAQs, and community discussions.</p>
+
+      <div class=”form-group”>
+        <label for=”title”>Content Title:</label>
+        <input type=”text” id=”title” placeholder=”e.g. How to Report a Pothole”>
+      </div>
+
+      <div class=”form-group”>
+        <label for=”body”>Content Body:</label>
+        <textarea id=”body” rows=”6” placeholder=”Write the article, guide, or FAQ here…”></textarea>
+      </div>
+
+      <button type=”submit”>Publish Content</button>
+
+      <div class=”content-list”>
+        <div class=”content-item”>
+          <h4>How to Report a Pothole</h4>
+          <p>This guide explains how citizens can submit road-related issues through CivicWatch.</p>
+          <div class=”actions”>
+            <button>Edit</button>
+            <button style="background-color:#FF5252; color:white;">Delete</button>
+          </div>
+        </div>
+        <!—More content items can be added dynamically 
+      </div>
+
+      <div style="text-align: center;">
+        <a href="INDEX.HTML" class="back-button" data-i18n="back_to_index">← Back to Main page</a>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>
+

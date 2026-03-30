@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Department Overview | CivicWatch</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #111B21;
+      color: #FFFFFF;
+    }
+
+    header {
+      background-color: #25D366;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #111B21;
+    }
+
+    nav {
+      background-color: #1A1A1A;
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    nav a {
+      color: #25D366;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      padding: 30px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .overview-box {
+      background-color: #1F2C34;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+    }
+
+    .overview-box h2 {
+      color: #25D366;
+      margin-top: 0;
+    }
+
+    .department-info {
+      margin-bottom: 20px;
+    }
+
+    .department-info h3 {
+      margin: 0;
+      font-size: 1.3em;
+      color: #FFFFFF;
+    }
+
+    .department-info p {
+      margin: 5px 0 0;
+      font-size: 1em;
+      color: #CCCCCC;
+    }
+
+    .stats-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background-color: #263238;
+      flex: 1 1 200px;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .stat-card h4 {
+      margin: 0;
+      color: #25D366;
+      font-size: 1em;
+    }
+
+    .stat-card p {
+      font-size: 1.8em;
+      margin: 10px 0 0;
+      color: #EDEDED;
+    }
+  </style>
+  <script src="../../.JS/i18n.js"></script>
+  <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
+</head>
+<body>
+
+  <header>
+    <h1 data-i18n="department_overview">Department Overview</h1>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <select id="langSelector">
+        <option value="en">English</option>
+        <option value="sw">Swahili</option>
+      </select>
+      <button id="resetAuthBtn" onclick="window.clearAccess && window.clearAccess('department')" style="background:#ffffff;color:#111;padding:6px 8px;border-radius:4px;border:none;font-weight:bold;" data-i18n="reset_auth">Reset Auth</button>
+    </div>
+  </header>
+
+  <nav>
+    <a href="DASHBOARD.HTML" data-i18n="welcome">Overview</a>
+   <a href="ASSIGNED.HTML"data-i18n="assigned_to">Assigned</a>
+    <a href="ASSIGNED_REPORT.HTML" data-i18n="assigned_reports">Assigned Reports</a>
+    <a href="TASKMANAGEMENT.HTML" data-i18n="task_mgmt">Tasks</a>
+    <a href="CITIZEN_COMMUNICATION.HTML" data-i18n="citizen_comm">Communication</a>
+    <a href="EVIDENCE_ATTACHMENTS.HTML" data-i18n="evidence">Evidence</a>
+    <a href="DEPARTMART_MAP.HTML" data-i18n="dept_map">Map</a>
+    <a href="ANALYTICS.HTML" data-i18n="analytics">Analytics</a>
+    <a href="DEPARTMENT_SETTINGS.HTML" data-i18n="dept_settings">Settings</a>
+    <a href="LOGOUT.HTML" style="color: #FF5252;" data-i18n="logout">Logout</a>
+  </nav>
+
+  <main>
+    <div class="overview-box">
+      <h2> Departments</h2>
+      <div class="department-info">
+        <h3>Role:</h3>
+        <p>Responsible for maintaining roads, traffic signage, public transport infrastructure and ensuring safe mobility across the city.</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h4>Total Reports Assigned</h4>
+          <p>3</p>
+        </div>
+        <div class="stat-card">
+          <h4>Pending Cases</h4>
+          <p>1</p>
+        </div>
+        <div class="stat-card">
+          <h4>In-Progress Cases</h4>
+          <p>1</p>
+        </div>
+        <div class="stat-card">
+          <h4>Resolved Cases</h4>
+          <p>0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Avg. Resolution Time</h4>
+          <p>3.2 days</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../../.JS/DEPARTMENT.JS"></script>
+
+</body>
+</html>
+

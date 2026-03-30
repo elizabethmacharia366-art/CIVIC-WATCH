@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang=”en”>
+<head>
+  <meta charset=”UTF-8” />
+  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <title>CivicWatch Admin – Notifications</title>
+  <style>
+    Body {
+      Margin: 0;
+      Font-family: ‘Segoe UI’, sans-serif;
+      Background-color: #111B21;
+      Color: #EDEDED;
+    }
+
+    Header {
+      Background-color: #25D366;
+      Padding: 20px;
+      Text-align: center;
+    }
+
+    Header h1 {
+      Margin: 0;
+      Color: #111B21;
+    }
+
+    Main {
+      Padding: 30px;
+      Max-width: 800px;
+      Margin: auto;
+    }
+
+    Section {
+      Background-color: #1F2C34;
+      Margin-bottom: 25px;
+      Padding: 20px;
+      Border-radius: 8px;
+    }
+
+    Section h2 {
+      Color: #25D366;
+      Margin-top: 0;
+    }
+
+    .form-group {
+      Margin-bottom: 20px;
+    }
+
+    Label {
+      Display: block;
+      Margin-bottom: 8px;
+      Font-weight: bold;
+    }
+
+    Input[type=”text”],
+    Textarea {
+      Width: 100%;
+      Padding: 10px;
+      Background-color: #263238;
+      Color: #EDEDED;
+      Border: 1px solid #37474F;
+      Border-radius: 4px;
+      Resize: vertical;
+    }
+
+    Button {
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border: none;
+      Border-radius: 6px;
+      Font-weight: bold;
+      Cursor: pointer;
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    Button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+
+    .back-button {
+      Display: inline-block;
+      Margin-top: 30px;
+      Background-color: #25D366;
+      Color: #111B21;
+      Padding: 10px 20px;
+      Border-radius: 6px;
+      Text-decoration: none;
+      Font-weight: bold;
+      Box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      Transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .back-button:hover {
+      Background-color: #1DA851;
+      Transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>CivicWatch Admin Panel</h1>
+  </header>
+
+  <main>
+    <section id=”notifications”>
+      <h2>Notifications & Alerts</h2>
+      <p>Send updates to users and notify them about report status or civic issues.</p>
+
+      <div class=”form-group”>
+        <label for=”recipient”>Send To:</label>
+        <input type=”text” id=”recipient” placeholder=”e.g. All Users, User ID, Region”>
+      </div>
+
+      <div class=”form-group”>
+        <label for=”subject”>Subject:</label>
+        <input type=”text” id=”subject” placeholder=”e.g. Report Update, New Civic Alert”>
+      </div>
+
+      <div class=”form-group”>
+        <label for=”message”>Message:</label>
+        <textarea id=”message” rows=”5” placeholder=”Type your notification message here…”></textarea>
+      </div>
+
+      <button type=”submit”>Send Notification</button>
+
+      <div style="text-align: center;">
+              </div>
+      <div style="text-align: center;">
+        <a href="INDEX.HTML" class="back-button" data-i18n="back_to_index">← Back to Main page</a>
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>
+
