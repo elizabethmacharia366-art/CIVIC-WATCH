@@ -1,4 +1,263 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Department Profile | CivicWatch</title>
-<style>header{display:flex;justify-content:space-between;align-items:center}main{max-width:720px}.profile-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.profile-meta div{padding:13px;border:1px solid #2c5360;border-radius:9px}.profile-meta strong{display:block;color:#38df8a}form{margin-top:22px;display:grid;gap:12px}.profile-message{min-height:24px}</style></head>
-<body data-role="department"><header><h1>Department Profile</h1><a href="DASHBOARD.HTML">Dashboard</a></header><main><section><h2>Your account</h2><div class="profile-meta"><div><strong>Role</strong><span id="profileRole"></span></div><div><strong>Username</strong><span id="profileUsername"></span></div></div><form id="profileForm"><label>Display name<input name="name" required></label><label>Email<input name="email" type="email"></label><label>Phone<input name="phone" type="tel"></label><button type="submit">Save profile</button><p id="profileMessage" class="profile-message" aria-live="polite"></p></form></section></main><script src="../../.JS/profile.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Department Profile | CivicWatch</title>
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <style>
+    .profile-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .profile-header {
+      background: var(--cw-surface);
+      border: 1px solid var(--cw-border);
+      border-radius: 16px;
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+    
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cw-accent), var(--cw-accent-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #111b21;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    }
+    
+    .profile-info h1 {
+      margin: 0 0 0.5rem 0;
+      color: var(--cw-accent);
+      font-size: 2rem;
+    }
+    
+    .profile-info .role-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      background: rgba(37, 211, 102, 0.15);
+      color: var(--cw-accent);
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .profile-info .username {
+      color: var(--cw-muted);
+      font-size: 1rem;
+    }
+    
+    .profile-sections {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    .profile-section {
+      background: var(--cw-surface);
+      border: 1px solid var(--cw-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    }
+    
+    .profile-section h3 {
+      margin: 0 0 1.5rem 0;
+      color: var(--cw-accent);
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .profile-section h3::before {
+      content: '';
+      width: 4px;
+      height: 24px;
+      background: var(--cw-accent);
+      border-radius: 2px;
+    }
+    
+    .info-grid {
+      display: grid;
+      gap: 1rem;
+    }
+    
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 1rem;
+      background: var(--cw-bg);
+      border-radius: 8px;
+      border: 1px solid var(--cw-border);
+    }
+    
+    .info-item label {
+      color: var(--cw-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    .info-item span {
+      color: var(--cw-text);
+      font-weight: 600;
+    }
+    
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--cw-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background: var(--cw-bg);
+      border: 1px solid var(--cw-border);
+      border-radius: 8px;
+      color: var(--cw-text);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--cw-accent);
+      box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+    }
+    
+    .save-button {
+      width: 100%;
+      padding: 1rem;
+      background: var(--cw-accent);
+      color: #111b21;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+    
+    .save-button:hover {
+      background: var(--cw-accent-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    }
+    
+    .profile-message {
+      min-height: 24px;
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 500;
+    }
+    
+    .profile-message.success {
+      background: rgba(37, 211, 102, 0.15);
+      color: var(--cw-accent);
+    }
+    
+    .profile-message.error {
+      background: rgba(239, 83, 80, 0.15);
+      color: var(--cw-danger);
+    }
+    
+    @media (max-width: 768px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .profile-sections {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="dashboard dashboard--department">
+  <header>
+    <h1>Department Profile</h1>
+    <a href="DASHBOARD.HTML" style="color: var(--cw-accent); text-decoration: none; font-weight: 600;">← Back to Dashboard</a>
+  </header>
+  
+  <main class="profile-container">
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar">D</div>
+      <div class="profile-info">
+        <h1 id="profileName">Department User</h1>
+        <span class="role-badge" id="profileRole">Department</span>
+        <p class="username">@<span id="profileUsername">publicworks</span></p>
+      </div>
+    </div>
+    
+    <div class="profile-sections">
+      <div class="profile-section">
+        <h3>Account Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Role</label>
+            <span id="displayRole">Department</span>
+          </div>
+          <div class="info-item">
+            <label>Username</label>
+            <span id="displayUsername">publicworks</span>
+          </div>
+          <div class="info-item">
+            <label>Email</label>
+            <span id="displayEmail">publicworks@civicwatch.local</span>
+          </div>
+          <div class="info-item">
+            <label>Phone</label>
+            <span id="displayPhone">+254723456789</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="profile-section">
+        <h3>Edit Profile</h3>
+        <form id="profileForm">
+          <div class="form-group">
+            <label for="name">Display Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone">
+          </div>
+          <button type="submit" class="save-button">Save Changes</button>
+          <p id="profileMessage" class="profile-message" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </main>
+  
+  <script src="../../.JS/profile.js"></script>
+</body>
+</html>
