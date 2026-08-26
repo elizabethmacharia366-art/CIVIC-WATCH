@@ -58,7 +58,7 @@ class DepartmentModule {
     }
     this.showNotification('Access denied', 'error');
     // If denied, redirect to index
-    window.location.href = 'INDEX.HTML';
+    window.location.href = '/';
     return false;
   }
 

@@ -58,7 +58,7 @@ class AdminModule {
       console.error('Password check failed', e);
     }
     this.showNotification('Access denied', 'error');
-    window.location.href = 'INDEX.HTML';
+    window.location.href = '/';
     return false;
   }
 
@@ -635,7 +635,9 @@ class AdminModule {
   }
 
   redirectToLogin() {
-    window.location.href = 'INDEX.HTML';
+    // The Admin dashboard has no dedicated login page. Redirecting to
+    // INDEX.HTML reloads this same page forever when a session is missing.
+    window.location.href = '/';
   }
 
   logout() {

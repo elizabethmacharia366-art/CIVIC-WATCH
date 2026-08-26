@@ -1,0 +1,82 @@
+:root {
+  --cw-bg: #08141b;
+  --cw-surface: #10242d;
+  --cw-surface-raised: #17333e;
+  --cw-border: #2a4b58;
+  --cw-text: #edf7f4;
+  --cw-muted: #a9c0c5;
+  --cw-accent: #37df88;
+}
+
+.dashboard {
+  min-height: 100vh;
+  background: radial-gradient(circle at top right, #183e41 0, var(--cw-bg) 45%);
+  color: var(--cw-text);
+}
+
+.dashboard header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px clamp(20px, 4vw, 56px);
+  text-align: left;
+  background: linear-gradient(110deg, #36d981, #20b96d);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .22);
+}
+
+.dashboard header h1 { font-size: clamp(1.3rem, 2.2vw, 2rem); letter-spacing: -.02em; }
+.dashboard #langSelector, .dashboard button { min-height: 38px; border-radius: 8px; }
+
+.dashboard nav {
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 12px clamp(20px, 4vw, 56px);
+  background: rgba(9, 25, 32, .96);
+  border-bottom: 1px solid var(--cw-border);
+}
+
+.dashboard nav a {
+  padding: 9px 11px;
+  border-radius: 7px;
+  color: #bcebd3;
+  transition: color .18s ease, background-color .18s ease;
+}
+
+.dashboard nav a:hover, .dashboard nav a:focus-visible { color: #062313; background: var(--cw-accent); outline: none; }
+.dashboard main { max-width: 1240px; padding: clamp(20px, 4vw, 44px); }
+
+.dashboard section, .dashboard .overview-box {
+  background: rgba(16, 36, 45, .94);
+  border: 1px solid var(--cw-border);
+  border-radius: 14px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, .16);
+}
+
+.dashboard .metrics, .dashboard .stats-grid, .dashboard .dashboardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.dashboard .metric, .dashboard .stat-card, .dashboard .statCard {
+  min-height: 126px;
+  padding: 19px;
+  border: 1px solid var(--cw-border);
+  border-radius: 12px;
+  background: linear-gradient(145deg, #1a3b47, var(--cw-surface-raised));
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.dashboard .metric h3, .dashboard .stat-card h4, .dashboard .statCard h3 { color: var(--cw-muted); font-size: .9rem; }
+.dashboard .metric p, .dashboard .stat-card p, .dashboard .statValue { color: var(--cw-accent); font-size: 2rem; font-weight: 750; }
+.dashboard .report-table { overflow-x: auto; }
+.dashboard table { min-width: 680px; }
+.dashboard canvas { box-sizing: border-box; max-width: 100%; height: auto; }
+
+@media (max-width: 640px) {
+  .dashboard header { align-items: flex-start; flex-direction: column; }
+  .dashboard nav { max-height: 45vh; overflow-y: auto; }
+  .dashboard .metrics, .dashboard .stats-grid, .dashboard .dashboardGrid { grid-template-columns: 1fr; }
+}
