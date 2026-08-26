@@ -69,7 +69,20 @@ async function api(req, res, pathname) {
     return json(res, 200, { token: createToken(user), user: sanitizeUser(user) });
   }
   if (resource === 'current-user') return current ? json(res, 200, sanitizeUser(current)) : json(res, 401, { error: 'Sign in required' });
-  if (resource === 'dashboard') return json(res, 200, { ...stats(), recentReports: store.reports.slice(-5), recentTasks: store.tasks.slice(-5) });
+  if (resource === 'dashboard') {
+    const pendingReviews = store.reports.filter(report => !['Resolved', 'Approved', 'Rejected'].includes(report.status)).length;
+    return json(res, 200, {
+      ...stats(),
+      totalUsers: store.users.length,
+      activeSubmissions: pendingReviews,
+      departmentCount: store.departments.length,
+      pendingReviews,
+      systemHealth: 'Operational',
+      userGrowth: '+0%',
+      recentReports: store.reports.slice(-5),
+      recentTasks: store.tasks.slice(-5)
+    });
+  }
   if (pathname === '/api/analytics/stats' || pathname === '/api/statistics/department') return json(res, 200, stats());
   if (pathname === '/api/departments' && method === 'GET') return json(res, 200, store.departments);
   if (pathname === '/api/departments' && method === 'POST') { const item = { id: id(), ...input }; store.departments.push(item); saveStore(); return json(res, 201, item); }

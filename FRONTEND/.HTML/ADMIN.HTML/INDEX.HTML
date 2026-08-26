@@ -91,6 +91,34 @@
       font-size: 1.2em;
     }
 
+    .dashboardGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 20px;
+    }
+
+    .statCard {
+      min-height: 120px;
+      padding: 20px;
+      border-radius: 8px;
+      background: #263238;
+      border: 1px solid #38505b;
+      box-sizing: border-box;
+    }
+
+    .statCard h3 {
+      margin: 0;
+      color: #25D366;
+      font-size: 1rem;
+    }
+
+    .statValue {
+      margin: 18px 0 0;
+      color: #FFFFFF;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
     canvas {
       background-color: #1F2C34;
       border-radius: 6px;
