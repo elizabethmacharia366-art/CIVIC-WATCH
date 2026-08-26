@@ -6,11 +6,26 @@ const crypto = require('node:crypto');
 const root = __dirname;
 const frontend = path.join(root, 'FRONTEND');
 const storeFile = path.join(root, 'data', 'store.json');
+
+function hashPassword(password, salt = crypto.randomBytes(16).toString('hex')) {
+  return `${salt}:${crypto.scryptSync(password, salt, 64).toString('hex')}`;
+}
+
 const initialStore = {
-  users: [],
+  users: [
+    { id: 'admin', username: 'admin', passwordHash: hashPassword('admin123'), role: 'admin', name: 'Elizabeth Macharia', email: 'admin@civicwatch.local', phone: '+254712345678' },
+    { id: 'department', username: 'publicworks', passwordHash: hashPassword('dept123'), role: 'department', name: 'James Omondi', email: 'publicworks@civicwatch.local', phone: '+254723456789' },
+    { id: 'citizen1', username: 'citizen1', passwordHash: hashPassword('citizen123'), role: 'citizen', name: 'Mary Wanjiku', email: 'citizen1@example.com', phone: '+254734567890' },
+    { id: 'citizen2', username: 'citizen2', passwordHash: hashPassword('citizen123'), role: 'citizen', name: 'David Kamau', email: 'citizen2@example.com', phone: '+254745678901' }
+  ],
   reports: [],
   tasks: [],
-  departments: [{ id: 'public-works', name: 'Public Works', description: 'Roads, lighting and sanitation' }],
+  departments: [
+    { id: 'public-works', name: 'Nairobi City Public Works', description: 'Roads, lighting and sanitation' },
+    { id: 'health', name: 'County Health Department', description: 'Public health and sanitation inspections' },
+    { id: 'water', name: 'Nairobi Water & Sewerage Company', description: 'Water supply and sewerage management' },
+    { id: 'planning', name: 'Nairobi Metropolitan Services', description: 'City planning and zoning regulations' }
+  ],
   notifications: [],
   content: [],
   feedback: [],
