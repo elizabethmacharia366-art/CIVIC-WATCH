@@ -3,163 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CivicWatch Admin Dashboard</title>
+  <title>Admin Dashboard | CivicWatch</title>
   <link rel="stylesheet" href="/styles/dashboard.css">
-  <style>
-    body {
-      margin: 0;
-      background-color: #111B21;
-      color: #FFFFFF;
-    }
-
-    header {
-      background-color: #25D366;
-      padding: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    header h1 {
-      margin: 0;
-      color: #111B21;
-    }
-
-    nav {
-      background-color: #1A1A1A;
-      padding: 15px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    nav a {
-      color: #25D366;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    main {
-      padding: 30px;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    section {
-      background-color: #1F2C34;
-      margin-bottom: 25px;
-      padding: 20px;
-      border-radius: 8px;
-    }
-
-    section h2 {
-      color: #25D366;
-      margin-top: 0;
-    }
-
-    .metrics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    .metric {
-      background-color: #263238;
-      padding: 15px;
-      border-radius: 6px;
-      flex: 1 1 200px;
-      text-decoration: none;
-      color: #EDEDED;
-      transition: background-color 0.3s ease;
-    }
-
-    .metric:hover {
-      background-color: #2E3B40;
-    }
-
-    .metric h3 {
-      margin: 0;
-      color: #25D366;
-    }
-
-    .metric p {
-      font-size: 1.2em;
-    }
-
-    .dashboardGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 20px;
-    }
-
-    .statCard {
-      min-height: 120px;
-      padding: 20px;
-      border-radius: 8px;
-      background: #263238;
-      border: 1px solid #38505b;
-      box-sizing: border-box;
-    }
-
-    .statCard h3 {
-      margin: 0;
-      color: #25D366;
-      font-size: 1rem;
-    }
-
-    .statValue {
-      margin: 18px 0 0;
-      color: #FFFFFF;
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-
-    canvas {
-      background-color: #1F2C34;
-      border-radius: 6px;
-      padding: 10px;
-      margin-top: 30px;
-    }
-  </style>
+  <link rel="stylesheet" href="/styles/system.css">
   <script src="../../.JS/i18n.js"></script>
   <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
- 
-
-  </head>
+</head>
 <body class="dashboard dashboard--admin">
 
   <header>
-    <h1 data-i18n="admin_dashboard">CivicWatch Admin Dashboard</h1>
-    <div style="display:flex;gap:8px;align-items:center;">
-      <label for="langSelector" style="color:#111;margin-right:6px;" data-i18n="ui_language">Language</label>
-      <select id="langSelector">
+    <h1 data-i18n="admin_dashboard">Admin Dashboard</h1>
+    <div style="display:flex;gap:12px;align-items:center;">
+      <select id="langSelector" style="padding: 8px 12px; background: var(--cw-bg); color: var(--cw-text); border: 1px solid var(--cw-border); border-radius: 8px; cursor: pointer;">
         <option value="en">English</option>
         <option value="sw">Swahili</option>
       </select>
-      <button id="resetAuthBtn" onclick="window.clearAccess && window.clearAccess('admin')" style="background:#ffffff;color:#111;padding:6px 8px;border-radius:4px;border:none;font-weight:bold;" data-i18n="reset_auth">Reset Auth</button>
+      <button id="resetAuthBtn" onclick="window.clearAccess && window.clearAccess('admin')" style="background: var(--cw-accent); color: #111b21; padding: 8px 12px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer;">Reset Auth</button>
     </div>
   </header>
 
   <nav>
     <a href="ADMIN_MAP.HTML" data-i18n="adim_map">Admin Map</a>
-    <a href="CONTENT MANAGEMENT.HTML" data-i18n="content_mgmt">content Management</a>
+    <a href="CONTENT MANAGEMENT.HTML" data-i18n="content_mgmt">Content Management</a>
     <a href="USERS MANAGEMENT.HTML" data-i18n="user_mgmt">User Management</a>
     <a href="SUBMISSION MANAGEMET.HTML" data-i18n="submission_mgmt">Submissions</a>
     <a href="NOTIFICATIONS.HTML" data-i18n="notifications">Notifications</a>
     <a href="ANALYTICS.HTML" data-i18n="analytics">Analytics</a>
-    <a href="SETTING.HTML" data-i18n="admin_settings">Setting</a>
+    <a href="SETTING.HTML" data-i18n="admin_settings">Settings</a>
     <a href="PROFILE.HTML">My Profile</a>
-    <a href="LOGOUT.HTML" style="color: #FF5252;" data-i18n="logout">Logout</a>
+    <a href="LOGOUT.HTML" style="color: #ef5350;" data-i18n="logout">Logout</a>
   </nav>
 
   <main>
     <section id="adminDashboard">
-      <h2 data-i18n="dashboard">Dashboard</h2>
+      <h2 data-i18n="dashboard">Overview</h2>
       <div class="metrics">
         <div class="metric">
           <h3 data-i18n="reports_submitted">Reports Submitted</h3>
@@ -180,17 +57,17 @@
       </div>
 
       <div style="margin-top: 40px;">
-        <h3 style="color:#25D366;" data-i18n="reports_by_region">Reports by Region</h3>
+        <h3 data-i18n="reports_by_region">Reports by Region</h3>
         <canvas id="regionChart" width="1000" height="300"></canvas>
       </div>
 
       <div style="margin-top: 40px; display: flex; flex-wrap: wrap; gap: 30px;">
         <div style="flex: 1;">
-          <h3 style="color:#25D366;" data-i18n="report_categories">Report Categories</h3>
+          <h3 data-i18n="report_categories">Report Categories</h3>
           <canvas id="categoryChart" width="400" height="300"></canvas>
         </div>
         <div style="flex: 2;">
-          <h3 style="color:#25D366;" data-i18n="monthly_submissions">Monthly Submissions</h3>
+          <h3 data-i18n="monthly_submissions">Monthly Submissions</h3>
           <canvas id="monthlyChart" width="600" height="300"></canvas>
         </div>
       </div>
