@@ -4,8 +4,63 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard | CivicWatch</title>
-  <link rel="stylesheet" href="/styles/dashboard.css">
   <link rel="stylesheet" href="/styles/system.css">
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <style>
+    :root {
+      --cw-bg: #111b21;
+      --cw-surface: #202c33;
+      --cw-surface-raised: #2a3942;
+      --cw-border: #2a3942;
+      --cw-text: #e9edef;
+      --cw-muted: #8696a0;
+      --cw-accent: #25d366;
+      --cw-accent-dark: #128c7e;
+      --cw-danger: #ef5350;
+    }
+    body {
+      background: var(--cw-bg) !important;
+      color: var(--cw-text) !important;
+    }
+    header {
+      background: var(--cw-surface) !important;
+      border-bottom: 1px solid var(--cw-border) !important;
+    }
+    header h1 {
+      color: var(--cw-accent) !important;
+    }
+    nav {
+      background: var(--cw-surface) !important;
+      border-bottom: 1px solid var(--cw-border) !important;
+    }
+    nav a {
+      color: var(--cw-text) !important;
+    }
+    nav a:hover {
+      background: var(--cw-accent) !important;
+      color: #111b21 !important;
+    }
+    section {
+      background: var(--cw-surface) !important;
+      border: 1px solid var(--cw-border) !important;
+    }
+    section h2, h3 {
+      color: var(--cw-accent) !important;
+    }
+    .metric {
+      background: var(--cw-surface-raised) !important;
+      border: 1px solid var(--cw-border) !important;
+    }
+    .metric h3 {
+      color: var(--cw-muted) !important;
+    }
+    .metric p {
+      color: var(--cw-accent) !important;
+    }
+    canvas {
+      background: var(--cw-surface-raised) !important;
+    }
+  </style>
   <script src="../../.JS/i18n.js"></script>
   <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
 </head>
