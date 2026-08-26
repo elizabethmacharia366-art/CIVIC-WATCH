@@ -98,8 +98,17 @@ function collection(req, res, input, items, name, current, hidePasswords = false
   return json(res, 200, hidePasswords ? sanitizeUser(item) : item);
 }
 function serveFile(res, pathname) {
-  const requested = pathname === '/' ? '/.HTML/PUBLIC.HTML' : pathname;
-  const file = path.resolve(frontend, `.${requested}`);
+  let requested = pathname === '/' ? '/.HTML/PUBLIC.HTML' : pathname;
+  // The original pages live in the hidden `.HTML` directory. Keep their
+  // short, user-facing URLs working as well as the on-disk paths.
+  if (/^\/(ADMIN\.HTML|DEPARTMENT\.HTML|CITIZEN\.HTML)\//.test(requested)) {
+    requested = `/.HTML${requested}`;
+  }
+  let file = path.resolve(frontend, `.${requested}`);
+  // PUBLIC.HTML refers to its image assets from the site root.
+  if (!fs.existsSync(file) && requested.split('/').filter(Boolean).length === 1) {
+    file = path.resolve(frontend, `.HTML/${requested}`);
+  }
   if (!file.startsWith(frontend) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return json(res, 404, { error: 'Not found' });
   const type = path.extname(file).toLowerCase() === '.html' ? 'text/html' : path.extname(file).toLowerCase() === '.js' ? 'application/javascript' : path.extname(file).toLowerCase() === '.json' ? 'application/json' : path.extname(file).toLowerCase() === '.png' ? 'image/png' : 'application/octet-stream';
   res.writeHead(200, { 'Content-Type': `${type}; charset=utf-8` }); fs.createReadStream(file).pipe(res);
