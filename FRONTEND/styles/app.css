@@ -1,0 +1,9 @@
+/* Shared CivicWatch typography: matches the common sign-in page. */
+html, body, button, input, select, textarea, option {
+  font-family: Georgia, 'Times New Roman', serif !important;
+  font-style: italic;
+}
+
+button, input, select, textarea { letter-spacing: .01em; }
+
+button, a { font-weight: 600; }

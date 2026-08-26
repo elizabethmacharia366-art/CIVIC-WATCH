@@ -134,8 +134,14 @@ function serveFile(res, pathname) {
     file = path.resolve(frontend, `.HTML/${requested}`);
   }
   if (!file.startsWith(frontend) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return json(res, 404, { error: 'Not found' });
-  const type = path.extname(file).toLowerCase() === '.html' ? 'text/html' : path.extname(file).toLowerCase() === '.js' ? 'application/javascript' : path.extname(file).toLowerCase() === '.json' ? 'application/json' : path.extname(file).toLowerCase() === '.png' ? 'image/png' : 'application/octet-stream';
-  res.writeHead(200, { 'Content-Type': `${type}; charset=utf-8` }); fs.createReadStream(file).pipe(res);
+  const isHtml = path.extname(file).toLowerCase() === '.html';
+  const type = isHtml ? 'text/html' : path.extname(file).toLowerCase() === '.js' ? 'application/javascript' : path.extname(file).toLowerCase() === '.json' ? 'application/json' : path.extname(file).toLowerCase() === '.png' ? 'image/png' : 'application/octet-stream';
+  res.writeHead(200, { 'Content-Type': `${type}; charset=utf-8` });
+  if (isHtml) {
+    const html = fs.readFileSync(file, 'utf8').replace('</head>', '  <link rel="stylesheet" href="/styles/app.css">\n</head>');
+    return res.end(html);
+  }
+  fs.createReadStream(file).pipe(res);
 }
 const server = http.createServer(async (req, res) => {
   const pathname = new URL(req.url, 'http://localhost').pathname;
