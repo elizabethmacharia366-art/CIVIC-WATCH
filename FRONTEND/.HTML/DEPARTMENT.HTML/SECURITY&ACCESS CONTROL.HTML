@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang=”en”>
+<html lang="en">
 <head>
-  <meta charset=”UTF-8” />
-  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Security & Access Control | CivicWatch</title>
   <style>
     Body {
@@ -121,45 +121,45 @@
   <main>
     <section>
       <h2>Login Credentials</h2>
-      <form id=”credentials-form”>
-        <label for=”username”>Username</label>
-        <input type=”text” id=”username” value=”dept_head” data-credential=”username” />
+      <form id="credentials-form">
+        <label for="username">Username</label>
+        <input type="text" id="username" value="dept_head" data-credential="username" />
 
-        <label for=”password”>New Password</label>
-        <input type=”password” id=”password” placeholder=”Enter new password” data-credential=”password” />
+        <label for="password">New Password</label>
+        <input type="password" id="password" placeholder="Enter new password" data-credential="password" />
 
-        <button type=”submit”>Update Credentials</button>
-        <div class=”debug-panel” id=”credentials-error”></div>
+        <button type="submit">Update Credentials</button>
+        <div class="debug-panel" id="credentials-error"></div>
       </form>
     </section>
 
     <section>
       <h2>Role-Based Access</h2>
-      <form id=”role-form”>
-        <label for=”staff-name”>Staff Username</label>
-        <input type=”text” id=”staff-name” placeholder=”e.g. j.kimani” data-role-user />
+      <form id="role-form">
+        <label for="staff-name">Staff Username</label>
+        <input type="text" id="staff-name" placeholder="e.g. j.kimani" data-role-user />
 
-        <label for=”staff-role”>Assign Role</label>
-        <select id=”staff-role” data-role-assign>
-          <option value=”head”>Department Head</option>
-          <option value=”officer”>Officer</option>
-          <option value=”field”>Field Staff</option>
+        <label for="staff-role">Assign Role</label>
+        <select id="staff-role" data-role-assign>
+          <option value="head">Department Head</option>
+          <option value="officer">Officer</option>
+          <option value="field">Field Staff</option>
         </select>
 
-        <button type=”submit”>Assign Role</button>
-        <div class=”debug-panel” id=”role-error”></div>
+        <button type="submit">Assign Role</button>
+        <div class="debug-panel" id="role-error"></div>
       </form>
     </section>
 
     <section>
       <h2>Activity Logs</h2>
-      <div class=”log-entry” data-log>
-        [2025-12-28 09:12] Officer M. Wanjiku updated status of Report #RPT-1023 to “In Progress”
+      <div class="log-entry" data-log>
+        [2025-12-28 09:12] Officer M. Wanjiku updated status of Report #RPT-1023 to "In Progress"
       </div>
-      <div class=”log-entry” data-log>
+      <div class="log-entry" data-log>
         [2025-12-27 16:45] Field Staff J. Kiptoo uploaded after photo for Report #RPT-1017
       </div>
-      <div class=”log-entry” data-log>
+      <div class="log-entry" data-log>
         [2025-12-27 10:30] Department Head updated working hours
       </div>
     </section>

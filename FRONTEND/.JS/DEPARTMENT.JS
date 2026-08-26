@@ -6,7 +6,7 @@ class DepartmentModule {
     this.departments = [];
     this.reports = [];
     this.init();
-    window.clearAccess = () => { localStorage.removeItem('authToken'); localStorage.removeItem('currentUser'); location.assign('/login.html?role=department'); };
+    window.clearAccess = async () => { await fetch('/api/logout', { method: 'POST' }); localStorage.removeItem('authToken'); localStorage.removeItem('currentUser'); location.assign('/login.html?role=department'); };
   }
 
   init() {
@@ -447,6 +447,7 @@ class DepartmentModule {
   }
 
   logout() {
+    fetch('/api/logout', { method: 'POST' });
     localStorage.removeItem('authToken');
     localStorage.removeItem('cw_access_admin');
     localStorage.removeItem('cw_access_department');

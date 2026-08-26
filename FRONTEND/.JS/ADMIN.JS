@@ -6,7 +6,7 @@ class AdminModule {
     this.users = [];
     this.submissions = [];
     this.init();
-    window.clearAccess = () => { localStorage.removeItem('authToken'); localStorage.removeItem('currentUser'); location.assign('/login.html?role=admin'); };
+    window.clearAccess = async () => { await fetch('/api/logout', { method: 'POST' }); localStorage.removeItem('authToken'); localStorage.removeItem('currentUser'); location.assign('/login.html?role=admin'); };
   }
 
   init() {
@@ -623,6 +623,7 @@ class AdminModule {
   }
 
   logout() {
+    fetch('/api/logout', { method: 'POST' });
     // Remove auth token and any page access flags
     localStorage.removeItem('authToken');
     localStorage.removeItem('cw_access_admin');

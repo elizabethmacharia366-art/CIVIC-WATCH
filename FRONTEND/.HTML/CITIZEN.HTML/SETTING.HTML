@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang=”en”>
+<html lang="en">
 <head>
-  <meta charset=”UTF-8” />
-  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Settings | CivicWatch</title>
   <style>
     Body {
@@ -118,56 +118,56 @@
   <main>
     <section>
       <h2>Profile Information</h2>
-      <form action=”update_profile.html” method=”post”>
-        <label for=”fullName”>Full Name</label>
-        <input type=”text” id=”fullName” name=”fullName” value=”Jane Citizen” required />
+      <form action="update_profile.html" method="post">
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" name="fullName" value="Jane Citizen" required />
 
-        <label for=”email”>Email Address</label>
-        <input type=”email” id=”email” name=”email” value=jane@example.com required />
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" value=jane@example.com required />
 
-        <label for=”phone”>Phone Number</label>
-        <input type=”tel” id=”phone” name=”phone” value=”+254700000000” />
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" value="+254700000000" />
 
-        <label for=”ID”>ID Number</label>
-        <input type=”tel” id=”ID” name=”ID” value=”34000000” />
+        <label for="ID">ID Number</label>
+        <input type="tel" id="ID" name="ID" value="34000000" />
 
 
-        <button type=”submit”>Update Profile</button>
+        <button type="submit">Update Profile</button>
       </form>
     </section>
 
     <section>
       <h2>Notification Preferences</h2>
-      <form action=”update_notifications.html” method=”post”>
-        <label for=”notifyReports”>Report Status Updates</label>
-        <select id=”notifyReports” name=”notifyReports”>
-          <option value=”enabled” selected>Enabled</option>
-          <option value=”disabled”>Disabled</option>
+      <form action="update_notifications.html" method="post">
+        <label for="notifyReports">Report Status Updates</label>
+        <select id="notifyReports" name="notifyReports">
+          <option value="enabled" selected>Enabled</option>
+          <option value="disabled">Disabled</option>
         </select>
 
-        <label for=”notifyNews”>Civic News & Alerts</label>
-        <select id=”notifyNews” name=”notifyNews”>
-          <option value=”enabled”>Enabled</option>
-          <option value=”disabled” selected>Disabled</option>
+        <label for="notifyNews">Civic News & Alerts</label>
+        <select id="notifyNews" name="notifyNews">
+          <option value="enabled">Enabled</option>
+          <option value="disabled" selected>Disabled</option>
         </select>
 
-        <button type=”submit”>Save Preferences</button>
+        <button type="submit">Save Preferences</button>
       </form>
     </section>
 
     <section>
       <h2>Change Password</h2>
-      <form action=”change_password.html” method=”post”>
-        <label for=”currentPassword”>Current Password</label>
-        <input type=”password” id=”currentPassword” name=”currentPassword” required />
+      <form action="change_password.html" method="post">
+        <label for="currentPassword">Current Password</label>
+        <input type="password" id="currentPassword" name="currentPassword" required />
 
-        <label for=”newPassword”>New Password</label>
-        <input type=”password” id=”newPassword” name=”newPassword” required />
+        <label for="newPassword">New Password</label>
+        <input type="password" id="newPassword" name="newPassword" required />
 
-        <label for=”confirmPassword”>Confirm New Password</label>
-        <input type=”password” id=”confirmPassword” name=”confirmPassword” required />
+        <label for="confirmPassword">Confirm New Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required />
 
-        <button type=”submit”>Update Password</button>
+        <button type="submit">Update Password</button>
       </form>
     </section>
   </main>

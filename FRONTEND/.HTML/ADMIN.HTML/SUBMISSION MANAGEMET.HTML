@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang=”en”>
+<html lang="en">
 <head>
-  <meta charset=”UTF-8” />
-  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CivicWatch Admin – Reports Management</title>
   <style>
     Body {
@@ -126,18 +126,18 @@
   </header>
 
   <main>
-    <section id=”reports”>
+    <section id="reports">
       <h2>Reports and Submissions Management</h2>
       <p>Review, filter and manage all civic reports submitted by citizens.</p>
 
       <div style="margin: 20px 0;">
-        <label for=”filter”>Filter by status:</label>
-        <select id=”filter”>
-          <option value=”all”>All</option>
-          <option value=”pending”>Pending</option>
-          <option value=”approved”>Approved</option>
-          <option value=”resolved”>Resolved</option>
-          <option value=”rejected”>Rejected</option>
+        <label for="filter">Filter by status:</label>
+        <select id="filter">
+          <option value="all">All</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="resolved">Resolved</option>
+          <option value="rejected">Rejected</option>
         </select>
       </div>
 
@@ -153,20 +153,8 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>RPT-1023</td>
-              <td>Pothole on 5th Avenue</td>
-              <td>Roads</td>
-              <td>2025-12-27</td>
-              <td style="color: #FFC107;"">Pending</td>
-              <td>
-                <button class=”btn btn-approve”>Approve</button>
-                <button class=”btn btn-reject”>Reject</button>
-                <button class=”btn btn-resolve”>Resolve</button>
-              </td>
-            </tr>
-            <!—More rows can be added dynamically 
+          <tbody id="submissionRows">
+            <tr><td colspan="6">Loading submissions…</td></tr>
           </tbody>
         </table>
       </div>
@@ -177,6 +165,6 @@
     </section>
   </main>
 
+  <script src="../../.JS/admin-pages.js"></script>
 </body>
 </html>
-

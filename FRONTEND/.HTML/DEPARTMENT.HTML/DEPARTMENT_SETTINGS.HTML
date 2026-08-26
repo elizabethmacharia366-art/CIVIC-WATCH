@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang=”en”>
+<html lang="en">
 <head>
-  <meta charset=”UTF-8” />
-  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Department Settings | CivicWatch</title>
   <style>
     Body {
@@ -147,53 +147,53 @@
     <section>
       <h2>Department Info</h2>
       <form>
-        <label for=”dept-name”>Department Name</label>
-        <input type=”text” id=”dept-name” value=”Roads & Transport” data-setting=”dept-name” />
+        <label for="dept-name">Department Name</label>
+        <input type="text" id="dept-name" value="Roads & Transport" data-setting="dept-name" />
 
-        <label for=”dept-contact”>Contact Email</label>
-        <input type=”email” id=”dept-contact” value=transport@civicwatch.go.ke data-setting=”dept-contact” />
+        <label for="dept-contact">Contact Email</label>
+        <input type="email" id="dept-contact" value=transport@civicwatch.go.ke data-setting="dept-contact" />
 
-        <label for=”working-hours”>Working Hours</label>
-        <input type=”text” id=”working-hours” value=”Mon–Fri, 8:00 AM – 5:00 PM” data-setting=”working-hours” />
+        <label for="working-hours">Working Hours</label>
+        <input type="text" id="working-hours" value="Mon–Fri, 8:00 AM – 5:00 PM" data-setting="working-hours" />
 
-        <button type=”submit”>Update Info</button>
+        <button type="submit">Update Info</button>
       </form>
     </section>
 
     <section>
       <h2>Staff Accounts</h2>
-      <ul class=”staff-list” data-staff-list>
+      <ul class="staff-list" data-staff-list>
         <li>
           Officer A. Otieno
-          <button data-remove=”A. Otieno”>Remove</button>
+          <button data-remove="A. Otieno">Remove</button>
         </li>
         <li>
           Officer M. Wanjiku
-          <button data-remove=”M. Wanjiku”>Remove</button>
+          <button data-remove="M. Wanjiku">Remove</button>
         </li>
       </ul>
 
-      <label for=”new-staff”>Add New Staff</label>
-      <input type=”text” id=”new-staff” placeholder=”Full name” data-add-staff />
-      <button type=”button”>Add Staff</button>
+      <label for="new-staff">Add New Staff</label>
+      <input type="text" id="new-staff" placeholder="Full name" data-add-staff />
+      <button type="button">Add Staff</button>
     </section>
 
     <section>
       <h2>Notification Preferences</h2>
       <form>
-        <label for=”notify-updates”>Receive Report Updates</label>
-        <select id=”notify-updates” data-setting=”notify-updates”>
-          <option value=”enabled” selected>Enabled</option>
-          <option value=”disabled”>Disabled</option>
+        <label for="notify-updates">Receive Report Updates</label>
+        <select id="notify-updates" data-setting="notify-updates">
+          <option value="enabled" selected>Enabled</option>
+          <option value="disabled">Disabled</option>
         </select>
 
-        <label for=”notify-comments”>Citizen Comments & Replies</label>
-        <select id=”notify-comments” data-setting=”notify-comments”>
-          <option value=”enabled”>Enabled</option>
-          <option value=”disabled” selected>Disabled</option>
+        <label for="notify-comments">Citizen Comments & Replies</label>
+        <select id="notify-comments" data-setting="notify-comments">
+          <option value="enabled">Enabled</option>
+          <option value="disabled" selected>Disabled</option>
         </select>
 
-        <button type=”submit”>Save Preferences</button>
+        <button type="submit">Save Preferences</button>
       </form>
     </section>
   </main>

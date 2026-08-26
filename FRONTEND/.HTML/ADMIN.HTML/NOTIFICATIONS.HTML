@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang=”en”>
+<html lang="en">
 <head>
-  <meta charset=”UTF-8” />
-  <meta name=”viewport” content=”width=device-width, initial-scale=1.0”/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CivicWatch Admin – Notifications</title>
   <style>
     Body {
@@ -51,7 +51,7 @@
       Font-weight: bold;
     }
 
-    Input[type=”text”],
+    Input[type="text"],
     Textarea {
       Width: 100%;
       Padding: 10px;
@@ -104,26 +104,28 @@
   </header>
 
   <main>
-    <section id=”notifications”>
+    <section id="notifications">
       <h2>Notifications & Alerts</h2>
       <p>Send updates to users and notify them about report status or civic issues.</p>
 
-      <div class=”form-group”>
-        <label for=”recipient”>Send To:</label>
-        <input type=”text” id=”recipient” placeholder=”e.g. All Users, User ID, Region”>
+      <form id="notificationForm">
+      <div class="form-group">
+        <label for="recipient">Send To:</label>
+        <input type="text" id="recipient" name="recipient" placeholder="e.g. All Users, User ID, Region" required>
       </div>
 
-      <div class=”form-group”>
-        <label for=”subject”>Subject:</label>
-        <input type=”text” id=”subject” placeholder=”e.g. Report Update, New Civic Alert”>
+      <div class="form-group">
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" placeholder="e.g. Report Update, New Civic Alert" required>
       </div>
 
-      <div class=”form-group”>
-        <label for=”message”>Message:</label>
-        <textarea id=”message” rows=”5” placeholder=”Type your notification message here…”></textarea>
+      <div class="form-group">
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" rows="5" placeholder="Type your notification message here…" required></textarea>
       </div>
 
-      <button type=”submit”>Send Notification</button>
+      <button type="submit">Send Notification</button>
+      </form>
 
       <div style="text-align: center;">
               </div>
@@ -133,6 +135,6 @@
     </section>
   </main>
 
+  <script src="../../.JS/admin-pages.js"></script>
 </body>
 </html>
-

@@ -12,12 +12,15 @@ const initialStore = {
   tasks: [],
   departments: [{ id: 'public-works', name: 'Public Works', description: 'Roads, lighting and sanitation' }],
   notifications: [],
+  content: [],
   feedback: [],
   locations: []
 };
 let store = loadStore();
 ensureSeedUsers();
-const tokens = new Map();
+upgradePasswordStorage();
+const sessionSecret = process.env.CIVIC_SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+const sessionLifetimeSeconds = 8 * 60 * 60;
 
 function loadStore() {
   try { return { ...initialStore, ...JSON.parse(fs.readFileSync(storeFile, 'utf8')) }; }
@@ -33,18 +36,52 @@ function ensureSeedUsers() {
   }
   saveStore();
 }
+function hashPassword(password, salt = crypto.randomBytes(16).toString('hex')) {
+  return `${salt}:${crypto.scryptSync(password, salt, 64).toString('hex')}`;
+}
+function verifyPassword(password, passwordHash) {
+  if (!passwordHash) return false;
+  const [salt, hash] = passwordHash.split(':');
+  if (!salt || !hash) return false;
+  const candidate = crypto.scryptSync(password, salt, 64);
+  return crypto.timingSafeEqual(candidate, Buffer.from(hash, 'hex'));
+}
+function upgradePasswordStorage() {
+  let changed = false;
+  for (const user of store.users) {
+    if (user.password && !user.passwordHash) {
+      user.passwordHash = hashPassword(user.password);
+      delete user.password;
+      changed = true;
+    }
+  }
+  if (changed) saveStore();
+}
 function saveStore() {
   fs.mkdirSync(path.dirname(storeFile), { recursive: true });
   fs.writeFileSync(storeFile, JSON.stringify(store, null, 2));
 }
-function json(res, status, value) {
-  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*' });
+function json(res, status, value, headers = {}) {
+  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', ...headers });
   res.end(JSON.stringify(value));
 }
 function id() { return crypto.randomUUID(); }
+function tokenFromRequest(req) {
+  const bearer = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  if (bearer) return bearer;
+  return (req.headers.cookie || '').split(';').map(value => value.trim()).find(value => value.startsWith('cw_session='))?.slice('cw_session='.length) || '';
+}
 function userFor(req) {
-  const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
-  return tokens.get(token) || null;
+  const [encoded, signature] = tokenFromRequest(req).split('.');
+  if (!encoded || !signature) return null;
+  const expected = crypto.createHmac('sha256', sessionSecret).update(encoded).digest('base64url');
+  if (signature.length !== expected.length || !crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected))) return null;
+  try {
+    const session = JSON.parse(Buffer.from(encoded, 'base64url').toString('utf8'));
+    if (session.exp < Math.floor(Date.now() / 1000)) return null;
+    const user = store.users.find(candidate => candidate.id === session.id);
+    return user?.role === session.role ? user : null;
+  } catch { return null; }
 }
 function body(req) {
   return new Promise((resolve, reject) => {
@@ -53,7 +90,7 @@ function body(req) {
     req.on('end', () => { try { resolve(raw ? JSON.parse(raw) : {}); } catch { reject(new Error('Invalid JSON')); } });
   });
 }
-function sanitizeUser(user) { const { password, ...safe } = user; return safe; }
+function sanitizeUser(user) { const { password, passwordHash, ...safe } = user; return safe; }
 function stats() { return { users: store.users.length, reports: store.reports.length, pendingReports: store.reports.filter(r => r.status !== 'Resolved').length }; }
 
 async function api(req, res, pathname) {
@@ -67,19 +104,42 @@ async function api(req, res, pathname) {
 
   if (pathname === '/api/health') return json(res, 200, { ok: true });
   if (resource === 'register' && method === 'POST') {
+    if (role !== 'citizens') return json(res, 403, { error: 'Only citizen self-registration is allowed' });
     const username = input.username || input.email;
     if (!username || !input.password) return json(res, 400, { error: 'Username and password are required' });
     if (store.users.some(u => u.username === username)) return json(res, 409, { error: 'Username already exists' });
-    const user = { id: id(), username, email: input.email || username, name: input.name || username, password: input.password, role: input.role || (role === 'citizens' ? 'citizen' : 'department') };
-    store.users.push(user); saveStore(); return json(res, 201, { token: createToken(user), user: sanitizeUser(user) });
+    const user = { id: id(), username, email: input.email || username, name: input.name || username, passwordHash: hashPassword(input.password), role: 'citizen' };
+    store.users.push(user); saveStore();
+    const token = createToken(user);
+    return json(res, 201, { token, user: sanitizeUser(user) }, sessionCookie(token));
   }
   if (resource === 'login' && method === 'POST') {
     const username = input.username || input.email;
-    const user = store.users.find(u => u.username === username && u.password === input.password);
+    const expectedRole = role === 'citizens' ? 'citizen' : role;
+    if (!['admin', 'department', 'citizen'].includes(expectedRole)) return json(res, 404, { error: 'Login route not found' });
+    const user = store.users.find(u => u.username === username && u.role === expectedRole && verifyPassword(input.password, u.passwordHash));
     if (!user) return json(res, 401, { error: 'Invalid credentials' });
-    return json(res, 200, { token: createToken(user), user: sanitizeUser(user) });
+    const token = createToken(user);
+    return json(res, 200, { token, user: sanitizeUser(user) }, sessionCookie(token));
   }
+  if (pathname === '/api/logout' && method === 'POST') return json(res, 200, { success: true }, { 'Set-Cookie': 'cw_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0' });
   if (resource === 'current-user') return current ? json(res, 200, sanitizeUser(current)) : json(res, 401, { error: 'Sign in required' });
+  if (!current) return json(res, 401, { error: 'Sign in required' });
+  if (role === 'admin' && current.role !== 'admin') return json(res, 403, { error: 'Administrator access required' });
+  if (role === 'citizens' && current.role !== 'citizen') return json(res, 403, { error: 'Citizen access required' });
+  if (role === 'departments' && !['admin', 'department'].includes(current.role)) return json(res, 403, { error: 'Department access required' });
+  if (resource === 'profile') {
+    if (method === 'GET') return json(res, 200, sanitizeUser(current));
+    if (!['PUT', 'PATCH'].includes(method)) return json(res, 405, { error: 'Method not allowed' });
+    const updates = {};
+    for (const key of ['name', 'email', 'phone']) {
+      if (typeof input[key] === 'string') updates[key] = input[key].trim();
+    }
+    if (updates.email && !/^\S+@\S+\.\S+$/.test(updates.email)) return json(res, 400, { error: 'Enter a valid email address' });
+    Object.assign(current, updates);
+    saveStore();
+    return json(res, 200, sanitizeUser(current));
+  }
   if (resource === 'dashboard') {
     const pendingReviews = store.reports.filter(report => !['Resolved', 'Approved', 'Rejected'].includes(report.status)).length;
     return json(res, 200, {
@@ -101,14 +161,22 @@ async function api(req, res, pathname) {
     const item = store.departments.find(d => d.id === parts[2]); return item ? json(res, 200, item) : json(res, 404, { error: 'Department not found' });
   }
   if (resource === 'reports' || (parts[1] === 'reports')) return collection(req, res, input, store.reports, 'reports', current);
+  // Admin calls reports "submissions"; both names refer to the same records.
+  if (resource === 'submissions') return collection(req, res, input, store.reports, 'submissions', current);
   if (resource === 'tasks' || (parts[1] === 'tasks')) return collection(req, res, input, store.tasks, 'tasks', current);
   if (resource === 'notifications' || pathname === '/api/notifications') return collection(req, res, input, store.notifications, 'notifications', current);
+  if (resource === 'content') return collection(req, res, input, store.content, 'content', current);
   if (resource === 'feedback') { if (method === 'POST') { store.feedback.push({ id: id(), ...input, userId: current?.id, createdAt: new Date().toISOString() }); saveStore(); } return json(res, 200, store.feedback); }
   if (pathname === '/api/locations') { if (method === 'POST') { store.locations.push({ id: id(), ...input }); saveStore(); } return json(res, 200, store.locations); }
   if (resource === 'users') return collection(req, res, input, store.users, 'users', current, true);
   return json(res, 404, { error: 'API route not found' });
 }
-function createToken(user) { const token = crypto.randomBytes(24).toString('hex'); tokens.set(token, user); return token; }
+function createToken(user) {
+  const payload = Buffer.from(JSON.stringify({ id: user.id, role: user.role, exp: Math.floor(Date.now() / 1000) + sessionLifetimeSeconds })).toString('base64url');
+  const signature = crypto.createHmac('sha256', sessionSecret).update(payload).digest('base64url');
+  return `${payload}.${signature}`;
+}
+function sessionCookie(token) { return { 'Set-Cookie': `cw_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${sessionLifetimeSeconds}` }; }
 function collection(req, res, input, items, name, current, hidePasswords = false) {
   const pathname = new URL(req.url, 'http://localhost').pathname;
   const segments = pathname.split('/').filter(Boolean);
@@ -121,7 +189,7 @@ function collection(req, res, input, items, name, current, hidePasswords = false
   if (req.method === 'PUT' || req.method === 'PATCH' || segments.length > 4) { Object.assign(item, input, segments[4] === 'approve' ? { status: 'Approved' } : segments[4] === 'reject' ? { status: 'Rejected' } : {}); saveStore(); return json(res, 200, hidePasswords ? sanitizeUser(item) : item); }
   return json(res, 200, hidePasswords ? sanitizeUser(item) : item);
 }
-function serveFile(res, pathname) {
+function serveFile(req, res, pathname) {
   let requested = pathname === '/' ? '/.HTML/PUBLIC.HTML' : pathname;
   // The original pages live in the hidden `.HTML` directory. Keep their
   // short, user-facing URLs working as well as the on-disk paths.
@@ -135,17 +203,26 @@ function serveFile(res, pathname) {
   }
   if (!file.startsWith(frontend) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return json(res, 404, { error: 'Not found' });
   const isHtml = path.extname(file).toLowerCase() === '.html';
+  const roleMatch = file.match(/\/(ADMIN|DEPARTMENT|CITIZEN)\.HTML\//);
+  if (isHtml && roleMatch) {
+    const requiredRole = roleMatch[1].toLowerCase();
+    const user = userFor(req);
+    if (!user || user.role !== requiredRole) {
+      res.writeHead(302, { Location: `/login.html?role=${requiredRole}` });
+      return res.end();
+    }
+  }
   const type = isHtml ? 'text/html' : path.extname(file).toLowerCase() === '.js' ? 'application/javascript' : path.extname(file).toLowerCase() === '.json' ? 'application/json' : path.extname(file).toLowerCase() === '.png' ? 'image/png' : 'application/octet-stream';
   res.writeHead(200, { 'Content-Type': `${type}; charset=utf-8` });
   if (isHtml) {
-    const html = fs.readFileSync(file, 'utf8').replace('</head>', '  <link rel="stylesheet" href="/styles/app.css">\n</head>');
+    const html = fs.readFileSync(file, 'utf8').replace('</head>', '  <link rel="stylesheet" href="/styles/app.css">\n  <link rel="stylesheet" href="/styles/system.css">\n</head>');
     return res.end(html);
   }
   fs.createReadStream(file).pipe(res);
 }
 const server = http.createServer(async (req, res) => {
-  const pathname = new URL(req.url, 'http://localhost').pathname;
-  try { if (pathname.startsWith('/api/')) await api(req, res, pathname); else serveFile(res, pathname); }
+  const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
+  try { if (pathname.startsWith('/api/')) await api(req, res, pathname); else serveFile(req, res, pathname); }
   catch (error) { json(res, 500, { error: error.message }); }
 });
 server.listen(process.env.PORT || 3000, () => console.log('CivicWatch running at http://localhost:3000'));

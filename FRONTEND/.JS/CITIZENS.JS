@@ -880,6 +880,7 @@ class CitizenModule {
   }
 
   logout() {
+    fetch('/api/logout', { method: 'POST' });
     localStorage.removeItem('authToken');
     localStorage.removeItem('currentUser');
     // keep local_citizens for future logins, but remove any flags
