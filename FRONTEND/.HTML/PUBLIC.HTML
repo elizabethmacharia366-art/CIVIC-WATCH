@@ -35,6 +35,15 @@
       text-decoration: none;
       font-weight: bold;
     }
+    nav .login-button {
+      display: inline-block;
+      margin-left: 1.5rem;
+      padding: 0.65rem 1.1rem;
+      border-radius: 7px;
+      color: #062313;
+      background: #25d366;
+      text-decoration: none;
+    }
     #langSelector {
       padding: 0.5rem;
       background-color: #25d366;
@@ -116,9 +125,7 @@
         <option value="sw">Swahili</option>
       </select>
       <nav>
-        <a href="ADMIN.HTML/INDEX.HTML" data-i18n="admin">Admin</a>
-        <a href="DEPARTMENT.HTML/DASHBOARD.HTML" data-i18n="department">Department</a>
-        <a href="CITIZEN.HTML/DASHBOARD.HTML" data-i18n="citizens">Citizens</a>
+        <a class="login-button" href="/login.html">Login</a>
       </nav>
     </div>
   </header>
