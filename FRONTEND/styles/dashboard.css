@@ -9,6 +9,14 @@
   --cw-accent-dark: #128c7e;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--cw-bg);
+  color: var(--cw-text);
+}
+
 .dashboard {
   min-height: 100vh;
   background: var(--cw-bg);
@@ -27,10 +35,11 @@
   border-bottom: 1px solid var(--cw-border);
 }
 
-.dashboard header h1 { font-size: clamp(1.3rem, 2.2vw, 2rem); letter-spacing: -.02em; color: var(--cw-accent); }
+.dashboard header h1 { font-size: clamp(1.3rem, 2.2vw, 2rem); letter-spacing: -.02em; color: var(--cw-accent); margin: 0; }
 .dashboard #langSelector, .dashboard button { min-height: 38px; border-radius: 8px; }
 
 .dashboard nav {
+  display: flex;
   justify-content: flex-start;
   gap: 6px;
   padding: 12px clamp(20px, 4vw, 56px);
@@ -43,16 +52,31 @@
   border-radius: 7px;
   color: var(--cw-text);
   transition: color .18s ease, background-color .18s ease;
+  text-decoration: none;
 }
 
 .dashboard nav a:hover, .dashboard nav a:focus-visible { color: #111b21; background: var(--cw-accent); outline: none; }
-.dashboard main { max-width: 1240px; padding: clamp(20px, 4vw, 44px); }
+.dashboard main { max-width: 1240px; padding: clamp(20px, 4vw, 44px); margin: 0 auto; }
 
 .dashboard section, .dashboard .overview-box {
   background: var(--cw-surface);
   border: 1px solid var(--cw-border);
   border-radius: 14px;
   box-shadow: 0 14px 32px rgba(0, 0, 0, .16);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.dashboard section h2, .dashboard .overview-box h2 {
+  margin: 0 0 20px 0;
+  color: var(--cw-accent);
+  font-size: 1.5rem;
+}
+
+.dashboard h3 {
+  margin: 0 0 12px 0;
+  color: var(--cw-accent);
+  font-size: 1.2rem;
 }
 
 .dashboard .metrics, .dashboard .stats-grid, .dashboard .dashboardGrid {
@@ -71,11 +95,30 @@
   text-align: left;
 }
 
-.dashboard .metric h3, .dashboard .stat-card h4, .dashboard .statCard h3 { color: var(--cw-muted); font-size: .9rem; }
-.dashboard .metric p, .dashboard .stat-card p, .dashboard .statValue { color: var(--cw-accent); font-size: 2rem; font-weight: 750; }
+.dashboard .metric h3, .dashboard .stat-card h4, .dashboard .statCard h3 { color: var(--cw-muted); font-size: .9rem; margin: 0 0 8px 0; }
+.dashboard .metric p, .dashboard .stat-card p, .dashboard .statValue { color: var(--cw-accent); font-size: 2rem; font-weight: 750; margin: 0; }
 .dashboard .report-table { overflow-x: auto; }
-.dashboard table { min-width: 680px; }
-.dashboard canvas { box-sizing: border-box; max-width: 100%; height: auto; }
+.dashboard table { min-width: 680px; width: 100%; border-collapse: collapse; }
+.dashboard th { background: var(--cw-surface-raised); color: var(--cw-accent); padding: 12px; text-align: left; border-bottom: 1px solid var(--cw-border); }
+.dashboard td { padding: 12px; border-bottom: 1px solid var(--cw-border); color: var(--cw-text); }
+.dashboard tr:hover td { background: var(--cw-surface-raised); }
+.dashboard canvas { box-sizing: border-box; max-width: 100%; height: auto; background: var(--cw-surface-raised); border-radius: 8px; padding: 16px; }
+
+.dashboard .department-info {
+  margin-bottom: 20px;
+}
+
+.dashboard .department-info h3 {
+  margin: 0 0 8px 0;
+  color: var(--cw-text);
+  font-size: 1.1rem;
+}
+
+.dashboard .department-info p {
+  margin: 0;
+  color: var(--cw-muted);
+  line-height: 1.6;
+}
 
 @media (max-width: 640px) {
   .dashboard header { align-items: flex-start; flex-direction: column; }
