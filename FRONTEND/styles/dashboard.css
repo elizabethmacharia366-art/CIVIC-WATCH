@@ -1,16 +1,17 @@
 :root {
-  --cw-bg: #08141b;
-  --cw-surface: #10242d;
-  --cw-surface-raised: #17333e;
-  --cw-border: #2a4b58;
-  --cw-text: #edf7f4;
-  --cw-muted: #a9c0c5;
-  --cw-accent: #37df88;
+  --cw-bg: #111b21;
+  --cw-surface: #202c33;
+  --cw-surface-raised: #2a3942;
+  --cw-border: #2a3942;
+  --cw-text: #e9edef;
+  --cw-muted: #8696a0;
+  --cw-accent: #25d366;
+  --cw-accent-dark: #128c7e;
 }
 
 .dashboard {
   min-height: 100vh;
-  background: radial-gradient(circle at top right, #183e41 0, var(--cw-bg) 45%);
+  background: var(--cw-bg);
   color: var(--cw-text);
 }
 
@@ -21,33 +22,34 @@
   gap: 16px;
   padding: 22px clamp(20px, 4vw, 56px);
   text-align: left;
-  background: linear-gradient(110deg, #36d981, #20b96d);
+  background: var(--cw-surface);
   box-shadow: 0 4px 16px rgba(0, 0, 0, .22);
+  border-bottom: 1px solid var(--cw-border);
 }
 
-.dashboard header h1 { font-size: clamp(1.3rem, 2.2vw, 2rem); letter-spacing: -.02em; }
+.dashboard header h1 { font-size: clamp(1.3rem, 2.2vw, 2rem); letter-spacing: -.02em; color: var(--cw-accent); }
 .dashboard #langSelector, .dashboard button { min-height: 38px; border-radius: 8px; }
 
 .dashboard nav {
   justify-content: flex-start;
   gap: 6px;
   padding: 12px clamp(20px, 4vw, 56px);
-  background: rgba(9, 25, 32, .96);
+  background: var(--cw-surface);
   border-bottom: 1px solid var(--cw-border);
 }
 
 .dashboard nav a {
   padding: 9px 11px;
   border-radius: 7px;
-  color: #bcebd3;
+  color: var(--cw-text);
   transition: color .18s ease, background-color .18s ease;
 }
 
-.dashboard nav a:hover, .dashboard nav a:focus-visible { color: #062313; background: var(--cw-accent); outline: none; }
+.dashboard nav a:hover, .dashboard nav a:focus-visible { color: #111b21; background: var(--cw-accent); outline: none; }
 .dashboard main { max-width: 1240px; padding: clamp(20px, 4vw, 44px); }
 
 .dashboard section, .dashboard .overview-box {
-  background: rgba(16, 36, 45, .94);
+  background: var(--cw-surface);
   border: 1px solid var(--cw-border);
   border-radius: 14px;
   box-shadow: 0 14px 32px rgba(0, 0, 0, .16);
@@ -64,7 +66,7 @@
   padding: 19px;
   border: 1px solid var(--cw-border);
   border-radius: 12px;
-  background: linear-gradient(145deg, #1a3b47, var(--cw-surface-raised));
+  background: var(--cw-surface-raised);
   box-sizing: border-box;
   text-align: left;
 }

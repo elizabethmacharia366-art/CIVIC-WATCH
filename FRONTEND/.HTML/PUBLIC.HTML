@@ -8,14 +8,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --primary: #00a651;
-      --primary-dark: #008c45;
-      --secondary: #1a1a2e;
-      --accent: #16213e;
-      --text-light: #f8f9fa;
-      --text-muted: #adb5bd;
-      --card-bg: #1e293b;
-      --border: #334155;
+      --primary: #25d366;
+      --primary-dark: #128c7e;
+      --bg: #111b21;
+      --surface: #202c33;
+      --surface-raised: #2a3942;
+      --border: #2a3942;
+      --text-light: #e9edef;
+      --text-muted: #8696a0;
+      --card-bg: #202c33;
       --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
@@ -27,15 +28,14 @@
     }
     
     body {
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      background: var(--bg);
       color: var(--text-light);
       line-height: 1.6;
       min-height: 100vh;
     }
     
     header {
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(10px);
+      background: var(--surface);
       padding: 1rem 3rem;
       display: flex;
       justify-content: space-between;
@@ -61,10 +61,7 @@
     header h1 {
       font-size: 1.8rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--primary), #4ade80);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--primary);
       letter-spacing: -0.5px;
     }
     
@@ -92,8 +89,8 @@
     nav .login-button {
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
+      background: var(--primary);
+      color: #111b21;
       text-decoration: none;
       font-weight: 600;
       transition: all 0.3s ease;
@@ -102,36 +99,22 @@
     
     nav .login-button:hover {
       transform: translateY(-2px);
+      background: var(--primary-dark);
       box-shadow: var(--shadow-lg);
     }
     
     .hero {
-      background: linear-gradient(135deg, rgba(0, 166, 81, 0.1) 0%, rgba(15, 23, 42, 0.9) 100%);
+      background: var(--surface);
       padding: 4rem 2rem;
       text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: radial-gradient(circle at 20% 50%, rgba(0, 166, 81, 0.1) 0%, transparent 50%);
-      pointer-events: none;
+      border-bottom: 1px solid var(--border);
     }
     
     .hero h2 {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--primary), #4ade80);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--primary);
     }
     
     .hero p {
@@ -161,7 +144,7 @@
       content: '';
       width: 4px;
       height: 30px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      background: var(--primary);
       border-radius: 2px;
     }
     
@@ -230,14 +213,15 @@
     }
     
     .status-resolved {
-      background: rgba(0, 166, 81, 0.2);
+      background: rgba(37, 211, 102, 0.2);
       color: var(--primary);
     }
     
     .gallery-section {
-      background: rgba(30, 41, 59, 0.5);
+      background: var(--surface);
       padding: 3rem 2rem;
       margin-top: 3rem;
+      border-top: 1px solid var(--border);
     }
     
     .gallery-section h2 {
@@ -293,7 +277,7 @@
     }
     
     footer {
-      background: rgba(15, 23, 42, 0.95);
+      background: var(--surface);
       text-align: center;
       padding: 2rem;
       color: var(--text-muted);

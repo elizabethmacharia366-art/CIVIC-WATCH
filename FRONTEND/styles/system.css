@@ -1,34 +1,36 @@
-/* Portal-wide visual system. Loaded after each page's legacy styles. */
+/* Portal-wide visual system. WhatsApp Dark Theme */
 :root {
-  --cw-bg: #07171f;
-  --cw-surface: #102a34;
-  --cw-surface-raised: #173944;
-  --cw-border: #2c5360;
-  --cw-text: #effbf6;
-  --cw-muted: #b4cbc8;
-  --cw-accent: #38df8a;
-  --cw-danger: #ff7474;
+  --cw-bg: #111b21;
+  --cw-surface: #202c33;
+  --cw-surface-raised: #2a3942;
+  --cw-border: #2a3942;
+  --cw-text: #e9edef;
+  --cw-muted: #8696a0;
+  --cw-accent: #25d366;
+  --cw-accent-dark: #128c7e;
+  --cw-danger: #ef5350;
 }
 
 body {
   min-height: 100vh;
   color: var(--cw-text) !important;
-  background: radial-gradient(circle at 100% 0, #174c48 0, var(--cw-bg) 48%) !important;
+  background: var(--cw-bg) !important;
   line-height: 1.55;
 }
 
 header {
   padding: 20px clamp(20px, 4vw, 56px) !important;
-  background: linear-gradient(115deg, #42e595, #22b96c) !important;
+  background: var(--cw-surface) !important;
   box-shadow: 0 3px 16px rgba(0, 0, 0, .2);
+  border-bottom: 1px solid var(--cw-border);
 }
 
-header h1, header h2 { color: #062516 !important; }
+header h1, header h2 { color: var(--cw-accent) !important; }
 nav {
   gap: 7px !important;
   justify-content: center;
   padding: 12px clamp(18px, 4vw, 56px) !important;
-  background: rgba(7, 26, 33, .96) !important;
+  background: var(--cw-surface) !important;
   border-bottom: 1px solid var(--cw-border);
 }
 
@@ -36,16 +38,16 @@ nav a, .back-button, .button-link {
   display: inline-block;
   padding: 8px 12px;
   border-radius: 8px;
-  color: #bcefd4 !important;
+  color: var(--cw-text) !important;
   text-decoration: none;
 }
 
-nav a:hover, nav a:focus-visible, .back-button:hover, .button-link:hover { color: #052313 !important; background: var(--cw-accent) !important; outline: none; }
+nav a:hover, nav a:focus-visible, .back-button:hover, .button-link:hover { color: #111b21 !important; background: var(--cw-accent) !important; outline: none; }
 main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: clamp(22px, 4vw, 48px) 0 !important; }
 section, .overview-box, .login-card, .content-item, .response, .notification, .report-block, .chart-container {
   border: 1px solid var(--cw-border) !important;
   border-radius: 14px !important;
-  background: rgba(16, 42, 52, .94) !important;
+  background: var(--cw-surface) !important;
   box-shadow: 0 14px 30px rgba(0, 0, 0, .15);
 }
 
@@ -57,15 +59,15 @@ input, select, textarea {
   border: 1px solid var(--cw-border) !important;
   border-radius: 8px !important;
   color: var(--cw-text) !important;
-  background: #09222c !important;
+  background: var(--cw-bg) !important;
 }
 
-input:focus, select:focus, textarea:focus { outline: 3px solid rgba(56, 223, 138, .28); border-color: var(--cw-accent) !important; }
+input:focus, select:focus, textarea:focus { outline: 3px solid rgba(37, 211, 102, .28); border-color: var(--cw-accent) !important; }
 button, .btn {
   padding: 9px 14px;
   border: 0;
   border-radius: 8px !important;
-  color: #062313 !important;
+  color: #111b21 !important;
   background: var(--cw-accent) !important;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, .18);
@@ -73,9 +75,9 @@ button, .btn {
 
 button:hover, .btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
 table { overflow: hidden; border: 1px solid var(--cw-border); border-radius: 10px; }
-th { color: var(--cw-accent) !important; background: #0a222c !important; }
+th { color: var(--cw-accent) !important; background: var(--cw-surface-raised) !important; }
 td { border-color: var(--cw-border) !important; }
-tr:hover td { background: #193e49 !important; }
+tr:hover td { background: var(--cw-surface-raised) !important; }
 .back-button { margin-top: 18px; background: var(--cw-surface-raised); border: 1px solid var(--cw-border); }
 
 @media (max-width: 640px) {
