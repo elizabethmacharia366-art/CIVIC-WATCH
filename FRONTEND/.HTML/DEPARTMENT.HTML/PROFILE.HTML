@@ -6,6 +6,28 @@
   <title>Department Profile | CivicWatch</title>
   <link rel="stylesheet" href="/styles/dashboard.css">
   <style>
+    :root {
+      --cw-bg: #111b21;
+      --cw-surface: #202c33;
+      --cw-surface-raised: #2a3942;
+      --cw-border: #2a3942;
+      --cw-text: #e9edef;
+      --cw-muted: #8696a0;
+      --cw-accent: #25d366;
+      --cw-accent-dark: #128c7e;
+      --cw-danger: #ef5350;
+    }
+    
+    body {
+      background: var(--cw-bg);
+      color: var(--cw-text);
+    }
+    
+    header {
+      background: var(--cw-surface);
+      border-bottom: 1px solid var(--cw-border);
+    }
+    
     .profile-container {
       max-width: 900px;
       margin: 0 auto;
