@@ -7,118 +7,350 @@
   <title>CivicWatch</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: #121b22;
-      color: #e9edef;
+    :root {
+      --primary: #00a651;
+      --primary-dark: #008c45;
+      --secondary: #1a1a2e;
+      --accent: #16213e;
+      --text-light: #f8f9fa;
+      --text-muted: #adb5bd;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: var(--text-light);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
     header {
-      background-color: #1f2c34;
-      padding: 1rem 2rem;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 3rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .logo-container img {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+    }
+    
     header h1 {
-      margin: 0;
-      color: #25d366;
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), #4ade80);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
     }
+    
     .header-right {
       display: flex;
       align-items: center;
-      gap: 2rem;
+      gap: 1.5rem;
     }
-    nav a {
-      color: #e9edef;
-      margin-left: 1.5rem;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav .login-button {
-      display: inline-block;
-      margin-left: 1.5rem;
-      padding: 0.65rem 1.1rem;
-      border-radius: 7px;
-      color: #062313;
-      background: #25d366;
-      text-decoration: none;
-    }
+    
     #langSelector {
-      padding: 0.5rem;
-      background-color: #25d366;
-      color: #1f2c34;
-      border: none;
-      border-radius: 4px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .hero {
-      background-color: #0b141a;
-      padding: 2rem;
-      text-align: center;
-    }
-    .hero h2 {
-      color: #25d366;
-    }
-    .issues {
-      padding: 2rem;
-    }
-    .issues h3 {
-      color: #25d366;
-      margin-bottom: 1rem;
-    }
-    .issue-card {
-      background-color: #1f2c34;
+      padding: 0.6rem 1rem;
+      background: var(--card-bg);
+      color: var(--text-light);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    #langSelector:hover {
+      border-color: var(--primary);
+    }
+    
+    nav .login-button {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+    
+    nav .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .hero {
+      background: linear-gradient(135deg, rgba(0, 166, 81, 0.1) 0%, rgba(15, 23, 42, 0.9) 100%);
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(0, 166, 81, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    
+    .hero h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary), #4ade80);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .issues {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    
+    .issues h3 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      color: var(--text-light);
       display: flex;
-      gap: 1rem;
       align-items: center;
+      gap: 0.5rem;
     }
+    
+    .issues h3::before {
+      content: '';
+      width: 4px;
+      height: 30px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 2px;
+    }
+    
+    .issues-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    
+    .issue-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+    
+    .issue-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary);
+    }
+    
     .issue-card img {
-      width: 120px;
-      height: 80px;
+      width: 140px;
+      height: 100px;
       object-fit: cover;
-      border-radius: 4px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
     }
+    
     .issue-card .info {
       flex: 1;
     }
+    
     .issue-card .info h4 {
-      margin: 0 0 0.5rem;
-      color: #e9edef;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-light);
     }
+    
     .issue-card .info p {
-      margin: 0;
-      color: #cfd8dc;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
     }
-    footer {
-      background-color: #1f2c34;
+    
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+    
+    .status-pending {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fbbf24;
+    }
+    
+    .status-resolved {
+      background: rgba(0, 166, 81, 0.2);
+      color: var(--primary);
+    }
+    
+    .gallery-section {
+      background: rgba(30, 41, 59, 0.5);
+      padding: 3rem 2rem;
+      margin-top: 3rem;
+    }
+    
+    .gallery-section h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
       text-align: center;
-      padding: 1rem;
-      color: #cfd8dc;
-      margin-top: 2rem;
+      color: var(--text-light);
+    }
+    
+    .gallery-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .gallery-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow);
+    }
+    
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .gallery-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .gallery-item .info {
+      padding: 1.25rem;
+    }
+    
+    .gallery-item .info h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-light);
+    }
+    
+    .gallery-item .info p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    
+    footer {
+      background: rgba(15, 23, 42, 0.95);
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem 1.5rem;
+      }
+      
+      header h1 {
+        font-size: 1.3rem;
+      }
+      
+      .logo-container img {
+        width: 45px;
+        height: 45px;
+      }
+      
+      .hero h2 {
+        font-size: 1.8rem;
+      }
+      
+      .hero p {
+        font-size: 1rem;
+      }
+      
+      .issues-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .issue-card {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .issue-card img {
+        width: 100%;
+        height: 180px;
+      }
     }
   </style>
   <script>window.TRANSLATIONS_PATH = '/i18n/translations.json';</script>
   <script src="/.JS/i18n.js"></script>
   <link rel="stylesheet" href="/styles/app.css">
   <link rel="stylesheet" href="/styles/system.css">
-  <style>
-    /* Keep the public portal consistent even when this file is opened directly. */
-    *, *::before, *::after {
-      font-family: Georgia, "Times New Roman", serif !important;
-      font-style: italic !important;
-    }
-  </style>
 </head>
 <body class="public-dashboard">
 
   <header>
-    <img src="LOGO.PNG"  width="150" height="150">
-    <h1 data-i18n="welcome"> civic watch portal..</h1>
+    <div class="logo-container">
+      <img src="LOGO.PNG" alt="CivicWatch Logo">
+      <h1 data-i18n="welcome">CivicWatch Portal</h1>
+    </div>
     <div class="header-right">
       <select id="langSelector">
         <option value="en">English</option>
@@ -136,45 +368,60 @@
 
   <section class="issues">
     <h3 data-i18n="recently_reported">Recently Reported Issues</h3>
-
-    <div class="issue-card">
-          <img src="POTHOLE.PNG"  width="100" height="100">
-      <div class="info">
-        <h4 data-i18n="pothole_main">Pothole on Main Street</h4>
-        <p data-i18n="pothole_desc">Large pothole causing traffic delays. Reported 2 hours ago.</p>
-      </div>
-    </div>
-
-    <div class="issue-card">
-    <img src="BROKEN STREET LIGHT.PNG" width="100" height="100">
-      <div class="info">
-        <h4 data-i18n="broken_light">Broken Streetlight</h4>
-        <p data-i18n="light_desc">Streetlight not working near the park. Reported yesterday.</p>
-      </div>
-    </div>
-
-    <div class="issue-card">
-    <img src="DUMPING.PNG"  width="100" height="100">
-      <div class="info">
-        <h4 data-i18n="illegal_dump">Illegal Dumping</h4>
-        <p data-i18n="dump_desc">Garbage dumped near riverbank. Needs urgent cleanup.</p>
-      </div>
-    </div>
-    <div class="hero">
-    <h2 data-i18n="photos_recent">Photos of recent events</h2>
-    <div class="issue-card">
     
-     <img src="S2.PNG"  width="100" height="100">
-      <div class="info">
-        <h4 data-i18n="muranga">Muranga Country</h4>
-        <p data-i18n="muranga_desc">Garbage dumped near riverbank. Needs urgent cleanup.</p>
-      </div><br>
-        <img src="S3.PNG"  width="100" height="100">
-      <div class="info">
-        <h4 data-i18n="nairobi">Nairobi city sweeping program</h4>
-        <p data-i18n="nairobi_desc">keeping our streets clean at UCESCO Africa-kenya</p>
+    <div class="issues-grid">
+      <div class="issue-card">
+        <img src="POTHOLE.PNG" alt="Pothole">
+        <div class="info">
+          <h4 data-i18n="pothole_main">Pothole on Thika Road</h4>
+          <p data-i18n="pothole_desc">Large pothole causing traffic delays near Garden City Mall. Reported 2 hours ago.</p>
+          <span class="status-badge status-pending">Pending</span>
+        </div>
+      </div>
+
+      <div class="issue-card">
+        <img src="BROKEN STREET LIGHT.PNG" alt="Broken Street Light">
+        <div class="info">
+          <h4 data-i18n="broken_light">Broken Streetlight</h4>
+          <p data-i18n="light_desc">Streetlight not working near Uhuru Park. Reported yesterday.</p>
+          <span class="status-badge status-pending">Pending</span>
+        </div>
+      </div>
+
+      <div class="issue-card">
+        <img src="DUMPING.PNG" alt="Illegal Dumping">
+        <div class="info">
+          <h4 data-i18n="illegal_dump">Illegal Dumping</h4>
+          <p data-i18n="dump_desc">Garbage dumped near riverbank. Needs urgent cleanup.</p>
+          <span class="status-badge status-resolved">Resolved</span>
+        </div>
       </div>
     </div>
   </section>
+
+  <section class="gallery-section">
+    <h2 data-i18n="photos_recent">Photos of Recent Events</h2>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="S2.PNG" alt="Muranga County">
+        <div class="info">
+          <h4 data-i18n="muranga">Muranga County</h4>
+          <p data-i18n="muranga_desc">Community cleanup initiative in progress.</p>
+        </div>
+      </div>
+      
+      <div class="gallery-item">
+        <img src="S3.PNG" alt="Nairobi City Sweeping">
+        <div class="info">
+          <h4 data-i18n="nairobi">Nairobi City Sweeping Program</h4>
+          <p data-i18n="nairobi_desc">Keeping our streets clean at UCESCO Africa-Kenya.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2026 CivicWatch. Empowering Communities Together.</p>
+  </footer>
 </body>
 </html>
