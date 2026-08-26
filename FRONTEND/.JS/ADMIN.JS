@@ -6,9 +6,7 @@ class AdminModule {
     this.users = [];
     this.submissions = [];
     this.init();
-    if (!window.clearAccess) {
-      window.clearAccess = (role) => { localStorage.removeItem(`cw_access_${role}`); location.reload(); };
-    }
+    window.clearAccess = () => { localStorage.removeItem('authToken'); localStorage.removeItem('currentUser'); location.assign('/login.html?role=admin'); };
   }
 
   init() {
@@ -37,28 +35,12 @@ class AdminModule {
 
   requirePassword(role) {
     try {
-      const key = `cw_access_${role}`;
-      // support forcing re-auth via URL: add ?reauth=1 to clear stored flag
-      try { if (new URLSearchParams(window.location.search).get('reauth') === '1') localStorage.removeItem(key); } catch(e){}
-      const stored = localStorage.getItem(key);
-      if (stored) return true;
-
-      let attempts = 3;
-      while (attempts > 0) {
-        const pw = prompt(`Enter password to access ${role} page:`);
-        if (pw === null) break; 
-        if (pw === '106276') {
-          localStorage.setItem(key, JSON.stringify({ authorized: true, at: Date.now() }));
-          return true;
-        }
-        attempts -= 1;
-        alert(`Incorrect password. ${attempts} attempt(s) left.`);
-      }
+      const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+      if (user?.role === role && localStorage.getItem('authToken')) return true;
     } catch (e) {
-      console.error('Password check failed', e);
+      console.error('Session check failed', e);
     }
-    this.showNotification('Access denied', 'error');
-    window.location.href = '/';
+    window.location.replace(`/login.html?role=${role}`);
     return false;
   }
 
@@ -637,7 +619,7 @@ class AdminModule {
   redirectToLogin() {
     // The Admin dashboard has no dedicated login page. Redirecting to
     // INDEX.HTML reloads this same page forever when a session is missing.
-    window.location.href = '/';
+    window.location.href = '/login.html?role=admin';
   }
 
   logout() {

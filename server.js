@@ -7,7 +7,7 @@ const root = __dirname;
 const frontend = path.join(root, 'FRONTEND');
 const storeFile = path.join(root, 'data', 'store.json');
 const initialStore = {
-  users: [{ id: 'admin', username: 'admin', password: 'admin123', role: 'admin' }],
+  users: [],
   reports: [],
   tasks: [],
   departments: [{ id: 'public-works', name: 'Public Works', description: 'Roads, lighting and sanitation' }],
@@ -16,11 +16,22 @@ const initialStore = {
   locations: []
 };
 let store = loadStore();
+ensureSeedUsers();
 const tokens = new Map();
 
 function loadStore() {
   try { return { ...initialStore, ...JSON.parse(fs.readFileSync(storeFile, 'utf8')) }; }
   catch { return structuredClone(initialStore); }
+}
+function ensureSeedUsers() {
+  const configuredUsers = [
+    { id: 'admin', username: process.env.CIVIC_ADMIN_USERNAME, password: process.env.CIVIC_ADMIN_PASSWORD, role: 'admin', name: 'Administrator' },
+    { id: 'department', username: process.env.CIVIC_DEPARTMENT_USERNAME, password: process.env.CIVIC_DEPARTMENT_PASSWORD, role: 'department', name: 'Public Works' }
+  ].filter(user => user.username && user.password);
+  for (const seed of configuredUsers) {
+    if (!store.users.some(user => user.username === seed.username)) store.users.push(structuredClone(seed));
+  }
+  saveStore();
 }
 function saveStore() {
   fs.mkdirSync(path.dirname(storeFile), { recursive: true });

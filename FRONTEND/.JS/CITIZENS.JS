@@ -20,9 +20,7 @@ class CitizenModule {
   onDOMReady() {
     // Ensure user is authenticated before allowing access to citizen pages
     if (!this.isAuthenticated()) {
-      // hide main UI until user authenticates
-      this.lockPageForAuth();
-      this.showAuthModal();
+      window.location.replace('/login.html?role=citizen');
       return;
     }
 

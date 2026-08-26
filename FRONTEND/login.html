@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in | CivicWatch</title>
+  <style>
+    :root { color-scheme: dark; --accent: #37df88; --ink: #07151b; --panel: #102832; --line: #31515d; --muted: #b5c8cc; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; font-family: Georgia, 'Times New Roman', serif; font-style: italic; color: #effaf7; background: radial-gradient(circle at top left, #1a5a55, var(--ink) 54%); }
+    .login-card { width: min(100%, 460px); padding: clamp(26px, 5vw, 46px); border: 1px solid var(--line); border-radius: 20px; background: rgba(16, 40, 50, .96); box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
+    .eyebrow { margin: 0 0 8px; color: var(--accent); font-size: .9rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(2rem, 7vw, 3rem); color: var(--accent); }
+    .intro { margin: 12px 0 28px; color: var(--muted); line-height: 1.5; }
+    label { display: block; margin: 16px 0 7px; color: #dceae6; font-weight: 700; }
+    input, select, button { width: 100%; min-height: 46px; border-radius: 9px; font: inherit; }
+    input, select { padding: 0 12px; border: 1px solid var(--line); color: #effaf7; background: #0a1d25; }
+    button { margin-top: 24px; cursor: pointer; border: 0; color: #062313; background: var(--accent); font-weight: 800; transition: transform .15s ease, filter .15s ease; }
+    button.secondary { margin-top: 10px; color: var(--accent); background: transparent; border: 1px solid var(--line); }
+    button:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .message { min-height: 22px; margin: 16px 0 0; color: #ffb8b8; }
+    .hint { margin: 24px 0 0; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; line-height: 1.55; }
+    .hint strong { color: #fff; }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <main class="login-card">
+    <p class="eyebrow">CivicWatch portal</p>
+    <h1>Welcome back</h1>
+    <p class="intro">Sign in once to access your civic dashboard.</p>
+    <form id="loginForm">
+      <label for="role">I am signing in as</label>
+      <select id="role" name="role"><option value="citizen">Citizen</option><option value="department">Department</option><option value="admin">Administrator</option></select>
+      <label for="username">Username or email</label>
+      <input id="username" name="username" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <button type="submit">Sign in</button>
+      <button class="secondary" id="register" type="button">Create a citizen account</button>
+      <p class="message" id="message" role="alert"></p>
+    </form>
+    <p class="hint"><strong>Administrator and department accounts</strong> are supplied by your system administrator. Citizens can create an account here.</p>
+    <p class="hint"><a href="/">Return to the public portal</a></p>
+  </main>
+  <script>
+    const destinations = { admin: '/ADMIN.HTML/INDEX.HTML', department: '/DEPARTMENT.HTML/DASHBOARD.HTML', citizen: '/CITIZEN.HTML/DASHBOARD.HTML' };
+    const role = document.getElementById('role');
+    const selected = new URLSearchParams(location.search).get('role');
+    if (selected && destinations[selected]) role.value = selected;
+    document.getElementById('loginForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const message = document.getElementById('message');
+      message.textContent = '';
+      const data = Object.fromEntries(new FormData(event.currentTarget));
+      try {
+        const response = await fetch(`/api/${data.role === 'citizen' ? 'citizens' : data.role}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unable to sign in');
+        if (result.user.role !== data.role) throw new Error(`This account is not a ${data.role} account.`);
+        localStorage.setItem('authToken', result.token);
+        localStorage.setItem('currentUser', JSON.stringify(result.user));
+        location.assign(destinations[data.role]);
+      } catch (error) { message.textContent = error.message; }
+    });
+    document.getElementById('register').addEventListener('click', async () => {
+      const message = document.getElementById('message');
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+      if (!username || !password) { message.textContent = 'Enter a username and password to create a citizen account.'; return; }
+      try {
+        const response = await fetch('/api/citizens/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password, name: username }) });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unable to create account');
+        localStorage.setItem('authToken', result.token);
+        localStorage.setItem('currentUser', JSON.stringify(result.user));
+        location.assign(destinations.citizen);
+      } catch (error) { message.textContent = error.message; }
+    });
+  </script>
+</body>
+</html>
