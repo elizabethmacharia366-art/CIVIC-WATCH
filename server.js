@@ -5,7 +5,9 @@ const crypto = require('node:crypto');
 
 const root = __dirname;
 const frontend = path.join(root, 'FRONTEND');
-const storeFile = path.join(root, 'data', 'store.json');
+const dataDir = process.env.VERCEL ? '/tmp' : path.join(root, 'data');
+const storeFile = path.join(dataDir, 'store.json');
+const seedStoreFile = path.join(root, 'data', 'store.json');
 const initialStore = {
   users: [],
   reports: [],
@@ -23,8 +25,17 @@ const sessionSecret = process.env.CIVIC_SESSION_SECRET || crypto.randomBytes(32)
 const sessionLifetimeSeconds = 8 * 60 * 60;
 
 function loadStore() {
-  try { return { ...initialStore, ...JSON.parse(fs.readFileSync(storeFile, 'utf8')) }; }
-  catch { return structuredClone(initialStore); }
+  try {
+    if (fs.existsSync(storeFile)) {
+      return { ...initialStore, ...JSON.parse(fs.readFileSync(storeFile, 'utf8')) };
+    }
+    if (fs.existsSync(seedStoreFile)) {
+      return { ...initialStore, ...JSON.parse(fs.readFileSync(seedStoreFile, 'utf8')) };
+    }
+    return structuredClone(initialStore);
+  } catch {
+    return structuredClone(initialStore);
+  }
 }
 function ensureSeedUsers() {
   const configuredUsers = [
@@ -58,8 +69,12 @@ function upgradePasswordStorage() {
   if (changed) saveStore();
 }
 function saveStore() {
-  fs.mkdirSync(path.dirname(storeFile), { recursive: true });
-  fs.writeFileSync(storeFile, JSON.stringify(store, null, 2));
+  try {
+    fs.mkdirSync(path.dirname(storeFile), { recursive: true });
+    fs.writeFileSync(storeFile, JSON.stringify(store, null, 2));
+  } catch (err) {
+    console.error('Failed to save store:', err.message);
+  }
 }
 function json(res, status, value, headers = {}) {
   res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Access-Control-Allow-Origin': '*', ...headers });
@@ -225,4 +240,10 @@ const server = http.createServer(async (req, res) => {
   try { if (pathname.startsWith('/api/')) await api(req, res, pathname); else serveFile(req, res, pathname); }
   catch (error) { json(res, 500, { error: error.message }); }
 });
-server.listen(process.env.PORT || 3000, () => console.log('CivicWatch running at http://localhost:3000'));
+
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  server.listen(PORT, () => console.log(`CivicWatch running at http://localhost:${PORT}`));
+}
+
+module.exports = server;
