@@ -207,7 +207,7 @@ function collection(req, res, input, items, name, current, hidePasswords = false
 function serveFile(req, res, pathname) {
   let requested = pathname === '/' ? '/.HTML/PUBLIC.HTML' : pathname;
 
-  if (/^\/(ADMIN\.HTML|DEPARTMENT\.HTML|CITIZEN\.HTML)\
+  if (/^\/(ADMIN\.HTML|DEPARTMENT\.HTML|CITIZEN\.HTML)$/i.test(requested)) {
     requested = `/.HTML${requested}`;
   }
   let file = path.resolve(frontend, `.${requested}`);
@@ -217,7 +217,7 @@ function serveFile(req, res, pathname) {
   }
   if (!file.startsWith(frontend) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return json(res, 404, { error: 'Not found' });
   const isHtml = path.extname(file).toLowerCase() === '.html';
-  const roleMatch = file.match(/\/(ADMIN|DEPARTMENT|CITIZEN)\.HTML\
+  const roleMatch = file.match(/\/(ADMIN|DEPARTMENT|CITIZEN)\.HTML$/i);
   if (isHtml && roleMatch) {
     const requiredRole = roleMatch[1].toLowerCase();
     const user = userFor(req);
@@ -234,15 +234,18 @@ function serveFile(req, res, pathname) {
   }
   fs.createReadStream(file).pipe(res);
 }
-const server = http.createServer(async (req, res) => {
+
+async function requestHandler(req, res) {
   const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
   try { if (pathname.startsWith('/api/')) await api(req, res, pathname); else serveFile(req, res, pathname); }
   catch (error) { json(res, 500, { error: error.message }); }
-});
+}
+
+const server = http.createServer(requestHandler);
 
 if (require.main === module) {
   const PORT = process.env.PORT || 3000;
   server.listen(PORT, () => console.log(`CivicWatch running at http://localhost:${PORT}`));
 }
 
-module.exports = server;
+module.exports = requestHandler;
