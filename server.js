@@ -204,7 +204,10 @@ function createToken(user) {
   const signature = crypto.createHmac('sha256', sessionSecret).update(payload).digest('base64url');
   return `${payload}.${signature}`;
 }
-function sessionCookie(token) { return { 'Set-Cookie': `cw_session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=${sessionLifetimeSeconds}` }; }
+function sessionCookie(token) {
+  const secureFlag = (process.env.NODE_ENV === 'production' || process.env.VERCEL) ? '; Secure' : '';
+  return { 'Set-Cookie': `cw_session=${token}; HttpOnly; SameSite=Lax; Path=/${secureFlag}; Max-Age=${sessionLifetimeSeconds}` };
+}
 function collection(req, res, input, items, name, current, hidePasswords = false) {
   const pathname = new URL(req.url, 'http://localhost').pathname;
   const segments = pathname.split('/').filter(Boolean);
@@ -219,15 +222,15 @@ function collection(req, res, input, items, name, current, hidePasswords = false
 }
 function serveFile(req, res, pathname) {
   let requested = pathname === '/' ? '/.HTML/PUBLIC.HTML' : pathname;
-
-  if (/^\/(ADMIN\.HTML|DEPARTMENT\.HTML|CITIZEN\.HTML)$/i.test(requested)) {
-    requested = `/.HTML${requested}`;
-  }
   let file = path.resolve(frontend, `.${requested}`);
 
-  if (!fs.existsSync(file) && requested.split('/').filter(Boolean).length === 1) {
-    file = path.resolve(frontend, `.HTML/${requested}`);
+  if (!fs.existsSync(file) || fs.statSync(file).isDirectory()) {
+    const htmlFile = path.resolve(frontend, `.HTML${requested}`);
+    if (fs.existsSync(htmlFile) && !fs.statSync(htmlFile).isDirectory()) {
+      file = htmlFile;
+    }
   }
+
   if (!file.startsWith(frontend) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return json(res, 404, { error: 'Not found' });
   const isHtml = path.extname(file).toLowerCase() === '.html';
   const roleMatch = file.match(/\/(ADMIN|DEPARTMENT|CITIZEN)\.HTML(?:\/|$)/i);
