@@ -45,8 +45,11 @@ function loadStore() {
 function ensureSeedUsers() {
   const defaultSeeds = [
     { id: 'admin', username: process.env.CIVIC_ADMIN_USERNAME || 'admin', password: process.env.CIVIC_ADMIN_PASSWORD || 'admin123', role: 'admin', name: 'Elizabeth Macharia', email: 'admin@civicwatch.local' },
+    { id: 'admin2', username: 'admin2', password: 'admin123', role: 'admin', name: 'David Kimani', email: 'admin2@civicwatch.local' },
     { id: 'department', username: process.env.CIVIC_DEPARTMENT_USERNAME || 'publicworks', password: process.env.CIVIC_DEPARTMENT_PASSWORD || 'dept123', role: 'department', name: 'James Omondi', email: 'publicworks@civicwatch.local' },
-    { id: 'citizen1', username: process.env.CIVIC_CITIZEN_USERNAME || 'citizen1', password: process.env.CIVIC_CITIZEN_PASSWORD || 'citizen123', role: 'citizen', name: 'Mary Wanjiku', email: 'citizen1@example.com' }
+    { id: 'department2', username: 'sanitation', password: 'dept123', role: 'department', name: 'Grace Nyambura', email: 'sanitation@civicwatch.local' },
+    { id: 'citizen1', username: process.env.CIVIC_CITIZEN_USERNAME || 'citizen1', password: process.env.CIVIC_CITIZEN_PASSWORD || 'citizen123', role: 'citizen', name: 'Mary Wanjiku', email: 'citizen1@example.com' },
+    { id: 'citizen2', username: 'citizen2', password: 'citizen123', role: 'citizen', name: 'John Kamau', email: 'citizen2@example.com' }
   ];
   for (const seed of defaultSeeds) {
     let existing = store.users.find(user => user.username.toLowerCase() === seed.username.toLowerCase() || user.id === seed.id);
