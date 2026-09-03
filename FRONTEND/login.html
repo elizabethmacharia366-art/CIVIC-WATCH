@@ -27,7 +27,13 @@
     
     .message { min-height: 22px; margin: 16px 0 0; color: #ff8e8e; font-size: .9rem; text-align: center; font-weight: 500; }
     .message.success { color: var(--accent); }
-    
+
+    .password-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
+    .password-wrapper input { padding-right: 44px; }
+    .password-toggle { position: absolute; right: 8px; background: transparent; border: none; color: var(--muted); cursor: pointer; padding: 6px; width: 34px; min-height: 34px; display: flex; align-items: center; justify-content: center; transition: color .2s ease, background .2s ease; border-radius: 6px; }
+    .password-toggle:hover { color: var(--accent); background: rgba(55, 223, 136, 0.12); }
+    .password-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; pointer-events: none; }
+
     .hint { margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; line-height: 1.5; text-align: center; }
     .hint strong { color: #fff; }
     a { color: var(--accent); text-decoration: none; }
@@ -70,12 +76,24 @@
       <input id="username" name="username" placeholder="Enter username or email" autocomplete="username" required>
       
       <label for="password">Password</label>
-      <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+      <div class="password-wrapper">
+        <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('password', this)" aria-label="Show password" tabindex="0">
+          <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-closed hidden" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+        </button>
+      </div>
 
       <!-- Register only confirm password -->
       <div id="confirmPasswordGroup" class="hidden">
         <label for="confirmPassword">Confirm Password</label>
-        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" autocomplete="new-password">
+        <div class="password-wrapper">
+          <input id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" autocomplete="new-password">
+          <button type="button" class="password-toggle" onclick="togglePasswordVisibility('confirmPassword', this)" aria-label="Show password" tabindex="0">
+            <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="eye-closed hidden" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          </button>
+        </div>
       </div>
 
       <button type="submit" class="submit-btn" id="submitBtn">Sign in</button>
@@ -87,6 +105,23 @@
   </main>
 
   <script>
+    function togglePasswordVisibility(inputId, toggleBtn) {
+      const input = document.getElementById(inputId);
+      const eyeOpen = toggleBtn.querySelector('.eye-open');
+      const eyeClosed = toggleBtn.querySelector('.eye-closed');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eyeOpen.classList.add('hidden');
+        eyeClosed.classList.remove('hidden');
+        toggleBtn.setAttribute('aria-label', 'Hide password');
+      } else {
+        input.type = 'password';
+        eyeOpen.classList.remove('hidden');
+        eyeClosed.classList.add('hidden');
+        toggleBtn.setAttribute('aria-label', 'Show password');
+      }
+    }
+
     const destinations = { admin: '/ADMIN.HTML/INDEX.HTML', department: '/DEPARTMENT.HTML/DASHBOARD.HTML', citizen: '/CITIZEN.HTML/DASHBOARD.HTML' };
     let currentMode = 'login';
 

@@ -168,7 +168,7 @@
   </div>
 
   <script>
-    (async ()=>{ const api='http://localhost:3000/api/departments/analytics'; const demo={kpis:{totalTasks:12,completionRate:75,onTimeCompletion:58,overdueCount:2},tasksByStatus:{'pending':4,'in-progress':5,'completed':3},tasksByAssignee:{'Officer A':5,'Officer B':4,'Officer C':3},taskTimeline:{labels:['Week 1','Week 2','Week 3','Week 4'],data:[2,5,4,1]}};
+    (async ()=>{ const api='/api/departments/analytics'; const demo={kpis:{totalTasks:12,completionRate:75,onTimeCompletion:58,overdueCount:2},tasksByStatus:{'pending':4,'in-progress':5,'completed':3},tasksByAssignee:{'Officer A':5,'Officer B':4,'Officer C':3},taskTimeline:{labels:['Week 1','Week 2','Week 3','Week 4'],data:[2,5,4,1]}};
       try{const r=await fetch(api);if(!r.ok)throw 0;render(await r.json());}catch(e){render(demo);}
       function render(d){if(d.kpis){document.getElementById('totalTasksKPI').textContent=d.kpis.totalTasks||12;document.getElementById('completionRateKPI').textContent=(d.kpis.completionRate||75)+'%';document.getElementById('onTimeKPI').textContent=(d.kpis.onTimeCompletion||58)+'%';document.getElementById('overdueKPI').textContent=d.kpis.overdueCount||2;}
         if(d.tasksByStatus)new Chart(document.getElementById('taskStatusChart'),{type:'doughnut',data:{labels:Object.keys(d.tasksByStatus),datasets:[{data:Object.values(d.tasksByStatus),backgroundColor:['#ff9800','#2196f3','#4caf50']}]},options:{responsive:true,maintainAspectRatio:false}});

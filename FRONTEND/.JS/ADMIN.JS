@@ -1,12 +1,21 @@
 
 class AdminModule {
   constructor() {
-    this.apiBaseUrl = 'http://localhost:3000/api/admin';
+    this.apiBaseUrl = '/api/admin';
     this.currentUser = null;
     this.users = [];
     this.submissions = [];
     this.init();
     window.clearAccess = async () => { await fetch('/api/logout', { method: 'POST' }); localStorage.removeItem('authToken'); localStorage.removeItem('currentUser'); location.assign('/login.html?role=admin'); };
+  }
+
+  authFetch(url, options = {}) {
+    const token = localStorage.getItem('authToken');
+    const headers = { ...options.headers };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return fetch(url, { ...options, headers });
   }
 
   init() {
@@ -130,7 +139,7 @@ class AdminModule {
 
   async loadDashboardData() {
     try {
-      const response = await fetch(`${this.apiBaseUrl}/dashboard`);
+      const response = await this.authFetch(`${this.apiBaseUrl}/dashboard`);
       if (!response.ok) throw new Error('Failed to load dashboard');
 
       const data = await response.json();
@@ -253,7 +262,7 @@ class AdminModule {
 
   async loadUsers() {
     try {
-      const response = await fetch(`${this.apiBaseUrl}/users`);
+      const response = await this.authFetch(`${this.apiBaseUrl}/users`);
       if (!response.ok) throw new Error('Failed to load users');
 
       this.users = await response.json();
@@ -310,7 +319,7 @@ class AdminModule {
 
       const method = userData.id ? 'PUT' : 'POST';
 
-      const response = await fetch(url, {
+      const response = await this.authFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData)
@@ -331,7 +340,7 @@ class AdminModule {
 
   async editUser(userId) {
     try {
-      const response = await fetch(`${this.apiBaseUrl}/users/${userId}`);
+      const response = await this.authFetch(`${this.apiBaseUrl}/users/${userId}`);
       if (!response.ok) throw new Error('Failed to load user');
 
       const user = await response.json();
@@ -355,7 +364,7 @@ class AdminModule {
     if (!confirm('Are you sure you want to delete this user?')) return;
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/users/${userId}`, {
+      const response = await this.authFetch(`${this.apiBaseUrl}/users/${userId}`, {
         method: 'DELETE'
       });
 
@@ -411,7 +420,7 @@ class AdminModule {
 
   async loadSubmissions() {
     try {
-      const response = await fetch(`${this.apiBaseUrl}/submissions`);
+      const response = await this.authFetch(`${this.apiBaseUrl}/submissions`);
       if (!response.ok) throw new Error('Failed to load submissions');
 
       this.submissions = await response.json();
@@ -463,7 +472,7 @@ class AdminModule {
 
   async reviewSubmission(submissionId) {
     try {
-      const response = await fetch(`${this.apiBaseUrl}/submissions/${submissionId}`);
+      const response = await this.authFetch(`${this.apiBaseUrl}/submissions/${submissionId}`);
       if (!response.ok) throw new Error('Failed to load submission');
 
       const submission = await response.json();
@@ -505,7 +514,7 @@ class AdminModule {
     const comments = document.getElementById('reviewComments')?.value || '';
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/submissions/${submissionId}/approve`, {
+      const response = await this.authFetch(`${this.apiBaseUrl}/submissions/${submissionId}/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'approved', comments })
@@ -526,7 +535,7 @@ class AdminModule {
     const comments = document.getElementById('reviewComments')?.value || '';
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/submissions/${submissionId}/reject`, {
+      const response = await this.authFetch(`${this.apiBaseUrl}/submissions/${submissionId}/reject`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'rejected', comments })
@@ -556,7 +565,7 @@ class AdminModule {
     }
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/submissions/${submissionId}/assign`, {
+      const response = await this.authFetch(`${this.apiBaseUrl}/submissions/${submissionId}/assign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ assigneeId: assigneeSelect.value })
@@ -579,7 +588,7 @@ class AdminModule {
     const contentData = Object.fromEntries(formData);
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/content`, {
+      const response = await this.authFetch(`${this.apiBaseUrl}/content`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(contentData)

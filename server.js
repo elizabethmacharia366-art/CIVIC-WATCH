@@ -21,7 +21,7 @@ const initialStore = {
 let store = loadStore();
 ensureSeedUsers();
 upgradePasswordStorage();
-const sessionSecret = process.env.CIVIC_SESSION_SECRET || crypto.randomBytes(32).toString('hex');
+const sessionSecret = process.env.CIVIC_SESSION_SECRET || 'civicwatch_default_session_secret_key_2026';
 const sessionLifetimeSeconds = 8 * 60 * 60;
 
 function loadStore() {
@@ -38,12 +38,19 @@ function loadStore() {
   }
 }
 function ensureSeedUsers() {
-  const configuredUsers = [
-    { id: 'admin', username: process.env.CIVIC_ADMIN_USERNAME, password: process.env.CIVIC_ADMIN_PASSWORD, role: 'admin', name: 'Administrator' },
-    { id: 'department', username: process.env.CIVIC_DEPARTMENT_USERNAME, password: process.env.CIVIC_DEPARTMENT_PASSWORD, role: 'department', name: 'Public Works' }
-  ].filter(user => user.username && user.password);
-  for (const seed of configuredUsers) {
-    if (!store.users.some(user => user.username === seed.username)) store.users.push(structuredClone(seed));
+  const defaultSeeds = [
+    { id: 'admin', username: process.env.CIVIC_ADMIN_USERNAME || 'admin', password: process.env.CIVIC_ADMIN_PASSWORD || 'admin123', role: 'admin', name: 'Elizabeth Macharia', email: 'admin@civicwatch.local' },
+    { id: 'department', username: process.env.CIVIC_DEPARTMENT_USERNAME || 'publicworks', password: process.env.CIVIC_DEPARTMENT_PASSWORD || 'dept123', role: 'department', name: 'James Omondi', email: 'publicworks@civicwatch.local' },
+    { id: 'citizen1', username: process.env.CIVIC_CITIZEN_USERNAME || 'citizen1', password: process.env.CIVIC_CITIZEN_PASSWORD || 'citizen123', role: 'citizen', name: 'Mary Wanjiku', email: 'citizen1@example.com' }
+  ];
+  for (const seed of defaultSeeds) {
+    let existing = store.users.find(user => user.username.toLowerCase() === seed.username.toLowerCase() || user.id === seed.id);
+    if (!existing) {
+      existing = { id: seed.id, username: seed.username, email: seed.email, name: seed.name, role: seed.role, passwordHash: hashPassword(seed.password) };
+      store.users.push(existing);
+    } else if (!existing.passwordHash && seed.password) {
+      existing.passwordHash = hashPassword(seed.password);
+    }
   }
   saveStore();
 }
@@ -136,7 +143,7 @@ async function api(req, res, pathname) {
   }
   if (resource === 'login' && method === 'POST') {
     const rawUsername = (input.username || input.email || '').trim();
-    const expectedRole = role === 'citizens' ? 'citizen' : role;
+    const expectedRole = (role === 'citizens' || role === 'citizen') ? 'citizen' : (role === 'departments' || role === 'department') ? 'department' : (role === 'admins' || role === 'admin') ? 'admin' : role;
     if (!['admin', 'department', 'citizen'].includes(expectedRole)) return json(res, 404, { error: 'Login route not found' });
     const user = store.users.find(u => (u.username.toLowerCase() === rawUsername.toLowerCase() || (u.email && u.email.toLowerCase() === rawUsername.toLowerCase())) && u.role === expectedRole && verifyPassword(input.password, u.passwordHash));
     if (!user) return json(res, 401, { error: 'Invalid credentials' });
@@ -146,9 +153,9 @@ async function api(req, res, pathname) {
   if (pathname === '/api/logout' && method === 'POST') return json(res, 200, { success: true }, { 'Set-Cookie': 'cw_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0' });
   if (resource === 'current-user') return current ? json(res, 200, sanitizeUser(current)) : json(res, 401, { error: 'Sign in required' });
   if (!current) return json(res, 401, { error: 'Sign in required' });
-  if (role === 'admin' && current.role !== 'admin') return json(res, 403, { error: 'Administrator access required' });
-  if (role === 'citizens' && current.role !== 'citizen') return json(res, 403, { error: 'Citizen access required' });
-  if (role === 'departments' && !['admin', 'department'].includes(current.role)) return json(res, 403, { error: 'Department access required' });
+  if ((role === 'admin' || role === 'admins') && current.role !== 'admin') return json(res, 403, { error: 'Administrator access required' });
+  if ((role === 'citizens' || role === 'citizen') && current.role !== 'citizen') return json(res, 403, { error: 'Citizen access required' });
+  if ((role === 'departments' || role === 'department') && !['admin', 'department'].includes(current.role)) return json(res, 403, { error: 'Department access required' });
   if (resource === 'profile') {
     if (method === 'GET') return json(res, 200, sanitizeUser(current));
     if (!['PUT', 'PATCH'].includes(method)) return json(res, 405, { error: 'Method not allowed' });
@@ -223,7 +230,7 @@ function serveFile(req, res, pathname) {
   }
   if (!file.startsWith(frontend) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return json(res, 404, { error: 'Not found' });
   const isHtml = path.extname(file).toLowerCase() === '.html';
-  const roleMatch = file.match(/\/(ADMIN|DEPARTMENT|CITIZEN)\.HTML$/i);
+  const roleMatch = file.match(/\/(ADMIN|DEPARTMENT|CITIZEN)\.HTML(?:\/|$)/i);
   if (isHtml && roleMatch) {
     const requiredRole = roleMatch[1].toLowerCase();
     const user = userFor(req);

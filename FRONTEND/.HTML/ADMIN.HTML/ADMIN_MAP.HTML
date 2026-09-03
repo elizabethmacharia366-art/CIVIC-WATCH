@@ -71,7 +71,7 @@
 
     async function loadDepartments() {
       try {
-        const res = await fetch('http://localhost:3000/api/departments');
+        const res = await fetch('/api/departments');
         if (!res.ok) return;
         const depts = await res.json();
         const sel = document.getElementById('admin-filter-dept');
@@ -92,7 +92,7 @@
       const dept = document.getElementById('admin-filter-dept').value;
       const status = document.getElementById('admin-filter-status').value;
       try {
-        const res = await fetch('http://localhost:3000/api/reports');
+        const res = await fetch('/api/reports');
         if (!res.ok) throw new Error('Failed fetch');
         const data = await res.json();
         data.forEach(r => {
@@ -165,7 +165,7 @@
       try {
         const payload = { latitude: ll.lat, longitude: ll.lng, source: 'admin_map' };
         if (deptId && deptId !== 'all') payload.departmentId = deptId;
-        const res = await fetch('http://localhost:3000/api/locations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const res = await fetch('/api/locations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('authToken') || '') }, body: JSON.stringify(payload) });
         if (!res.ok) throw new Error('Save failed');
         alert('Location saved successfully');
       } catch (e) { alert('Failed to save location: ' + e.message); }

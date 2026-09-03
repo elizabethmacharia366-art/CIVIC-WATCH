@@ -103,7 +103,7 @@
         if (!userMarker) return alert('No marker to save. Click the map or use "Mark My Location".');
         const ll = userMarker.getLatLng();
         try {
-          const res = await fetch('http://localhost:3000/api/locations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ latitude: ll.lat, longitude: ll.lng, source: 'citizen_map' }) });
+          const res = await fetch('/api/locations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('authToken') || '') }, body: JSON.stringify({ latitude: ll.lat, longitude: ll.lng, source: 'citizen_map' }) });
           if (!res.ok) throw new Error('Save failed');
           alert('Location saved successfully');
         } catch (e) { alert('Failed to save location: ' + e.message); }
@@ -126,7 +126,7 @@
     async function loadReports() {
       markersLayer.clearLayers();
       try {
-        const res = await fetch('http://localhost:3000/api/reports');
+        const res = await fetch('/api/reports');
         if (!res.ok) throw new Error('no api');
         const data = await res.json();
           data.forEach(r => {

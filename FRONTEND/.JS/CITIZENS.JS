@@ -1,12 +1,21 @@
 
 class CitizenModule {
   constructor() {
-    this.apiBaseUrl = 'http://localhost:3000/api/citizens';
+    this.apiBaseUrl = '/api/citizens';
     this.currentUser = null;
     this.userReports = [];
     this.notifications = [];
     this.feedbackList = [];
     this.init();
+  }
+
+  authFetch(url, options = {}) {
+    const token = localStorage.getItem('authToken');
+    const headers = { ...options.headers };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return fetch(url, { ...options, headers });
   }
 
   init() {
@@ -434,7 +443,7 @@ class CitizenModule {
     const profileData = Object.fromEntries(formData);
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/profile`, {
+      const response = await this.authFetch(`${this.apiBaseUrl}/profile`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(profileData)
@@ -461,7 +470,7 @@ class CitizenModule {
 
   async loadDashboardStats() {
     try {
-      const response = await fetch(`${this.apiBaseUrl}/dashboard`);
+      const response = await this.authFetch(`${this.apiBaseUrl}/dashboard`);
       if (!response.ok) throw new Error('Failed to load dashboard');
 
       const stats = await response.json();
@@ -579,7 +588,7 @@ class CitizenModule {
     };
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/reports`, {
+      const response = await this.authFetch(`${this.apiBaseUrl}/reports`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(reportData)
@@ -637,7 +646,7 @@ class CitizenModule {
 
   async loadUserReports() {
     try {
-      const response = await fetch(`${this.apiBaseUrl}/reports`);
+      const response = await this.authFetch(`${this.apiBaseUrl}/reports`);
       if (!response.ok) throw new Error('Failed to load reports');
 
       this.userReports = await response.json();
@@ -660,7 +669,7 @@ class CitizenModule {
       if (statusFilter) url += `status=${statusFilter}&`;
       if (dateFilter) url += `date=${dateFilter}`;
 
-      const response = await fetch(url);
+      const response = await this.authFetch(url);
       if (!response.ok) throw new Error('Failed to filter reports');
 
       this.userReports = await response.json();
@@ -692,7 +701,7 @@ class CitizenModule {
 
   async viewReportDetails(reportId) {
     try {
-      const response = await fetch(`${this.apiBaseUrl}/reports/${reportId}`);
+      const response = await this.authFetch(`${this.apiBaseUrl}/reports/${reportId}`);
       if (!response.ok) throw new Error('Failed to load report');
 
       const report = await response.json();
@@ -747,7 +756,7 @@ class CitizenModule {
     if (!confirm('Are you sure you want to delete this report?')) return;
 
     try {
-      const response = await fetch(`${this.apiBaseUrl}/reports/${reportId}`, {
+      const response = await this.authFetch(`${this.apiBaseUrl}/reports/${reportId}`, {
         method: 'DELETE'
       });
 
@@ -773,7 +782,7 @@ class CitizenModule {
 
   async loadNotifications() {
     try {
-      const response = await fetch(`${this.apiBaseUrl}/notifications`);
+      const response = await this.authFetch(`${this.apiBaseUrl}/notifications`);
       if (!response.ok) throw new Error('Failed to load notifications');
 
       this.notifications = await response.json();

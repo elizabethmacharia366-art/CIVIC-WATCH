@@ -1,12 +1,21 @@
 
 class DepartmentModule {
   constructor() {
-    this.apiBaseUrl = 'http://localhost:3000/api/departments';
+    this.apiBaseUrl = '/api/departments';
     this.currentDepartment = null;
     this.departments = [];
     this.reports = [];
     this.init();
     window.clearAccess = async () => { await fetch('/api/logout', { method: 'POST' }); localStorage.removeItem('authToken'); localStorage.removeItem('currentUser'); location.assign('/login.html?role=department'); };
+  }
+
+  authFetch(url, options = {}) {
+    const token = localStorage.getItem('authToken');
+    const headers = { ...options.headers };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return fetch(url, { ...options, headers });
   }
 
   init() {
@@ -104,7 +113,7 @@ class DepartmentModule {
 
   async loadDepartments() {
     try {
-      const response = await fetch(this.apiBaseUrl);
+      const response = await this.authFetch(this.apiBaseUrl);
       if (!response.ok) throw new Error('Failed to load departments');
 
       this.departments = await response.json();
@@ -142,7 +151,7 @@ class DepartmentModule {
 
   async loadDepartmentDetails(deptId) {
     try {
-      const response = await fetch(`${this.apiBaseUrl}/${deptId}`);
+      const response = await this.authFetch(`${this.apiBaseUrl}/${deptId}`);
       if (!response.ok) throw new Error('Failed to load department details');
 
       const details = await response.json();
@@ -187,7 +196,7 @@ class DepartmentModule {
 
       const method = data.id ? 'PUT' : 'POST';
 
-      const response = await fetch(url, {
+      const response = await this.authFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -216,7 +225,7 @@ class DepartmentModule {
     };
 
     try {
-      const response = await fetch('http://localhost:3000/api/tasks', {
+      const response = await this.authFetch('/api/tasks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(task)
@@ -238,11 +247,11 @@ class DepartmentModule {
     const priorityFilter = document.getElementById('priorityFilter')?.value;
 
     try {
-      let url = `http://localhost:3000/api/reports?departmentId=${this.currentDepartment?.id}`;
+      let url = `/api/reports?departmentId=${this.currentDepartment?.id || ''}`;
       if (statusFilter) url += `&status=${statusFilter}`;
       if (priorityFilter) url += `&priority=${priorityFilter}`;
 
-      const response = await fetch(url);
+      const response = await this.authFetch(url);
       if (!response.ok) throw new Error('Failed to filter reports');
 
       this.reports = await response.json();
@@ -274,7 +283,7 @@ class DepartmentModule {
 
   async viewReport(reportId) {
     try {
-      const response = await fetch(`http://localhost:3000/api/reports/${reportId}`);
+      const response = await this.authFetch(`/api/reports/${reportId}`);
       if (!response.ok) throw new Error('Failed to load report');
 
       const report = await response.json();
@@ -335,7 +344,7 @@ class DepartmentModule {
 
   async updateDashboardStats() {
     try {
-      const response = await fetch(`http://localhost:3000/api/statistics/department`);
+      const response = await this.authFetch('/api/statistics/department');
       if (!response.ok) throw new Error('Failed to load stats');
 
       const stats = await response.json();

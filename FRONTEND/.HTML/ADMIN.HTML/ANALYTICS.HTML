@@ -173,7 +173,7 @@
   <script>
     async function fetchDashboardData() {
       try {
-        const res = await fetch('http://localhost:3000/api/admin/dashboard');
+        const res = await fetch('/api/admin/dashboard', { headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('authToken') || '') } });
         if (!res.ok) throw new Error('no-data');
         return await res.json();
       } catch (e) {
