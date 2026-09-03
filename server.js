@@ -24,8 +24,13 @@ upgradePasswordStorage();
 const sessionSecret = process.env.CIVIC_SESSION_SECRET || 'civicwatch_default_session_secret_key_2026';
 const sessionLifetimeSeconds = 8 * 60 * 60;
 
+const tmpStoreFile = path.join('/tmp', 'civicwatch_store.json');
+
 function loadStore() {
   try {
+    if (fs.existsSync(tmpStoreFile)) {
+      return { ...initialStore, ...JSON.parse(fs.readFileSync(tmpStoreFile, 'utf8')) };
+    }
     if (fs.existsSync(storeFile)) {
       return { ...initialStore, ...JSON.parse(fs.readFileSync(storeFile, 'utf8')) };
     }
@@ -80,7 +85,12 @@ function saveStore() {
     fs.mkdirSync(path.dirname(storeFile), { recursive: true });
     fs.writeFileSync(storeFile, JSON.stringify(store, null, 2));
   } catch (err) {
-    console.error('Failed to save store:', err.message);
+    try {
+      fs.mkdirSync('/tmp', { recursive: true });
+      fs.writeFileSync(tmpStoreFile, JSON.stringify(store, null, 2));
+    } catch (e) {
+      console.error('Failed store save fallback:', e.message);
+    }
   }
 }
 function json(res, status, value, headers = {}) {
@@ -117,12 +127,16 @@ function stats() { return { users: store.users.length, reports: store.reports.le
 
 async function api(req, res, pathname) {
   if (req.method === 'OPTIONS') { res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type, Authorization', 'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS' }); return res.end(); }
-  const parts = pathname.split('/').filter(Boolean);
   const method = req.method;
-  const current = userFor(req);
   const input = ['POST', 'PUT', 'PATCH'].includes(method) ? await body(req) : {};
+  return handleApiRoute(req, res, pathname, input, method);
+}
+
+function handleApiRoute(req, res, pathname, input, method) {
+  const parts = pathname.split('/').filter(Boolean);
   const role = parts[1];
   const resource = parts[2];
+  const current = userFor(req);
 
   if (pathname === '/api/health') return json(res, 200, { ok: true });
   if ((resource === 'register' || role === 'register' || pathname === '/api/register' || pathname === '/api/auth/register') && method === 'POST') {
@@ -137,16 +151,33 @@ async function api(req, res, pathname) {
       return json(res, 409, { error: 'An account with that username or email already exists' });
     }
     const user = { id: id(), username: rawUsername, email, name, passwordHash: hashPassword(password), role: 'citizen' };
-    store.users.push(user); saveStore();
+    store.users.push(user);
+    saveStore();
     const token = createToken(user);
     return json(res, 201, { token, user: sanitizeUser(user) }, sessionCookie(token));
   }
   if (resource === 'login' && method === 'POST') {
     const rawUsername = (input.username || input.email || '').trim();
-    const expectedRole = (role === 'citizens' || role === 'citizen') ? 'citizen' : (role === 'departments' || role === 'department') ? 'department' : (role === 'admins' || role === 'admin') ? 'admin' : role;
-    if (!['admin', 'department', 'citizen'].includes(expectedRole)) return json(res, 404, { error: 'Login route not found' });
-    const user = store.users.find(u => (u.username.toLowerCase() === rawUsername.toLowerCase() || (u.email && u.email.toLowerCase() === rawUsername.toLowerCase())) && u.role === expectedRole && verifyPassword(input.password, u.passwordHash));
-    if (!user) return json(res, 401, { error: 'Invalid credentials' });
+    if (!rawUsername || !input.password) return json(res, 400, { error: 'Username and password are required' });
+
+    if (fs.existsSync(tmpStoreFile)) {
+      try {
+        const loaded = JSON.parse(fs.readFileSync(tmpStoreFile, 'utf8'));
+        if (Array.isArray(loaded.users)) store.users = loaded.users;
+      } catch (e) {}
+    }
+
+    const user = store.users.find(u => (u.username.toLowerCase() === rawUsername.toLowerCase() || (u.email && u.email.toLowerCase() === rawUsername.toLowerCase())));
+    if (!user) return json(res, 401, { error: 'Invalid username or password' });
+
+    const expectedRole = (role === 'citizens' || role === 'citizen') ? 'citizen' : (role === 'departments' || role === 'department') ? 'department' : (role === 'admins' || role === 'admin') ? 'admin' : (input.role || user.role);
+    if (user.role !== expectedRole) {
+      return json(res, 401, { error: `Account exists as a ${user.role} account. Please select "${user.role.toUpperCase()}" role.` });
+    }
+    if (!verifyPassword(input.password, user.passwordHash)) {
+      return json(res, 401, { error: 'Invalid password. Please check your password.' });
+    }
+
     const token = createToken(user);
     return json(res, 200, { token, user: sanitizeUser(user) }, sessionCookie(token));
   }
