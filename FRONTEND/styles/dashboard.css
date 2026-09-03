@@ -51,7 +51,9 @@ body {
   justify-content: space-between;
   gap: 16px;
   padding: 16px clamp(20px, 4vw, 48px);
-  background: var(--cw-surface) !important;
+  background: rgba(32, 44, 51, 0.92) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   border-bottom: 1px solid var(--cw-border) !important;
   position: sticky;
