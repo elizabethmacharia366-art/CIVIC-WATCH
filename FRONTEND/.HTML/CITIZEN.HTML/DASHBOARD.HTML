@@ -13,7 +13,13 @@
 
   <header>
     <div class="header-brand">
-      <h1 data-i18n="citizen_dashboard">Citizen Dashboard</h1>
+      <div class="brand-logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <h1 data-i18n="citizen_dashboard">CivicWatch Citizen Portal</h1>
+        <div style="font-size:0.78rem;color:var(--cw-muted);"><span class="status-dot"></span><span data-i18n="system_active">System Active</span></div>
+      </div>
       <span class="role-badge">Citizen</span>
     </div>
     <div class="header-controls">
@@ -26,16 +32,46 @@
   </header>
 
   <nav>
-    <a href="DASHBOARD.HTML" class="active" data-i18n="welcome">Overview</a>
-    <a href="SUBMIT_REPORT.HTML" data-i18n="submit_report">Submit Report</a>
-    <a href="MY_REPORT.HTML" data-i18n="my_reports">My Reports</a>
-    <a href="NOTIFICATION.HTML" data-i18n="notifications">Notifications</a>
-    <a href="FEEDBACK.HTML" data-i18n="feedback">Feedback</a>
-    <a href="MAP_VIEW.HTML" data-i18n="map_view">Map</a>
-    <a href="RESOURCE.HTML" data-i18n="resources">Resources</a>
-    <a href="SETTING.HTML" data-i18n="settings">Settings</a>
-    <a href="PROFILE.HTML">My Profile</a>
-    <a href="LOGOUT.HTML" class="nav-logout" data-i18n="logout">Logout</a>
+    <a href="DASHBOARD.HTML" class="active" data-i18n="welcome">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8v-10h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Overview
+    </a>
+    <a href="SUBMIT_REPORT.HTML" data-i18n="submit_report">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      Submit Report
+    </a>
+    <a href="MY_REPORT.HTML" data-i18n="my_reports">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+      My Reports
+    </a>
+    <a href="NOTIFICATION.HTML" data-i18n="notifications">
+      <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+      Notifications
+    </a>
+    <a href="FEEDBACK.HTML" data-i18n="feedback">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+      Feedback
+    </a>
+    <a href="MAP_VIEW.HTML" data-i18n="map_view">
+      <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+      Map View
+    </a>
+    <a href="RESOURCE.HTML" data-i18n="resources">
+      <svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+      Resources
+    </a>
+    <a href="SETTING.HTML" data-i18n="settings">
+      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      Settings
+    </a>
+    <a href="PROFILE.HTML">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      My Profile
+    </a>
+    <a href="LOGOUT.HTML" class="nav-logout" data-i18n="logout">
+      <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+      Logout
+    </a>
   </nav>
 
   <main>
@@ -44,46 +80,66 @@
 
       <div class="metrics">
         <div class="metric">
-          <h3>Reports Submitted</h3>
+          <div class="metric-header">
+            <h3>Reports Submitted</h3>
+            <div class="metric-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/></svg>
+            </div>
+          </div>
           <p id="citizenSubmitted">3</p>
+          <div class="metric-trend">Total submitted issues</div>
         </div>
+
         <div class="metric">
-          <h3>Reports Resolved</h3>
+          <div class="metric-header">
+            <h3>Reports Resolved</h3>
+            <div class="metric-icon metric-icon--blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+          </div>
           <p id="citizenResolved">1</p>
+          <div class="metric-trend" style="color:var(--cw-blue);">Successfully addressed</div>
         </div>
+
         <div class="metric">
-          <h3>Pending Reports</h3>
+          <div class="metric-header">
+            <h3>Pending Reports</h3>
+            <div class="metric-icon metric-icon--amber">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+          </div>
           <p id="citizenPending">2</p>
+          <div class="metric-trend" style="color:var(--cw-amber);">Under municipal review</div>
         </div>
       </div>
 
       <div class="report-table">
-        <h3>Reported Issues</h3>
+        <h3>Recent Reported Issues</h3>
         <table>
           <thead>
             <tr>
-              <th>Title</th>
+              <th>Issue Title</th>
               <th>Status</th>
               <th>Date Submitted</th>
-              <th>Feedback</th>
+              <th>Department Feedback</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Blocked Drainage in Umoja</td>
-              <td><span class="badge badge-resolved">Resolved</span></td>
+              <td style="font-weight:600;">Blocked Drainage in Umoja</td>
+              <td><span class="badge badge-resolved">✓ Resolved</span></td>
               <td>2025-12-20</td>
               <td>Issue cleared by sanitation team</td>
             </tr>
             <tr>
-              <td>Potholes on Juja Road</td>
-              <td><span class="badge badge-in-progress">In Progress</span></td>
+              <td style="font-weight:600;">Potholes on Juja Road</td>
+              <td><span class="badge badge-in-progress">⚙ In Progress</span></td>
               <td>2025-12-25</td>
               <td>Scheduled for repair next week</td>
             </tr>
             <tr>
-              <td>Streetlight not working</td>
-              <td><span class="badge badge-pending">Pending</span></td>
+              <td style="font-weight:600;">Streetlight not working</td>
+              <td><span class="badge badge-pending">⏱ Pending</span></td>
               <td>2025-12-27</td>
               <td>Awaiting assignment</td>
             </tr>

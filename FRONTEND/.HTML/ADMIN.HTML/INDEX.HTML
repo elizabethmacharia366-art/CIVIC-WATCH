@@ -13,8 +13,14 @@
 
   <header>
     <div class="header-brand">
-      <h1 data-i18n="admin_dashboard">Admin Dashboard</h1>
-      <span class="role-badge">Administrator</span>
+      <div class="brand-logo" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <div>
+        <h1 data-i18n="admin_dashboard">CivicWatch Administration</h1>
+        <div style="font-size:0.78rem;color:var(--cw-muted);"><span class="status-dot"></span><span data-i18n="system_active">System Oversight Active</span></div>
+      </div>
+      <span class="role-badge role-badge--admin">Administrator</span>
     </div>
     <div class="header-controls">
       <select id="langSelector">
@@ -26,38 +32,95 @@
   </header>
 
   <nav>
-    <a href="INDEX.HTML" class="active" data-i18n="dashboard">Overview</a>
-    <a href="ADMIN_MAP.HTML" data-i18n="adim_map">Admin Map</a>
-    <a href="CONTENT MANAGEMENT.HTML" data-i18n="content_mgmt">Content Management</a>
-    <a href="USERS MANAGEMENT.HTML" data-i18n="user_mgmt">User Management</a>
-    <a href="SUBMISSION MANAGEMET.HTML" data-i18n="submission_mgmt">Submissions</a>
-    <a href="NOTIFICATIONS.HTML" data-i18n="notifications">Notifications</a>
-    <a href="ANALYTICS.HTML" data-i18n="analytics">Analytics</a>
-    <a href="SETTING.HTML" data-i18n="admin_settings">Settings</a>
-    <a href="PROFILE.HTML">My Profile</a>
-    <a href="LOGOUT.HTML" class="nav-logout" data-i18n="logout">Logout</a>
+    <a href="INDEX.HTML" class="active" data-i18n="dashboard">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8v-10h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Overview
+    </a>
+    <a href="ADMIN_MAP.HTML" data-i18n="adim_map">
+      <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+      Admin Map
+    </a>
+    <a href="CONTENT MANAGEMENT.HTML" data-i18n="content_mgmt">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+      Content Management
+    </a>
+    <a href="USERS MANAGEMENT.HTML" data-i18n="user_mgmt">
+      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      User Management
+    </a>
+    <a href="SUBMISSION MANAGEMET.HTML" data-i18n="submission_mgmt">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+      Submissions
+    </a>
+    <a href="NOTIFICATIONS.HTML" data-i18n="notifications">
+      <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+      Notifications
+    </a>
+    <a href="ANALYTICS.HTML" data-i18n="analytics">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+      Analytics
+    </a>
+    <a href="SETTING.HTML" data-i18n="admin_settings">
+      <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      Settings
+    </a>
+    <a href="PROFILE.HTML">
+      <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+      My Profile
+    </a>
+    <a href="LOGOUT.HTML" class="nav-logout" data-i18n="logout">
+      <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+      Logout
+    </a>
   </nav>
 
   <main>
     <section id="adminDashboard">
-      <h2 data-i18n="dashboard">Overview</h2>
+      <h2 data-i18n="dashboard">System Executive Summary</h2>
 
       <div class="metrics">
         <div class="metric">
-          <h3 data-i18n="reports_submitted">Reports Submitted</h3>
+          <div class="metric-header">
+            <h3 data-i18n="reports_submitted">Reports Submitted</h3>
+            <div class="metric-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/></svg>
+            </div>
+          </div>
           <p id="adminSubmitted">1</p>
+          <div class="metric-trend">Total system reports</div>
         </div>
+
         <div class="metric">
-          <h3 data-i18n="users_registered">Users Registered</h3>
-          <p id="adminUsers">0</p>
+          <div class="metric-header">
+            <h3 data-i18n="users_registered">Users Registered</h3>
+            <div class="metric-icon metric-icon--blue">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+          </div>
+          <p id="adminUsers">3</p>
+          <div class="metric-trend" style="color:var(--cw-blue);">Active platform accounts</div>
         </div>
+
         <div class="metric">
-          <h3 data-i18n="pending_feedback">Pending Feedback</h3>
+          <div class="metric-header">
+            <h3 data-i18n="pending_feedback">Pending Feedback</h3>
+            <div class="metric-icon metric-icon--amber">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+          </div>
           <p id="adminFeedback">0</p>
+          <div class="metric-trend" style="color:var(--cw-amber);">Feedback review queue</div>
         </div>
+
         <div class="metric">
-          <h3 data-i18n="most_active_region">Most Active Region</h3>
-          <p id="adminActiveRegion">Nairobi Central</p>
+          <div class="metric-header">
+            <h3 data-i18n="most_active_region">Most Active Region</h3>
+            <div class="metric-icon metric-icon--rose">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+          </div>
+          <p id="adminActiveRegion" style="font-size:1.6rem;">Nairobi Central</p>
+          <div class="metric-trend" style="color:var(--cw-rose);">Highest activity sector</div>
         </div>
       </div>
 
@@ -76,7 +139,7 @@
           </div>
         </div>
         <div class="chart-card">
-          <h3 data-i18n="monthly_submissions">Monthly Submissions</h3>
+          <h3 data-i18n="monthly_submissions">Monthly Submissions Trend</h3>
           <div class="chart-container">
             <canvas id="monthlyChart"></canvas>
           </div>
