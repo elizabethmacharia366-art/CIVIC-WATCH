@@ -6,11 +6,11 @@
   <title>Civic Watch Task Manager</title>
   <style>
     :root{
-      --bg: #0b1411;      
-      --card: #0f1a18;      
-      --muted: #bdbdbd;     
-      --accent: #128c7e;    
-      --accent-2: #075e54;  
+      --bg: #0b1411;
+      --card: #0f1a18;
+      --muted: #bdbdbd;
+      --accent: #128c7e;
+      --accent-2: #075e54;
       --glass: rgba(255,255,255,0.02);
       --ok: #25d366;
       --warn: #f59e0b;
@@ -299,7 +299,7 @@
       else if(sortBy === 'due-desc') list.sort((a,b) => (b.due||'9999-12-31').localeCompare(a.due||'9999-12-31') || b.order - a.order);
       else if(sortBy === 'priority-desc') list.sort((a,b) => (PRIORITY_WEIGHT[b.priority] - PRIORITY_WEIGHT[a.priority]) || b.order - a.order);
       else if(sortBy === 'created-desc') list.sort((a,b) => b.createdAt - a.createdAt);
-      else list.sort((a,b) => a.order - b.order); 
+      else list.sort((a,b) => a.order - b.order);
 
       taskListEl.innerHTML = '';
       if(list.length === 0){
@@ -359,7 +359,6 @@
         due.textContent = formatDueLabel(t.due);
         right.appendChild(due);
 
-        // Priority chip
         const pchip = document.createElement('div');
         pchip.className = 'tag';
         pchip.style.fontWeight = 700;

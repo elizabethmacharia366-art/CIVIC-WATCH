@@ -23,7 +23,7 @@ async function seedDatabase() {
     console.log('Reading schema...');
     const fs = require('fs');
     const schema = fs.readFileSync('./BACKEND/schema.sql', 'utf8');
-    
+
     console.log('Creating database and tables...');
     await promisePool.query(schema);
     console.log('Database schema created successfully.');

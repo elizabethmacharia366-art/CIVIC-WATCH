@@ -8,6 +8,3 @@ module.exports = (io, socket) => {
     socket.emit('statsResponse', { users: 10, reports: 5 });
   });
 };
-
-
-

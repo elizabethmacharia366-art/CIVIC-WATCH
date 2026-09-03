@@ -23,4 +23,3 @@ router.post('/', authMiddleware, roleMiddleware('admin'), async (req, res) => {
 });
 
 module.exports = router;
-

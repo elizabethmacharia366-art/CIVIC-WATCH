@@ -13,4 +13,3 @@ function roleMiddleware(requiredRole) {
 }
 
 module.exports = roleMiddleware;
-

@@ -18,7 +18,7 @@ class CitizenModule {
   }
 
   onDOMReady() {
-    // Ensure user is authenticated before allowing access to citizen pages
+
     if (!this.isAuthenticated()) {
       window.location.replace('/login.html?role=citizen');
       return;
@@ -30,15 +30,13 @@ class CitizenModule {
     this.handleDashboardLoad();
   }
 
-  // Check whether user is authenticated (token present)
   isAuthenticated() {
     const token = localStorage.getItem('authToken');
     return !!token;
   }
 
-  // Show registration / login modal
   showAuthModal() {
-    // Avoid duplicate modals
+
     if (document.getElementById('citizenAuthModal')) return;
 
     const modal = document.createElement('div');
@@ -70,7 +68,6 @@ class CitizenModule {
 
     document.body.appendChild(modal);
 
-    // Tab handlers
     document.getElementById('authTabLogin').addEventListener('click', () => {
       document.getElementById('loginForm').style.display = '';
       document.getElementById('registerForm').style.display = 'none';
@@ -82,16 +79,14 @@ class CitizenModule {
 
     document.getElementById('authClose').addEventListener('click', () => {
       modal.remove();
-      // redirect away if user cancels
+
       window.location.href = 'INDEX.HTML';
     });
 
-    // Form handlers
     document.getElementById('registerForm').addEventListener('submit', (e) => this.handleRegister(e));
     document.getElementById('loginForm').addEventListener('submit', (e) => this.handleLogin(e));
   }
 
-  // Handle registration: try backend, fallback to localStorage mock
   async handleRegister(e) {
     e.preventDefault();
     const form = e.target;
@@ -106,7 +101,7 @@ class CitizenModule {
 
       if (res.ok) {
         const body = await res.json();
-        // backend should return token and user
+
         this.saveAuth(body.token || body.authToken || 'token', body.user || body);
         document.getElementById('citizenAuthModal')?.remove();
         this.onDOMReady();
@@ -116,7 +111,6 @@ class CitizenModule {
       console.warn('Register backend failed, falling back to local mock', err);
     }
 
-    // Fallback: store user locally
     const localUsers = JSON.parse(localStorage.getItem('local_citizens') || '{}');
     const id = 'local_' + Date.now();
     const user = { id, name: data.name, email: data.email };
@@ -127,7 +121,6 @@ class CitizenModule {
     this.onDOMReady();
   }
 
-  // Handle login: try backend, fallback to localStorage mock
   async handleLogin(e) {
     e.preventDefault();
     const form = e.target;
@@ -151,7 +144,6 @@ class CitizenModule {
       console.warn('Login backend failed, falling back to local mock', err);
     }
 
-    // Fallback: verify against local_citizens
     const localUsers = JSON.parse(localStorage.getItem('local_citizens') || '{}');
     const entry = localUsers[data.email];
     if (entry && entry.password === data.password) {
@@ -165,13 +157,12 @@ class CitizenModule {
     alert('Login failed. Please check credentials or register.');
   }
 
-  // Save auth token and user to localStorage
   saveAuth(token, user) {
     try {
       localStorage.setItem('authToken', token);
       localStorage.setItem('currentUser', JSON.stringify(user));
       this.currentUser = user;
-      // ensure page is visible after auth
+
       try { this.unlockPageAfterAuth(); } catch(e){}
     } catch (e) {
       console.error('Failed to persist auth', e);
@@ -229,7 +220,7 @@ class CitizenModule {
     try {
       const token = localStorage.getItem('authToken');
       if (!token) {
-        // No token: show auth modal to register/login
+
         this.openAuthModal();
         return;
       }
@@ -241,14 +232,14 @@ class CitizenModule {
       if (!response.ok) throw new Error('Failed to load user');
 
       this.currentUser = await response.json();
-      // persist current user
+
       localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
       this.updateUserProfile();
       this.loadUserReports();
       this.loadNotifications();
     } catch (error) {
       console.error('Error loading current user:', error);
-      // Fallback: if backend fails but we have a local user saved, use it
+
       const stored = localStorage.getItem('currentUser');
       if (stored) {
         this.currentUser = JSON.parse(stored);
@@ -261,9 +252,8 @@ class CitizenModule {
     }
   }
 
-  // --- Authentication UI & logic ---
   openAuthModal() {
-    // If already shown, don't duplicate
+
     if (document.getElementById('cwAuthModal')) return;
     const modal = document.createElement('div');
     modal.id = 'cwAuthModal';
@@ -297,7 +287,6 @@ class CitizenModule {
     `;
     document.body.appendChild(modal);
 
-    // wire up events
     document.getElementById('cwLoginForm').addEventListener('submit', (e) => this.handleLoginSubmit(e));
     document.getElementById('cwRegisterForm').addEventListener('submit', (e) => this.handleRegisterSubmit(e));
     document.getElementById('showRegisterLink').addEventListener('click', (e) => { e.preventDefault(); this.toggleAuthForms(true); });
@@ -317,7 +306,6 @@ class CitizenModule {
     const form = e.target;
     const data = Object.fromEntries(new FormData(form));
 
-    // Try backend registration first
     try {
       const resp = await fetch(`${this.apiBaseUrl}/register`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data)
@@ -331,7 +319,7 @@ class CitizenModule {
       }
       throw new Error('Backend registration failed');
     } catch (err) {
-      // Fallback: save locally
+
       const users = JSON.parse(localStorage.getItem('cw_local_users') || '[]');
       if (users.find(u => u.email === data.email)) {
         this.showNotification('Email already registered locally', 'error');
@@ -365,7 +353,7 @@ class CitizenModule {
       }
       throw new Error('Backend login failed');
     } catch (err) {
-      // Fallback: check local users
+
       const users = JSON.parse(localStorage.getItem('cw_local_users') || '[]');
       const found = users.find(u => u.email === data.email && u.password === data.password);
       if (found) {
@@ -385,7 +373,7 @@ class CitizenModule {
       localStorage.setItem('authToken', token);
       localStorage.setItem('currentUser', JSON.stringify(user));
       this.currentUser = user;
-      // reveal page now that we are authenticated
+
       try { this.unlockPageAfterAuth(); } catch(e){}
       this.updateUserProfile();
       this.loadUserReports();
@@ -453,7 +441,7 @@ class CitizenModule {
       });
 
       if (!response.ok) throw new Error('Failed to update profile');
-      
+
       this.currentUser = { ...this.currentUser, ...profileData };
       this.updateUserProfile();
       this.showNotification('Profile updated successfully', 'success');
@@ -475,7 +463,7 @@ class CitizenModule {
     try {
       const response = await fetch(`${this.apiBaseUrl}/dashboard`);
       if (!response.ok) throw new Error('Failed to load dashboard');
-      
+
       const stats = await response.json();
       this.displayDashboardStats(stats);
     } catch (error) {
@@ -513,7 +501,6 @@ class CitizenModule {
       </div>
     `;
 
-    // Draw small charts if status distribution provided
     (async () => {
       try {
         if (stats.statusDistribution || stats.priorityDistribution) {
@@ -599,7 +586,7 @@ class CitizenModule {
       });
 
       if (!response.ok) throw new Error('Failed to submit report');
-      
+
       const result = await response.json();
       this.showNotification('Report submitted successfully', 'success');
       this.userReports.push(result);
@@ -633,7 +620,7 @@ class CitizenModule {
   handleFileUpload(e) {
     const files = e.target.files;
     const fileList = document.getElementById('fileList');
-    
+
     if (fileList) {
       fileList.innerHTML = '';
       Array.from(files).forEach(file => {
@@ -652,7 +639,7 @@ class CitizenModule {
     try {
       const response = await fetch(`${this.apiBaseUrl}/reports`);
       if (!response.ok) throw new Error('Failed to load reports');
-      
+
       this.userReports = await response.json();
     } catch (error) {
       console.error('Error loading reports:', error);
@@ -675,7 +662,7 @@ class CitizenModule {
 
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to filter reports');
-      
+
       this.userReports = await response.json();
       this.displayUserReports();
     } catch (error) {
@@ -707,7 +694,7 @@ class CitizenModule {
     try {
       const response = await fetch(`${this.apiBaseUrl}/reports/${reportId}`);
       if (!response.ok) throw new Error('Failed to load report');
-      
+
       const report = await response.json();
       this.displayReportDetailsModal(report);
     } catch (error) {
@@ -765,7 +752,7 @@ class CitizenModule {
       });
 
       if (!response.ok) throw new Error('Failed to delete report');
-      
+
       this.showNotification('Report deleted successfully', 'success');
       this.userReports = this.userReports.filter(r => r.id !== reportId);
       document.querySelector('.modal').remove();
@@ -788,7 +775,7 @@ class CitizenModule {
     try {
       const response = await fetch(`${this.apiBaseUrl}/notifications`);
       if (!response.ok) throw new Error('Failed to load notifications');
-      
+
       this.notifications = await response.json();
       this.updateNotificationBadge();
     } catch (error) {
@@ -826,7 +813,7 @@ class CitizenModule {
       });
 
       if (!response.ok) throw new Error('Failed to submit feedback');
-      
+
       this.showNotification('Thank you for your feedback!', 'success');
       e.target.reset();
     } catch (error) {
@@ -852,7 +839,7 @@ class CitizenModule {
       });
 
       if (!response.ok) throw new Error('Failed to update settings');
-      
+
       this.showNotification('Notification settings updated', 'success');
     } catch (error) {
       console.error('Error updating settings:', error);
@@ -883,11 +870,10 @@ class CitizenModule {
     fetch('/api/logout', { method: 'POST' });
     localStorage.removeItem('authToken');
     localStorage.removeItem('currentUser');
-    // keep local_citizens for future logins, but remove any flags
+
     window.location.href = 'LOGOUT.HTML';
   }
 
-  // Hide page content until the user authenticates
   lockPageForAuth() {
     try {
       const styleId = 'cw-auth-lock-style';
@@ -900,7 +886,6 @@ class CitizenModule {
     } catch (e) { console.warn('lockPageForAuth failed', e); }
   }
 
-  // Remove the lock so page content is visible after auth
   unlockPageAfterAuth() {
     try {
       const style = document.getElementById('cw-auth-lock-style');

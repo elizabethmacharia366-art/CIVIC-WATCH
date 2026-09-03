@@ -13,7 +13,7 @@ return jwt.verify(token,JWT_SECRET)
     catch(err){
         return null;
     }
-}    
+}
 Module.exports={
     generatetoken,
 verifytoken,

@@ -7,5 +7,3 @@ router.get('/', authMiddleware, notificationController.getNotifications);
 router.post('/', authMiddleware, notificationController.createNotification);
 
 module.exports = router;
-
-

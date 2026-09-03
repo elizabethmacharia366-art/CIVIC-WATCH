@@ -176,7 +176,7 @@ async function api(req, res, pathname) {
     const item = store.departments.find(d => d.id === parts[2]); return item ? json(res, 200, item) : json(res, 404, { error: 'Department not found' });
   }
   if (resource === 'reports' || (parts[1] === 'reports')) return collection(req, res, input, store.reports, 'reports', current);
-  // Admin calls reports "submissions"; both names refer to the same records.
+
   if (resource === 'submissions') return collection(req, res, input, store.reports, 'submissions', current);
   if (resource === 'tasks' || (parts[1] === 'tasks')) return collection(req, res, input, store.tasks, 'tasks', current);
   if (resource === 'notifications' || pathname === '/api/notifications') return collection(req, res, input, store.notifications, 'notifications', current);
@@ -206,19 +206,18 @@ function collection(req, res, input, items, name, current, hidePasswords = false
 }
 function serveFile(req, res, pathname) {
   let requested = pathname === '/' ? '/.HTML/PUBLIC.HTML' : pathname;
-  // The original pages live in the hidden `.HTML` directory. Keep their
-  // short, user-facing URLs working as well as the on-disk paths.
-  if (/^\/(ADMIN\.HTML|DEPARTMENT\.HTML|CITIZEN\.HTML)\//.test(requested)) {
+
+  if (/^\/(ADMIN\.HTML|DEPARTMENT\.HTML|CITIZEN\.HTML)\
     requested = `/.HTML${requested}`;
   }
   let file = path.resolve(frontend, `.${requested}`);
-  // PUBLIC.HTML refers to its image assets from the site root.
+
   if (!fs.existsSync(file) && requested.split('/').filter(Boolean).length === 1) {
     file = path.resolve(frontend, `.HTML/${requested}`);
   }
   if (!file.startsWith(frontend) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) return json(res, 404, { error: 'Not found' });
   const isHtml = path.extname(file).toLowerCase() === '.html';
-  const roleMatch = file.match(/\/(ADMIN|DEPARTMENT|CITIZEN)\.HTML\//);
+  const roleMatch = file.match(/\/(ADMIN|DEPARTMENT|CITIZEN)\.HTML\
   if (isHtml && roleMatch) {
     const requiredRole = roleMatch[1].toLowerCase();
     const user = userFor(req);

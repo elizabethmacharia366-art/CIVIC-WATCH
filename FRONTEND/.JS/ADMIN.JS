@@ -24,7 +24,7 @@ class AdminModule {
     this.loadCurrentUser();
     this.setupNavigationMenus();
     this.handleAdminDashboardLoad();
-    // Load users/submissions for pages that include those lists
+
     if (document.getElementById('usersList')) {
       this.loadUsers();
     }
@@ -102,7 +102,7 @@ class AdminModule {
       });
 
       if (!response.ok) throw new Error('Failed to load user');
-      
+
       this.currentUser = await response.json();
       this.updateUserDisplay();
     } catch (error) {
@@ -132,7 +132,7 @@ class AdminModule {
     try {
       const response = await fetch(`${this.apiBaseUrl}/dashboard`);
       if (!response.ok) throw new Error('Failed to load dashboard');
-      
+
       const data = await response.json();
       this.displayDashboard(data);
     } catch (error) {
@@ -173,7 +173,7 @@ class AdminModule {
         </div>
       </div>
     `;
-    // Render charts if the backend provided series data
+
     (async () => {
       try {
         if (data.userGrowthSeries || data.submissionsByDept || data.submissionsByStatus) {
@@ -186,7 +186,6 @@ class AdminModule {
     })();
   }
 
-  // Load Chart.js dynamically
   loadChartJS() {
     if (window.Chart) return Promise.resolve();
     return new Promise((resolve, reject) => {
@@ -198,12 +197,10 @@ class AdminModule {
     });
   }
 
-  // Draw admin charts (user growth, submissions by dept/status)
   drawAdminCharts(data) {
     const dashboard = document.getElementById('adminDashboard');
     if (!dashboard) return;
 
-    // User growth line chart
     if (data.userGrowthSeries && Array.isArray(data.userGrowthSeries.labels)) {
       let canvas = document.getElementById('adminUserGrowthChart');
       if (!canvas) {
@@ -221,7 +218,6 @@ class AdminModule {
       } catch (e) { console.warn(e); }
     }
 
-    // Submissions by department (pie)
     if (data.submissionsByDept) {
       let canvas = document.getElementById('adminSubByDeptChart');
       if (!canvas) {
@@ -238,7 +234,6 @@ class AdminModule {
       } catch (e) { console.warn(e); }
     }
 
-    // Submissions by status (bar)
     if (data.submissionsByStatus) {
       let canvas = document.getElementById('adminSubByStatusChart');
       if (!canvas) {
@@ -260,7 +255,7 @@ class AdminModule {
     try {
       const response = await fetch(`${this.apiBaseUrl}/users`);
       if (!response.ok) throw new Error('Failed to load users');
-      
+
       this.users = await response.json();
       this.displayUsers();
     } catch (error) {
@@ -309,12 +304,12 @@ class AdminModule {
     const userData = Object.fromEntries(formData);
 
     try {
-      const url = userData.id 
+      const url = userData.id
         ? `${this.apiBaseUrl}/users/${userData.id}`
         : `${this.apiBaseUrl}/users`;
-      
+
       const method = userData.id ? 'PUT' : 'POST';
-      
+
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -322,7 +317,7 @@ class AdminModule {
       });
 
       if (!response.ok) throw new Error('Failed to save user');
-      
+
       this.showNotification('User saved successfully', 'success');
       this.loadUsers();
       e.target.reset();
@@ -338,7 +333,7 @@ class AdminModule {
     try {
       const response = await fetch(`${this.apiBaseUrl}/users/${userId}`);
       if (!response.ok) throw new Error('Failed to load user');
-      
+
       const user = await response.json();
       const form = document.getElementById('userForm');
       if (form) {
@@ -365,7 +360,7 @@ class AdminModule {
       });
 
       if (!response.ok) throw new Error('Failed to delete user');
-      
+
       this.showNotification('User deleted successfully', 'success');
       this.loadUsers();
     } catch (error) {
@@ -378,7 +373,7 @@ class AdminModule {
     if (!confirm('Toggle suspension for this user?')) return;
 
     try {
-      // Try an explicit suspend endpoint first
+
       let response = await fetch(`${this.apiBaseUrl}/users/${userId}/suspend`, { method: 'PATCH' });
 
       if (response.ok) {
@@ -387,7 +382,6 @@ class AdminModule {
         return;
       }
 
-      // Fallback: toggle status via user PUT
       const user = this.users.find(u => u.id === userId);
       if (!user) throw new Error('User not found');
       const newStatus = user.status === 'suspended' ? 'active' : 'suspended';
@@ -403,7 +397,7 @@ class AdminModule {
       this.loadUsers();
     } catch (error) {
       console.error('Error suspending user:', error);
-      // Local fallback
+
       const idx = this.users.findIndex(u => u.id === userId);
       if (idx >= 0) {
         this.users[idx].status = this.users[idx].status === 'suspended' ? 'active' : 'suspended';
@@ -419,7 +413,7 @@ class AdminModule {
     try {
       const response = await fetch(`${this.apiBaseUrl}/submissions`);
       if (!response.ok) throw new Error('Failed to load submissions');
-      
+
       this.submissions = await response.json();
       this.displaySubmissions();
     } catch (error) {
@@ -458,7 +452,7 @@ class AdminModule {
 
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to filter submissions');
-      
+
       this.submissions = await response.json();
       this.displaySubmissions();
     } catch (error) {
@@ -471,7 +465,7 @@ class AdminModule {
     try {
       const response = await fetch(`${this.apiBaseUrl}/submissions/${submissionId}`);
       if (!response.ok) throw new Error('Failed to load submission');
-      
+
       const submission = await response.json();
       this.displayReviewModal(submission);
     } catch (error) {
@@ -509,7 +503,7 @@ class AdminModule {
 
   async approveSubmission(submissionId) {
     const comments = document.getElementById('reviewComments')?.value || '';
-    
+
     try {
       const response = await fetch(`${this.apiBaseUrl}/submissions/${submissionId}/approve`, {
         method: 'POST',
@@ -518,7 +512,7 @@ class AdminModule {
       });
 
       if (!response.ok) throw new Error('Failed to approve submission');
-      
+
       this.showNotification('Submission approved', 'success');
       document.querySelector('.modal').remove();
       this.loadSubmissions();
@@ -530,7 +524,7 @@ class AdminModule {
 
   async rejectSubmission(submissionId) {
     const comments = document.getElementById('reviewComments')?.value || '';
-    
+
     try {
       const response = await fetch(`${this.apiBaseUrl}/submissions/${submissionId}/reject`, {
         method: 'POST',
@@ -539,7 +533,7 @@ class AdminModule {
       });
 
       if (!response.ok) throw new Error('Failed to reject submission');
-      
+
       this.showNotification('Submission rejected', 'success');
       document.querySelector('.modal').remove();
       this.loadSubmissions();
@@ -552,7 +546,7 @@ class AdminModule {
   async assignSubmission(submissionId) {
     const modal = document.querySelector('.modal');
     const assigneeSelect = modal.querySelector('[name="assignee"]');
-    
+
     if (!assigneeSelect) {
       const input = document.createElement('input');
       input.name = 'assignee';
@@ -569,7 +563,7 @@ class AdminModule {
       });
 
       if (!response.ok) throw new Error('Failed to assign submission');
-      
+
       this.showNotification('Submission assigned', 'success');
       modal.remove();
       this.loadSubmissions();
@@ -592,7 +586,7 @@ class AdminModule {
       });
 
       if (!response.ok) throw new Error('Failed to save content');
-      
+
       this.showNotification('Content saved successfully', 'success');
       e.target.reset();
     } catch (error) {
@@ -617,21 +611,19 @@ class AdminModule {
   }
 
   redirectToLogin() {
-    // The Admin dashboard has no dedicated login page. Redirecting to
-    // INDEX.HTML reloads this same page forever when a session is missing.
+
     window.location.href = '/login.html?role=admin';
   }
 
   logout() {
     fetch('/api/logout', { method: 'POST' });
-    // Remove auth token and any page access flags
+
     localStorage.removeItem('authToken');
     localStorage.removeItem('cw_access_admin');
     localStorage.removeItem('cw_access_department');
     window.location.href = 'LOGOUT.HTML';
   }
 
-  // Task Management Functions
   async getTasks(filters = {}) {
     try {
       const response = await fetch('/api/tasks', {
@@ -648,7 +640,6 @@ class AdminModule {
 
       let tasks = await response.json();
 
-      // Apply filters
       if (filters.status) {
         tasks = tasks.filter(t => t.status === filters.status);
       }
@@ -864,9 +855,9 @@ class AdminModule {
   }
 
   editTask(taskId) {
-    // Open task editing modal/form
+
     console.log('Editing task:', taskId);
-    // Implementation depends on your modal/form system
+
   }
 }
 

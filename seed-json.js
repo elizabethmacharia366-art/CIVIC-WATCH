@@ -66,10 +66,8 @@ const initialStore = {
   locations: []
 };
 
-// Create data directory if it doesn't exist
 fs.mkdirSync(dataDir, { recursive: true });
 
-// Write the store file
 fs.writeFileSync(storeFile, JSON.stringify(initialStore, null, 2));
 
 console.log('JSON store seeded successfully!');

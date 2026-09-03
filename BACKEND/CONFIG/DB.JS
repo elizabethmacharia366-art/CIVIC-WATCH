@@ -18,6 +18,3 @@ promisePool.getConnection()
     console.error('DB connection failed:', err.message);
   });
 module.exports = promisePool;
-    
-
-

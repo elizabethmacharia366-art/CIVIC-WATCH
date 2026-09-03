@@ -7,4 +7,3 @@ function failure(res, error, status = 500) {
 }
 
 module.exports = { success, failure };
-

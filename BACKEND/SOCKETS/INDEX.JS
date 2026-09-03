@@ -24,4 +24,3 @@ function initSockets(server) {
 }
 
 module.exports = initSockets;
-

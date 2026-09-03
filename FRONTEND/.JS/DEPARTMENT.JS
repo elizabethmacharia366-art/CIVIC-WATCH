@@ -18,14 +18,14 @@ class DepartmentModule {
   }
 
   onDOMReady() {
-    // The shared sign-in page stores the authenticated role in localStorage.
+
     if (!this.requirePassword('department')) return;
 
     this.setupEventListeners();
     this.loadDepartments();
     this.setupNavigationMenus();
     this.handleDashboardLoad();
-    // Load tasks if we're on the task management page
+
     if (document.getElementById('tasksList')) {
       this.loadTasks();
     }
@@ -102,12 +102,11 @@ class DepartmentModule {
     });
   }
 
-  // Load all departments
   async loadDepartments() {
     try {
       const response = await fetch(this.apiBaseUrl);
       if (!response.ok) throw new Error('Failed to load departments');
-      
+
       this.departments = await response.json();
       this.updateDepartmentList();
     } catch (error) {
@@ -145,7 +144,7 @@ class DepartmentModule {
     try {
       const response = await fetch(`${this.apiBaseUrl}/${deptId}`);
       if (!response.ok) throw new Error('Failed to load department details');
-      
+
       const details = await response.json();
       this.displayDepartmentDetails(details);
     } catch (error) {
@@ -182,12 +181,12 @@ class DepartmentModule {
     const data = Object.fromEntries(formData);
 
     try {
-      const url = data.id 
+      const url = data.id
         ? `${this.apiBaseUrl}/${data.id}`
         : this.apiBaseUrl;
-      
+
       const method = data.id ? 'PUT' : 'POST';
-      
+
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -195,7 +194,7 @@ class DepartmentModule {
       });
 
       if (!response.ok) throw new Error('Failed to save department');
-      
+
       this.showNotification('Department saved successfully', 'success');
       this.loadDepartments();
       e.target.reset();
@@ -224,7 +223,7 @@ class DepartmentModule {
       });
 
       if (!response.ok) throw new Error('Failed to assign task');
-      
+
       this.showNotification('Task assigned successfully', 'success');
       taskForm.reset();
       this.loadDepartmentDetails(this.currentDepartment.id);
@@ -245,7 +244,7 @@ class DepartmentModule {
 
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to filter reports');
-      
+
       this.reports = await response.json();
       this.displayReports();
     } catch (error) {
@@ -277,7 +276,7 @@ class DepartmentModule {
     try {
       const response = await fetch(`http://localhost:3000/api/reports/${reportId}`);
       if (!response.ok) throw new Error('Failed to load report');
-      
+
       const report = await response.json();
       this.displayReportModal(report);
     } catch (error) {
@@ -338,10 +337,10 @@ class DepartmentModule {
     try {
       const response = await fetch(`http://localhost:3000/api/statistics/department`);
       if (!response.ok) throw new Error('Failed to load stats');
-      
+
       const stats = await response.json();
       const statsContainer = document.getElementById('dashboardStats');
-      
+
       if (statsContainer) {
         statsContainer.innerHTML = `
           <div class="statCard">
@@ -361,7 +360,7 @@ class DepartmentModule {
             <p class="statValue">${stats.completionRate || 0}%</p>
           </div>
         `;
-        // Render charts if there is chart data
+
         if (stats.reportByStatus || stats.reportByPriority) {
           await this.loadChartJS();
           this.drawDepartmentCharts(stats);
@@ -372,7 +371,6 @@ class DepartmentModule {
     }
   }
 
-  // Dynamically load Chart.js from CDN if not already present
   loadChartJS() {
     if (window.Chart) return Promise.resolve();
     return new Promise((resolve, reject) => {
@@ -384,12 +382,10 @@ class DepartmentModule {
     });
   }
 
-  // Draw simple charts for the department dashboard
   drawDepartmentCharts(stats) {
     const statsContainer = document.getElementById('dashboardStats');
     if (!statsContainer) return;
 
-    // Insert canvas containers (remove existing if any)
     let statusCanvas = document.getElementById('deptStatusChart');
     if (!statusCanvas) {
       const wrapper = document.createElement('div');
@@ -454,7 +450,6 @@ class DepartmentModule {
     window.location.href = 'LOGOUT.HTML';
   }
 
-  // Task Management Functions
   async getTasks(filters = {}) {
     try {
       const response = await fetch('/api/tasks', {
@@ -471,7 +466,6 @@ class DepartmentModule {
 
       let tasks = await response.json();
 
-      // Apply filters
       if (filters.status) {
         tasks = tasks.filter(t => t.status === filters.status);
       }
@@ -660,9 +654,9 @@ class DepartmentModule {
   }
 
   editTask(taskId) {
-    // Open task editing modal/form
+
     console.log('Editing task:', taskId);
-    // Implementation depends on your modal/form system
+
   }
 }
 

@@ -17,23 +17,23 @@
       --cw-accent-dark: #128c7e;
       --cw-danger: #ef5350;
     }
-    
+
     body {
       background: var(--cw-bg);
       color: var(--cw-text);
     }
-    
+
     header {
       background: var(--cw-surface);
       border-bottom: 1px solid var(--cw-border);
     }
-    
+
     .profile-container {
       max-width: 900px;
       margin: 0 auto;
       padding: 2rem;
     }
-    
+
     .profile-header {
       background: var(--cw-surface);
       border: 1px solid var(--cw-border);
@@ -45,7 +45,7 @@
       margin-bottom: 2rem;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     }
-    
+
     .profile-avatar {
       width: 120px;
       height: 120px;
@@ -59,13 +59,13 @@
       color: #111b21;
       box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
     }
-    
+
     .profile-info h1 {
       margin: 0 0 0.5rem 0;
       color: var(--cw-accent);
       font-size: 2rem;
     }
-    
+
     .profile-info .role-badge {
       display: inline-block;
       padding: 0.4rem 1rem;
@@ -76,18 +76,18 @@
       font-weight: 600;
       margin-bottom: 0.5rem;
     }
-    
+
     .profile-info .username {
       color: var(--cw-muted);
       font-size: 1rem;
     }
-    
+
     .profile-sections {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
     }
-    
+
     .profile-section {
       background: var(--cw-surface);
       border: 1px solid var(--cw-border);
@@ -95,7 +95,7 @@
       padding: 1.5rem;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     }
-    
+
     .profile-section h3 {
       margin: 0 0 1.5rem 0;
       color: var(--cw-accent);
@@ -104,7 +104,7 @@
       align-items: center;
       gap: 0.5rem;
     }
-    
+
     .profile-section h3::before {
       content: '';
       width: 4px;
@@ -112,12 +112,12 @@
       background: var(--cw-accent);
       border-radius: 2px;
     }
-    
+
     .info-grid {
       display: grid;
       gap: 1rem;
     }
-    
+
     .info-item {
       display: flex;
       justify-content: space-between;
@@ -127,22 +127,22 @@
       border-radius: 8px;
       border: 1px solid var(--cw-border);
     }
-    
+
     .info-item label {
       color: var(--cw-muted);
       font-size: 0.9rem;
       font-weight: 500;
     }
-    
+
     .info-item span {
       color: var(--cw-text);
       font-weight: 600;
     }
-    
+
     .form-group {
       margin-bottom: 1.2rem;
     }
-    
+
     .form-group label {
       display: block;
       margin-bottom: 0.5rem;
@@ -150,7 +150,7 @@
       font-size: 0.9rem;
       font-weight: 500;
     }
-    
+
     .form-group input {
       width: 100%;
       padding: 0.8rem 1rem;
@@ -161,13 +161,13 @@
       font-size: 1rem;
       transition: all 0.3s ease;
     }
-    
+
     .form-group input:focus {
       outline: none;
       border-color: var(--cw-accent);
       box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
     }
-    
+
     .save-button {
       width: 100%;
       padding: 1rem;
@@ -181,13 +181,13 @@
       transition: all 0.3s ease;
       margin-top: 1rem;
     }
-    
+
     .save-button:hover {
       background: var(--cw-accent-dark);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
     }
-    
+
     .profile-message {
       min-height: 24px;
       margin-top: 1rem;
@@ -196,23 +196,23 @@
       text-align: center;
       font-weight: 500;
     }
-    
+
     .profile-message.success {
       background: rgba(37, 211, 102, 0.15);
       color: var(--cw-accent);
     }
-    
+
     .profile-message.error {
       background: rgba(239, 83, 80, 0.15);
       color: var(--cw-danger);
     }
-    
+
     @media (max-width: 768px) {
       .profile-header {
         flex-direction: column;
         text-align: center;
       }
-      
+
       .profile-sections {
         grid-template-columns: 1fr;
       }
@@ -224,7 +224,7 @@
     <h1>Citizen Profile</h1>
     <a href="DASHBOARD.HTML" style="color: var(--cw-accent); text-decoration: none; font-weight: 600;">← Back to Dashboard</a>
   </header>
-  
+
   <main class="profile-container">
     <div class="profile-header">
       <div class="profile-avatar" id="profileAvatar">C</div>
@@ -234,7 +234,7 @@
         <p class="username">@<span id="profileUsername">citizen1</span></p>
       </div>
     </div>
-    
+
     <div class="profile-sections">
       <div class="profile-section">
         <h3>Account Information</h3>
@@ -257,7 +257,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="profile-section">
         <h3>Edit Profile</h3>
         <form id="profileForm">
@@ -279,7 +279,7 @@
       </div>
     </div>
   </main>
-  
+
   <script src="../../.JS/profile.js"></script>
 </body>
 </html>

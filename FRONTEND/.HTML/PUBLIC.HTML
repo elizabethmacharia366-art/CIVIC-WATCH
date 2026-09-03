@@ -20,20 +20,20 @@
       --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
-    
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       background: var(--bg);
       color: var(--text-light);
       line-height: 1.6;
       min-height: 100vh;
     }
-    
+
     header {
       background: var(--surface);
       padding: 1rem 3rem;
@@ -45,32 +45,32 @@
       top: 0;
       z-index: 1000;
     }
-    
+
     .logo-container {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-    
+
     .logo-container img {
       width: 60px;
       height: 60px;
       object-fit: contain;
     }
-    
+
     header h1 {
       font-size: 1.8rem;
       font-weight: 700;
       color: var(--primary);
       letter-spacing: -0.5px;
     }
-    
+
     .header-right {
       display: flex;
       align-items: center;
       gap: 1.5rem;
     }
-    
+
     #langSelector {
       padding: 0.6rem 1rem;
       background: var(--card-bg);
@@ -81,11 +81,11 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    
+
     #langSelector:hover {
       border-color: var(--primary);
     }
-    
+
     nav .login-button {
       padding: 0.75rem 1.5rem;
       border-radius: 8px;
@@ -96,40 +96,40 @@
       transition: all 0.3s ease;
       box-shadow: var(--shadow);
     }
-    
+
     nav .login-button:hover {
       transform: translateY(-2px);
       background: var(--primary-dark);
       box-shadow: var(--shadow-lg);
     }
-    
+
     .hero {
       background: var(--surface);
       padding: 4rem 2rem;
       text-align: center;
       border-bottom: 1px solid var(--border);
     }
-    
+
     .hero h2 {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 1rem;
       color: var(--primary);
     }
-    
+
     .hero p {
       font-size: 1.2rem;
       color: var(--text-muted);
       max-width: 600px;
       margin: 0 auto;
     }
-    
+
     .issues {
       max-width: 1200px;
       margin: 0 auto;
       padding: 3rem 2rem;
     }
-    
+
     .issues h3 {
       font-size: 1.8rem;
       font-weight: 600;
@@ -139,7 +139,7 @@
       align-items: center;
       gap: 0.5rem;
     }
-    
+
     .issues h3::before {
       content: '';
       width: 4px;
@@ -147,14 +147,14 @@
       background: var(--primary);
       border-radius: 2px;
     }
-    
+
     .issues-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       gap: 1.5rem;
       margin-bottom: 3rem;
     }
-    
+
     .issue-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -166,13 +166,13 @@
       transition: all 0.3s ease;
       box-shadow: var(--shadow);
     }
-    
+
     .issue-card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-lg);
       border-color: var(--primary);
     }
-    
+
     .issue-card img {
       width: 140px;
       height: 100px;
@@ -180,24 +180,24 @@
       border-radius: 8px;
       box-shadow: var(--shadow);
     }
-    
+
     .issue-card .info {
       flex: 1;
     }
-    
+
     .issue-card .info h4 {
       font-size: 1.1rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
       color: var(--text-light);
     }
-    
+
     .issue-card .info p {
       font-size: 0.9rem;
       color: var(--text-muted);
       line-height: 1.5;
     }
-    
+
     .status-badge {
       display: inline-block;
       padding: 0.25rem 0.75rem;
@@ -206,24 +206,24 @@
       font-weight: 600;
       margin-top: 0.5rem;
     }
-    
+
     .status-pending {
       background: rgba(251, 191, 36, 0.2);
       color: #fbbf24;
     }
-    
+
     .status-resolved {
       background: rgba(37, 211, 102, 0.2);
       color: var(--primary);
     }
-    
+
     .gallery-section {
       background: var(--surface);
       padding: 3rem 2rem;
       margin-top: 3rem;
       border-top: 1px solid var(--border);
     }
-    
+
     .gallery-section h2 {
       font-size: 1.8rem;
       font-weight: 600;
@@ -231,7 +231,7 @@
       text-align: center;
       color: var(--text-light);
     }
-    
+
     .gallery-grid {
       max-width: 1200px;
       margin: 0 auto;
@@ -239,7 +239,7 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
     }
-    
+
     .gallery-item {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -248,34 +248,34 @@
       transition: all 0.3s ease;
       box-shadow: var(--shadow);
     }
-    
+
     .gallery-item:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-lg);
     }
-    
+
     .gallery-item img {
       width: 100%;
       height: 200px;
       object-fit: cover;
     }
-    
+
     .gallery-item .info {
       padding: 1.25rem;
     }
-    
+
     .gallery-item .info h4 {
       font-size: 1.1rem;
       font-weight: 600;
       margin-bottom: 0.5rem;
       color: var(--text-light);
     }
-    
+
     .gallery-item .info p {
       font-size: 0.9rem;
       color: var(--text-muted);
     }
-    
+
     footer {
       background: var(--surface);
       text-align: center;
@@ -284,38 +284,38 @@
       margin-top: 3rem;
       border-top: 1px solid var(--border);
     }
-    
+
     @media (max-width: 768px) {
       header {
         padding: 1rem 1.5rem;
       }
-      
+
       header h1 {
         font-size: 1.3rem;
       }
-      
+
       .logo-container img {
         width: 45px;
         height: 45px;
       }
-      
+
       .hero h2 {
         font-size: 1.8rem;
       }
-      
+
       .hero p {
         font-size: 1rem;
       }
-      
+
       .issues-grid {
         grid-template-columns: 1fr;
       }
-      
+
       .issue-card {
         flex-direction: column;
         text-align: center;
       }
-      
+
       .issue-card img {
         width: 100%;
         height: 180px;
@@ -351,7 +351,7 @@
 
   <section class="issues">
     <h3 data-i18n="recently_reported">Recently Reported Issues</h3>
-    
+
     <div class="issues-grid">
       <div class="issue-card">
         <img src="POTHOLE.PNG" alt="Pothole">
@@ -392,7 +392,7 @@
           <p data-i18n="muranga_desc">Community cleanup initiative in progress.</p>
         </div>
       </div>
-      
+
       <div class="gallery-item">
         <img src="S3.PNG" alt="Nairobi City Sweeping">
         <div class="info">
