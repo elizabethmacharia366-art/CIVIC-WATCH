@@ -1,35 +1,67 @@
-# CivicWatch
+# CivicWatch 🏛️
 
-CivicWatch is a local issue-reporting portal for citizens, departments, and administrators.
+CivicWatch is a modern, responsive municipal public issue-reporting and management platform built for **Citizens**, **Department Officials**, and **System Administrators**. It features a unified WhatsApp Dark Theme design system, real-time analytics, and role-based access control.
 
-## Run locally
+---
 
-Requires Node.js 18 or newer. No external packages or database are needed for the development build.
+## 🚀 Live Demo & Production URL
 
-```bash
-npm start
-```
+- **Production Deployment**: [https://civic-watch-pearl.vercel.app](https://civic-watch-pearl.vercel.app)
+- **Login Portal**: [https://civic-watch-pearl.vercel.app/login.html](https://civic-watch-pearl.vercel.app/login.html)
 
-Open <http://localhost:3000>. The development API stores reports, tasks, feedback, and users in `data/store.json`; this file is intentionally not committed.
+---
 
-## Sign-in
+## 🔑 Demo Test Credentials
 
-Use the shared sign-in page at <http://localhost:3000/login.html>.
+You can test the system across all three user roles using the pre-seeded credentials below:
 
-Citizens can create an account from the same page. Configure administrator and department accounts locally before starting the server:
+### 1. Administrator Accounts (System Oversight)
+| Username | Password | Role | Full Name | Access Scope |
+| :--- | :--- | :--- | :--- | :--- |
+| `admin` | `admin123` | **Administrator** | Elizabeth Macharia | Full System Oversight & User Management |
+| `admin2` | `admin123` | **Administrator** | David Kimani | Analytics & Content Management |
 
-```bash
-export CIVIC_ADMIN_USERNAME="your-admin-username"
-export CIVIC_ADMIN_PASSWORD="use-a-strong-password"
-export CIVIC_DEPARTMENT_USERNAME="your-department-username"
-export CIVIC_DEPARTMENT_PASSWORD="use-a-strong-password"
-npm start
-```
+### 2. Department Accounts (Operations & Task Dispatch)
+| Username | Password | Role | Department | Operations |
+| :--- | :--- | :--- | :--- | :--- |
+| `publicworks` | `dept123` | **Department** | Public Works | Roads, Lighting & Infrastructure Tasks |
+| `sanitation` | `dept123` | **Department** | Sanitation | Waste Management & Drainage Tasks |
 
-These values are not stored in Git.
+### 3. Citizen Accounts (Issue Reporting & Tracking)
+| Username | Password | Role | Full Name | Capabilities |
+| :--- | :--- | :--- | :--- | :--- |
+| `citizen1` | `citizen123` | **Citizen** | Mary Wanjiku | Issue Submission, Tracking & Feedback |
+| `citizen2` | `citizen123` | **Citizen** | John Kamau | Issue Submission & Map View |
 
-## Checks
+> 💡 **Self-Registration**: Citizens can also create a new account directly on the [Login & Registration Page](https://civic-watch-pearl.vercel.app/login.html) by clicking **Create Account**.
 
-```bash
-npm run check
-```
+---
+
+## 🛠️ Quick Local Setup
+
+Requires **Node.js 18+**. No external database setup is required (uses built-in JSON store).
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/elizabethmacharia366-art/CIVIC-WATCH.git
+   cd CIVIC-WATCH
+   ```
+
+2. **Start the local server**:
+   ```bash
+   npm start
+   ```
+
+3. **Access the application**:
+   Open your browser to [http://localhost:3000](http://localhost:3000) or [http://localhost:3000/login.html](http://localhost:3000/login.html).
+
+---
+
+## 🌟 Key Features
+
+- **WhatsApp Dark Theme**: Premium `#111b21` dark mode aesthetic with `#25d366` emerald accents, glassmorphic headers (`#202c33`), and responsive SVG icon navigation.
+- **Role-Based Portals**:
+  - **Citizen Portal**: Submit issues with location & evidence, view real-time status updates (`Pending`, `In Progress`, `Resolved`), multi-language switcher (English / Swahili).
+  - **Department Portal**: Dispatch operations, manage assigned tasks, track resolution turnaround (SLA metrics), interactive dispatch map.
+  - **Admin Portal**: Executive statistics dashboard, regional issue distribution charts, category breakdowns, user administration.
+- **Secure Authentication**: Salted `crypto.scryptSync` password hashing, HTTP-only session cookies (`cw_session`), and automatic session purge on logout.
