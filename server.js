@@ -118,21 +118,27 @@ async function api(req, res, pathname) {
   const resource = parts[2];
 
   if (pathname === '/api/health') return json(res, 200, { ok: true });
-  if (resource === 'register' && method === 'POST') {
-    if (role !== 'citizens') return json(res, 403, { error: 'Only citizen self-registration is allowed' });
-    const username = input.username || input.email;
-    if (!username || !input.password) return json(res, 400, { error: 'Username and password are required' });
-    if (store.users.some(u => u.username === username)) return json(res, 409, { error: 'Username already exists' });
-    const user = { id: id(), username, email: input.email || username, name: input.name || username, passwordHash: hashPassword(input.password), role: 'citizen' };
+  if ((resource === 'register' || role === 'register' || pathname === '/api/register' || pathname === '/api/auth/register') && method === 'POST') {
+    const isAllowed = !role || ['citizens', 'citizen', 'auth', 'users', 'register'].includes(role);
+    if (!isAllowed) return json(res, 403, { error: 'Only citizen self-registration is allowed' });
+    const rawUsername = (input.username || input.email || '').trim();
+    const password = input.password;
+    if (!rawUsername || !password) return json(res, 400, { error: 'Username and password are required' });
+    const email = (input.email || rawUsername).trim();
+    const name = (input.name || rawUsername).trim();
+    if (store.users.some(u => u.username.toLowerCase() === rawUsername.toLowerCase() || (u.email && u.email.toLowerCase() === email.toLowerCase()))) {
+      return json(res, 409, { error: 'An account with that username or email already exists' });
+    }
+    const user = { id: id(), username: rawUsername, email, name, passwordHash: hashPassword(password), role: 'citizen' };
     store.users.push(user); saveStore();
     const token = createToken(user);
     return json(res, 201, { token, user: sanitizeUser(user) }, sessionCookie(token));
   }
   if (resource === 'login' && method === 'POST') {
-    const username = input.username || input.email;
+    const rawUsername = (input.username || input.email || '').trim();
     const expectedRole = role === 'citizens' ? 'citizen' : role;
     if (!['admin', 'department', 'citizen'].includes(expectedRole)) return json(res, 404, { error: 'Login route not found' });
-    const user = store.users.find(u => u.username === username && u.role === expectedRole && verifyPassword(input.password, u.passwordHash));
+    const user = store.users.find(u => (u.username.toLowerCase() === rawUsername.toLowerCase() || (u.email && u.email.toLowerCase() === rawUsername.toLowerCase())) && u.role === expectedRole && verifyPassword(input.password, u.passwordHash));
     if (!user) return json(res, 401, { error: 'Invalid credentials' });
     const token = createToken(user);
     return json(res, 200, { token, user: sanitizeUser(user) }, sessionCookie(token));

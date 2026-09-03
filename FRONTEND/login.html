@@ -3,79 +3,216 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sign in | CivicWatch</title>
+  <title>Sign in / Register | CivicWatch</title>
   <style>
     :root { color-scheme: dark; --accent: #37df88; --ink: #07151b; --panel: #102832; --line: #31515d; --muted: #b5c8cc; }
     * { box-sizing: border-box; }
-    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; font-family: Georgia, 'Times New Roman', serif; font-style: italic; color: #effaf7; background: radial-gradient(circle at top left, #1a5a55, var(--ink) 54%); }
-    .login-card { width: min(100%, 460px); padding: clamp(26px, 5vw, 46px); border: 1px solid var(--line); border-radius: 20px; background: rgba(16, 40, 50, .96); box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
-    .eyebrow { margin: 0 0 8px; color: var(--accent); font-size: .9rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-    h1 { margin: 0; font-size: clamp(2rem, 7vw, 3rem); color: var(--accent); }
-    .intro { margin: 12px 0 28px; color: var(--muted); line-height: 1.5; }
-    label { display: block; margin: 16px 0 7px; color: #dceae6; font-weight: 700; }
-    input, select, button { width: 100%; min-height: 46px; border-radius: 9px; font: inherit; }
-    input, select { padding: 0 12px; border: 1px solid var(--line); color: #effaf7; background: #0a1d25; }
-    button { margin-top: 24px; cursor: pointer; border: 0; color: #062313; background: var(--accent); font-weight: 800; transition: transform .15s ease, filter .15s ease; }
-    button.secondary { margin-top: 10px; color: var(--accent); background: transparent; border: 1px solid var(--line); }
-    button:hover { filter: brightness(1.08); transform: translateY(-1px); }
-    .message { min-height: 22px; margin: 16px 0 0; color: #ffb8b8; }
-    .hint { margin: 24px 0 0; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; line-height: 1.55; }
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #effaf7; background: radial-gradient(circle at top left, #1a5a55, var(--ink) 54%); }
+    .login-card { width: min(100%, 460px); padding: clamp(26px, 5vw, 42px); border: 1px solid var(--line); border-radius: 20px; background: rgba(16, 40, 50, .96); box-shadow: 0 24px 60px rgba(0, 0, 0, .35); }
+    .eyebrow { margin: 0 0 6px; color: var(--accent); font-size: .85rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(1.8rem, 6vw, 2.4rem); color: var(--accent); font-weight: 700; }
+    .intro { margin: 8px 0 20px; color: var(--muted); line-height: 1.5; font-size: .95rem; }
+    
+    .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+    .tab-btn { flex: 1; padding: 10px 14px; background: transparent; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); font: inherit; font-weight: 600; cursor: pointer; transition: all .2s ease; text-align: center; }
+    .tab-btn.active { background: rgba(55, 223, 136, 0.15); border-color: var(--accent); color: var(--accent); }
+
+    label { display: block; margin: 14px 0 6px; color: #dceae6; font-weight: 600; font-size: .9rem; }
+    input, select, button { width: 100%; min-height: 44px; border-radius: 9px; font: inherit; }
+    input, select { padding: 0 14px; border: 1px solid var(--line); color: #effaf7; background: #0a1d25; transition: border-color .2s ease; }
+    input:focus, select:focus { outline: none; border-color: var(--accent); }
+    
+    .submit-btn { margin-top: 24px; cursor: pointer; border: 0; color: #062313; background: var(--accent); font-weight: 700; font-size: 1rem; transition: transform .15s ease, filter .15s ease; }
+    .submit-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    
+    .message { min-height: 22px; margin: 16px 0 0; color: #ff8e8e; font-size: .9rem; text-align: center; font-weight: 500; }
+    .message.success { color: var(--accent); }
+    
+    .hint { margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; line-height: 1.5; text-align: center; }
     .hint strong { color: #fff; }
-    a { color: var(--accent); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
   <main class="login-card">
-    <p class="eyebrow">CivicWatch portal</p>
-    <h1>Welcome back</h1>
-    <p class="intro">Sign in once to access your civic dashboard.</p>
-    <form id="loginForm">
-      <label for="role">I am signing in as</label>
-      <select id="role" name="role"><option value="citizen">Citizen</option><option value="department">Department</option><option value="admin">Administrator</option></select>
-      <label for="username">Username or email</label>
-      <input id="username" name="username" autocomplete="username" required>
+    <p class="eyebrow">CivicWatch Portal</p>
+    
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab-btn active" id="tabLogin" onclick="setMode('login')">Sign In</button>
+      <button type="button" class="tab-btn" id="tabRegister" onclick="setMode('register')">Create Account</button>
+    </div>
+
+    <h1 id="formTitle">Welcome back</h1>
+    <p class="intro" id="formSubtitle">Sign in to access your civic dashboard.</p>
+    
+    <form id="authForm">
+      <!-- Register only field -->
+      <div id="nameGroup" class="hidden">
+        <label for="name">Full Name</label>
+        <input id="name" name="name" placeholder="e.g. Jane Doe" autocomplete="name">
+      </div>
+
+      <!-- Login only field -->
+      <div id="roleGroup">
+        <label for="role">Account Role</label>
+        <select id="role" name="role">
+          <option value="citizen">Citizen</option>
+          <option value="department">Department Official</option>
+          <option value="admin">Administrator</option>
+        </select>
+      </div>
+
+      <!-- Common fields -->
+      <label for="username" id="usernameLabel">Username or Email</label>
+      <input id="username" name="username" placeholder="Enter username or email" autocomplete="username" required>
+      
       <label for="password">Password</label>
-      <input id="password" name="password" type="password" autocomplete="current-password" required>
-      <button type="submit">Sign in</button>
-      <button class="secondary" id="register" type="button">Create a citizen account</button>
+      <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+
+      <!-- Register only confirm password -->
+      <div id="confirmPasswordGroup" class="hidden">
+        <label for="confirmPassword">Confirm Password</label>
+        <input id="confirmPassword" name="confirmPassword" type="password" placeholder="••••••••" autocomplete="new-password">
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">Sign in</button>
       <p class="message" id="message" role="alert"></p>
     </form>
-    <p class="hint"><strong>Administrator and department accounts</strong> are supplied by your system administrator. Citizens can create an account here.</p>
-    <p class="hint"><a href="/">Return to the public portal</a></p>
+    
+    <p class="hint" id="footerHint"><strong>Administrator & Department accounts</strong> are provisioned by your system administrator. Citizens can register a free account.</p>
+    <p class="hint"><a href="/">← Return to the public portal</a></p>
   </main>
+
   <script>
     const destinations = { admin: '/ADMIN.HTML/INDEX.HTML', department: '/DEPARTMENT.HTML/DASHBOARD.HTML', citizen: '/CITIZEN.HTML/DASHBOARD.HTML' };
-    const role = document.getElementById('role');
-    const selected = new URLSearchParams(location.search).get('role');
-    if (selected && destinations[selected]) role.value = selected;
-    document.getElementById('loginForm').addEventListener('submit', async event => {
+    let currentMode = 'login';
+
+    const urlParams = new URLSearchParams(location.search);
+    const selectedRole = urlParams.get('role');
+    const initialMode = urlParams.get('mode');
+
+    if (selectedRole && destinations[selectedRole]) {
+      document.getElementById('role').value = selectedRole;
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      const message = document.getElementById('message');
+      message.textContent = '';
+      message.className = 'message';
+
+      const tabLogin = document.getElementById('tabLogin');
+      const tabRegister = document.getElementById('tabRegister');
+      const formTitle = document.getElementById('formTitle');
+      const formSubtitle = document.getElementById('formSubtitle');
+      const roleGroup = document.getElementById('roleGroup');
+      const nameGroup = document.getElementById('nameGroup');
+      const confirmPasswordGroup = document.getElementById('confirmPasswordGroup');
+      const submitBtn = document.getElementById('submitBtn');
+
+      if (mode === 'register') {
+        tabLogin.classList.remove('active');
+        tabRegister.classList.add('active');
+        formTitle.textContent = 'Create Citizen Account';
+        formSubtitle.textContent = 'Register to report issues and track resolutions.';
+        roleGroup.classList.add('hidden');
+        nameGroup.classList.remove('hidden');
+        confirmPasswordGroup.classList.remove('hidden');
+        submitBtn.textContent = 'Register & Sign In';
+        document.getElementById('usernameLabel').textContent = 'Username or Email';
+      } else {
+        tabRegister.classList.remove('active');
+        tabLogin.classList.add('active');
+        formTitle.textContent = 'Welcome back';
+        formSubtitle.textContent = 'Sign in to access your civic dashboard.';
+        roleGroup.classList.remove('hidden');
+        nameGroup.classList.add('hidden');
+        confirmPasswordGroup.classList.add('hidden');
+        submitBtn.textContent = 'Sign in';
+        document.getElementById('usernameLabel').textContent = 'Username or Email';
+      }
+    }
+
+    if (initialMode === 'register') {
+      setMode('register');
+    }
+
+    document.getElementById('authForm').addEventListener('submit', async (event) => {
       event.preventDefault();
       const message = document.getElementById('message');
       message.textContent = '';
-      const data = Object.fromEntries(new FormData(event.currentTarget));
-      try {
-        const response = await fetch(`/api/${data.role === 'citizen' ? 'citizens' : data.role}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Unable to sign in');
-        if (result.user.role !== data.role) throw new Error(`This account is not a ${data.role} account.`);
-        localStorage.setItem('authToken', result.token);
-        localStorage.setItem('currentUser', JSON.stringify(result.user));
-        location.assign(destinations[data.role]);
-      } catch (error) { message.textContent = error.message; }
-    });
-    document.getElementById('register').addEventListener('click', async () => {
-      const message = document.getElementById('message');
+      message.className = 'message';
+
       const username = document.getElementById('username').value.trim();
       const password = document.getElementById('password').value;
-      if (!username || !password) { message.textContent = 'Enter a username and password to create a citizen account.'; return; }
-      try {
-        const response = await fetch('/api/citizens/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password, name: username }) });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || 'Unable to create account');
-        localStorage.setItem('authToken', result.token);
-        localStorage.setItem('currentUser', JSON.stringify(result.user));
-        location.assign(destinations.citizen);
-      } catch (error) { message.textContent = error.message; }
+      const submitBtn = document.getElementById('submitBtn');
+
+      if (currentMode === 'register') {
+        const name = document.getElementById('name').value.trim();
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (!username || !password) {
+          message.textContent = 'Please provide both username and password.';
+          return;
+        }
+        if (confirmPassword && password !== confirmPassword) {
+          message.textContent = 'Passwords do not match.';
+          return;
+        }
+
+        try {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Creating account...';
+          
+          const response = await fetch('/api/citizens/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, name: name || username, email: username })
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Unable to create account');
+
+          message.className = 'message success';
+          message.textContent = 'Account created! Redirecting...';
+          
+          localStorage.setItem('authToken', result.token);
+          localStorage.setItem('currentUser', JSON.stringify(result.user));
+          setTimeout(() => location.assign(destinations.citizen), 600);
+        } catch (error) {
+          message.textContent = error.message;
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Register & Sign In';
+        }
+      } else {
+        const role = document.getElementById('role').value;
+        try {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Signing in...';
+
+          const response = await fetch(`/api/${role === 'citizen' ? 'citizens' : role}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Unable to sign in');
+          if (result.user.role !== role) throw new Error(`This account is not a ${role} account.`);
+
+          message.className = 'message success';
+          message.textContent = 'Sign in successful! Redirecting...';
+
+          localStorage.setItem('authToken', result.token);
+          localStorage.setItem('currentUser', JSON.stringify(result.user));
+          setTimeout(() => location.assign(destinations[role]), 400);
+        } catch (error) {
+          message.textContent = error.message;
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign in';
+        }
+      }
     });
   </script>
 </body>
