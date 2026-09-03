@@ -1,25 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --cw-bg: #0b0f19;
-  --cw-surface: #111827;
-  --cw-surface-raised: #1f2937;
-  --cw-surface-hover: #2d3748;
-  --cw-border: rgba(255, 255, 255, 0.08);
-  --cw-border-glow: rgba(16, 185, 129, 0.3);
-  --cw-text: #f9fafb;
-  --cw-text-secondary: #d1d5db;
-  --cw-muted: #9ca3af;
-  --cw-accent: #10b981;
-  --cw-accent-dark: #059669;
-  --cw-accent-glow: rgba(16, 185, 129, 0.15);
-  --cw-blue: #3b82f6;
-  --cw-blue-glow: rgba(59, 130, 246, 0.15);
+  --cw-bg: #111b21;
+  --cw-surface: #202c33;
+  --cw-surface-raised: #2a3942;
+  --cw-surface-hover: #3b4a54;
+  --cw-border: #2a3942;
+  --cw-border-glow: rgba(37, 211, 102, 0.3);
+  --cw-text: #e9edef;
+  --cw-text-secondary: #8696a0;
+  --cw-muted: #8696a0;
+  --cw-accent: #25d366;
+  --cw-accent-dark: #128c7e;
+  --cw-accent-glow: rgba(37, 211, 102, 0.18);
+  --cw-blue: #34b7f1;
+  --cw-blue-glow: rgba(52, 183, 241, 0.18);
   --cw-amber: #f59e0b;
-  --cw-amber-glow: rgba(245, 158, 11, 0.15);
-  --cw-rose: #f43f5e;
-  --cw-rose-glow: rgba(244, 63, 94, 0.15);
-  --cw-purple: #8b5cf6;
+  --cw-amber-glow: rgba(245, 158, 11, 0.18);
+  --cw-danger: #ef5350;
+  --cw-danger-glow: rgba(239, 83, 80, 0.18);
+  --cw-purple: #a855f7;
 }
 
 * {
@@ -38,23 +38,21 @@ body {
 
 .dashboard {
   min-height: 100vh;
-  background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.05), transparent 70%), var(--cw-bg);
+  background: var(--cw-bg);
   color: var(--cw-text);
   display: flex;
   flex-direction: column;
 }
 
-/* Glass Header Bar */
+/* WhatsApp Dark Header Bar */
 .dashboard header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: 16px clamp(20px, 4vw, 48px);
-  background: rgba(17, 24, 39, 0.85) !important;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  background: var(--cw-surface) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   border-bottom: 1px solid var(--cw-border) !important;
   position: sticky;
   top: 0;
@@ -71,18 +69,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: #0b0f19;
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--cw-accent), var(--cw-accent-dark));
+  color: #111b21;
+  box-shadow: 0 0 16px rgba(37, 211, 102, 0.35);
 }
 
 .dashboard header h1 {
-  font-size: clamp(1.2rem, 1.8vw, 1.6rem);
+  font-size: clamp(1.25rem, 1.8vw, 1.65rem);
   letter-spacing: -0.02em;
-  color: var(--cw-text) !important;
+  color: var(--cw-accent) !important;
   margin: 0;
   font-weight: 800;
 }
@@ -107,7 +105,7 @@ body {
   padding: 5px 12px;
   background: var(--cw-accent-glow);
   color: var(--cw-accent);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  border: 1px solid rgba(37, 211, 102, 0.35);
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 700;
@@ -116,15 +114,15 @@ body {
 }
 
 .role-badge--admin {
-  background: rgba(139, 92, 246, 0.15);
+  background: rgba(168, 85, 247, 0.18);
   color: var(--cw-purple);
-  border-color: rgba(139, 92, 246, 0.3);
+  border-color: rgba(168, 85, 247, 0.35);
 }
 
 .role-badge--dept {
   background: var(--cw-blue-glow);
   color: var(--cw-blue);
-  border-color: rgba(59, 130, 246, 0.3);
+  border-color: rgba(52, 183, 241, 0.35);
 }
 
 .header-controls {
@@ -140,7 +138,7 @@ body {
 
 .dashboard #langSelector {
   padding: 8px 14px;
-  background: var(--cw-surface-raised);
+  background: var(--cw-bg);
   color: var(--cw-text);
   border: 1px solid var(--cw-border);
   cursor: pointer;
@@ -155,21 +153,21 @@ body {
 }
 
 .dashboard #resetAuthBtn {
-  background: linear-gradient(135deg, var(--cw-accent), var(--cw-accent-dark));
-  color: #0b0f19;
+  background: var(--cw-accent);
+  color: #111b21;
   padding: 8px 16px;
   border-radius: 8px;
   border: none;
   font-weight: 700;
   cursor: pointer;
   font-size: 0.88rem;
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.25);
+  transition: transform 0.15s ease, filter 0.15s ease;
 }
 
 .dashboard #resetAuthBtn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
+  filter: brightness(1.1);
 }
 
 /* Nav Tab Bar */
@@ -179,7 +177,7 @@ body {
   align-items: center;
   gap: 6px;
   padding: 10px clamp(20px, 4vw, 48px);
-  background: rgba(17, 24, 39, 0.6) !important;
+  background: var(--cw-surface) !important;
   border-bottom: 1px solid var(--cw-border) !important;
 }
 
@@ -189,7 +187,7 @@ body {
   gap: 8px;
   padding: 8px 16px;
   border-radius: 8px;
-  color: var(--cw-muted) !important;
+  color: var(--cw-text) !important;
   transition: all 0.2s ease;
   text-decoration: none;
   font-size: 0.9rem;
@@ -203,25 +201,25 @@ body {
 }
 
 .dashboard nav a:hover {
-  color: var(--cw-text) !important;
-  background: var(--cw-surface-raised) !important;
+  color: #111b21 !important;
+  background: var(--cw-accent) !important;
 }
 
 .dashboard nav a.active {
-  color: var(--cw-text) !important;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.08)) !important;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: 0 0 12px rgba(16, 185, 129, 0.15);
+  color: #111b21 !important;
+  background: var(--cw-accent) !important;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(37, 211, 102, 0.3);
 }
 
 .dashboard nav a.nav-logout {
-  color: var(--cw-rose) !important;
+  color: var(--cw-danger) !important;
   margin-left: auto;
 }
 
 .dashboard nav a.nav-logout:hover {
-  background: var(--cw-rose-glow) !important;
-  color: #ff4d4d !important;
+  background: var(--cw-danger-glow) !important;
+  color: var(--cw-danger) !important;
 }
 
 /* Main Content Area */
@@ -238,8 +236,8 @@ body {
 .dashboard .overview-box {
   background: var(--cw-surface) !important;
   border: 1px solid var(--cw-border) !important;
-  border-radius: 20px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.25);
   padding: clamp(24px, 3.5vw, 36px);
   margin-bottom: 28px;
   position: relative;
@@ -254,13 +252,13 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--cw-accent), var(--cw-blue), var(--cw-purple));
+  background: linear-gradient(90deg, var(--cw-accent), var(--cw-blue), var(--cw-accent-dark));
 }
 
 .dashboard section h2,
 .dashboard .overview-box h2 {
   margin: 0 0 20px 0;
-  color: var(--cw-text) !important;
+  color: var(--cw-accent) !important;
   font-size: 1.5rem;
   font-weight: 800;
   display: flex;
@@ -270,7 +268,7 @@ body {
 
 .dashboard h3 {
   margin: 0 0 14px 0;
-  color: var(--cw-text-secondary) !important;
+  color: var(--cw-accent) !important;
   font-size: 1.15rem;
   font-weight: 700;
 }
@@ -291,7 +289,7 @@ body {
   min-height: 124px;
   padding: 22px;
   border: 1px solid var(--cw-border) !important;
-  border-radius: 16px;
+  border-radius: 14px;
   background: var(--cw-surface-raised) !important;
   box-sizing: border-box;
   text-align: left;
@@ -306,8 +304,8 @@ body {
 .dashboard .metric:hover,
 .dashboard .stat-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(16, 185, 129, 0.4) !important;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3), 0 0 16px rgba(16, 185, 129, 0.1);
+  border-color: var(--cw-accent) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3), 0 0 16px rgba(37, 211, 102, 0.15);
 }
 
 .dashboard .metric-header {
@@ -350,15 +348,15 @@ body {
 }
 
 .dashboard .metric-icon--rose {
-  background: var(--cw-rose-glow);
-  color: var(--cw-rose);
+  background: var(--cw-danger-glow);
+  color: var(--cw-danger);
 }
 
 .dashboard .metric p,
 .dashboard .stat-card p,
 .dashboard .statValue {
-  color: var(--cw-text) !important;
-  font-size: 2.2rem;
+  color: var(--cw-accent) !important;
+  font-size: 2.3rem;
   font-weight: 800;
   margin: 0;
   line-height: 1;
@@ -371,7 +369,7 @@ body {
   gap: 4px;
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--cw-accent);
+  color: var(--cw-muted);
   margin-top: 8px;
 }
 
@@ -379,22 +377,22 @@ body {
 .dashboard .department-info {
   margin-bottom: 28px;
   padding: 20px;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(17, 24, 39, 0.4));
+  background: var(--cw-surface-raised);
   border-radius: 14px;
-  border-left: 4px solid var(--cw-blue);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-left: 4px solid var(--cw-accent);
+  border: 1px solid var(--cw-border);
 }
 
 .dashboard .department-info h3 {
   margin: 0 0 6px 0;
-  color: var(--cw-blue) !important;
+  color: var(--cw-accent) !important;
   font-size: 1.1rem;
   font-weight: 700;
 }
 
 .dashboard .department-info p {
   margin: 0;
-  color: var(--cw-text-secondary);
+  color: var(--cw-text);
   line-height: 1.6;
   font-size: 0.95rem;
 }
@@ -411,14 +409,14 @@ body {
   border-collapse: separate;
   border-spacing: 0;
   border: 1px solid var(--cw-border);
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
   background: var(--cw-surface-raised);
 }
 
 .dashboard th {
-  background: rgba(31, 41, 55, 0.9) !important;
-  color: var(--cw-muted) !important;
+  background: var(--cw-surface) !important;
+  color: var(--cw-accent) !important;
   padding: 14px 18px;
   text-align: left;
   border-bottom: 1px solid var(--cw-border) !important;
@@ -457,19 +455,19 @@ body {
 .badge-resolved {
   background: var(--cw-accent-glow);
   color: var(--cw-accent);
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  border: 1px solid rgba(37, 211, 102, 0.35);
 }
 
 .badge-in-progress {
   background: var(--cw-blue-glow);
   color: var(--cw-blue);
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  border: 1px solid rgba(52, 183, 241, 0.35);
 }
 
 .badge-pending {
   background: var(--cw-amber-glow);
   color: var(--cw-amber);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  border: 1px solid rgba(245, 158, 11, 0.35);
 }
 
 /* Charts Section */
@@ -482,9 +480,8 @@ body {
   position: relative;
   background: var(--cw-surface-raised) !important;
   border: 1px solid var(--cw-border);
-  border-radius: 16px;
+  border-radius: 14px;
   padding: 20px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .dashboard canvas {
