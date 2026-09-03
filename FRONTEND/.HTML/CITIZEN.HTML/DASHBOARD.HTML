@@ -6,87 +6,27 @@
   <title>Citizen Dashboard | CivicWatch</title>
   <link rel="stylesheet" href="/styles/system.css">
   <link rel="stylesheet" href="/styles/dashboard.css">
-  <style>
-    :root {
-      --cw-bg: #111b21;
-      --cw-surface: #202c33;
-      --cw-surface-raised: #2a3942;
-      --cw-border: #2a3942;
-      --cw-text: #e9edef;
-      --cw-muted: #8696a0;
-      --cw-accent: #25d366;
-      --cw-accent-dark: #128c7e;
-      --cw-danger: #ef5350;
-    }
-    body {
-      background: var(--cw-bg) !important;
-      color: var(--cw-text) !important;
-    }
-    header {
-      background: var(--cw-surface) !important;
-      border-bottom: 1px solid var(--cw-border) !important;
-    }
-    header h1 {
-      color: var(--cw-accent) !important;
-    }
-    nav {
-      background: var(--cw-surface) !important;
-      border-bottom: 1px solid var(--cw-border) !important;
-    }
-    nav a {
-      color: var(--cw-text) !important;
-    }
-    nav a:hover {
-      background: var(--cw-accent) !important;
-      color: #111b21 !important;
-    }
-    section {
-      background: var(--cw-surface) !important;
-      border: 1px solid var(--cw-border) !important;
-    }
-    section h2, h3 {
-      color: var(--cw-accent) !important;
-    }
-    .metric {
-      background: var(--cw-surface-raised) !important;
-      border: 1px solid var(--cw-border) !important;
-    }
-    .metric h3 {
-      color: var(--cw-muted) !important;
-    }
-    .metric p {
-      color: var(--cw-accent) !important;
-    }
-    table {
-      background: var(--cw-surface-raised) !important;
-    }
-    th {
-      background: var(--cw-surface) !important;
-      color: var(--cw-accent) !important;
-    }
-    td {
-      border-bottom: 1px solid var(--cw-border) !important;
-      color: var(--cw-text) !important;
-    }
-    tr:hover td {
-      background: var(--cw-surface-raised) !important;
-    }
-  </style>
   <script src="../../.JS/i18n.js"></script>
   <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
 </head>
 <body class="dashboard dashboard--citizen">
 
   <header>
-    <h1 data-i18n="citizen_dashboard">Citizen Dashboard</h1>
-    <select id="langSelector" style="padding: 8px 12px; background: var(--cw-bg); color: var(--cw-text); border: 1px solid var(--cw-border); border-radius: 8px; cursor: pointer;">
-      <option value="en">English</option>
-      <option value="sw">Swahili</option>
-    </select>
+    <div class="header-brand">
+      <h1 data-i18n="citizen_dashboard">Citizen Dashboard</h1>
+      <span class="role-badge">Citizen</span>
+    </div>
+    <div class="header-controls">
+      <select id="langSelector">
+        <option value="en">English</option>
+        <option value="sw">Swahili</option>
+      </select>
+      <button id="resetAuthBtn" onclick="window.clearAccess && window.clearAccess('citizen')">Reset Auth</button>
+    </div>
   </header>
 
   <nav>
-    <a href="DASHBOARD.HTML" data-i18n="welcome">Overview</a>
+    <a href="DASHBOARD.HTML" class="active" data-i18n="welcome">Overview</a>
     <a href="SUBMIT_REPORT.HTML" data-i18n="submit_report">Submit Report</a>
     <a href="MY_REPORT.HTML" data-i18n="my_reports">My Reports</a>
     <a href="NOTIFICATION.HTML" data-i18n="notifications">Notifications</a>
@@ -95,7 +35,7 @@
     <a href="RESOURCE.HTML" data-i18n="resources">Resources</a>
     <a href="SETTING.HTML" data-i18n="settings">Settings</a>
     <a href="PROFILE.HTML">My Profile</a>
-    <a href="LOGOUT.HTML" style="color: #ef5350;" data-i18n="logout">Logout</a>
+    <a href="LOGOUT.HTML" class="nav-logout" data-i18n="logout">Logout</a>
   </nav>
 
   <main>
@@ -105,20 +45,20 @@
       <div class="metrics">
         <div class="metric">
           <h3>Reports Submitted</h3>
-          <p>3</p>
+          <p id="citizenSubmitted">3</p>
         </div>
         <div class="metric">
           <h3>Reports Resolved</h3>
-          <p>1</p>
+          <p id="citizenResolved">1</p>
         </div>
         <div class="metric">
           <h3>Pending Reports</h3>
-          <p>2</p>
+          <p id="citizenPending">2</p>
         </div>
       </div>
 
       <div class="report-table">
-        <h3 style="margin-top: 40px;">Reported Issues</h3>
+        <h3>Reported Issues</h3>
         <table>
           <thead>
             <tr>
@@ -131,19 +71,19 @@
           <tbody>
             <tr>
               <td>Blocked Drainage in Umoja</td>
-              <td>Resolved</td>
+              <td><span class="badge badge-resolved">Resolved</span></td>
               <td>2025-12-20</td>
               <td>Issue cleared by sanitation team</td>
             </tr>
             <tr>
               <td>Potholes on Juja Road</td>
-              <td>In Progress</td>
+              <td><span class="badge badge-in-progress">In Progress</span></td>
               <td>2025-12-25</td>
               <td>Scheduled for repair next week</td>
             </tr>
             <tr>
               <td>Streetlight not working</td>
-              <td>Pending</td>
+              <td><span class="badge badge-pending">Pending</span></td>
               <td>2025-12-27</td>
               <td>Awaiting assignment</td>
             </tr>

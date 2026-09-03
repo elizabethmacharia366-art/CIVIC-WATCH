@@ -6,76 +6,27 @@
   <title>Department Dashboard | CivicWatch</title>
   <link rel="stylesheet" href="/styles/system.css">
   <link rel="stylesheet" href="/styles/dashboard.css">
-  <style>
-    :root {
-      --cw-bg: #111b21;
-      --cw-surface: #202c33;
-      --cw-surface-raised: #2a3942;
-      --cw-border: #2a3942;
-      --cw-text: #e9edef;
-      --cw-muted: #8696a0;
-      --cw-accent: #25d366;
-      --cw-accent-dark: #128c7e;
-      --cw-danger: #ef5350;
-    }
-    body {
-      background: var(--cw-bg) !important;
-      color: var(--cw-text) !important;
-    }
-    header {
-      background: var(--cw-surface) !important;
-      border-bottom: 1px solid var(--cw-border) !important;
-    }
-    header h1 {
-      color: var(--cw-accent) !important;
-    }
-    nav {
-      background: var(--cw-surface) !important;
-      border-bottom: 1px solid var(--cw-border) !important;
-    }
-    nav a {
-      color: var(--cw-text) !important;
-    }
-    nav a:hover {
-      background: var(--cw-accent) !important;
-      color: #111b21 !important;
-    }
-    .overview-box {
-      background: var(--cw-surface) !important;
-      border: 1px solid var(--cw-border) !important;
-    }
-    .overview-box h2, h3 {
-      color: var(--cw-accent) !important;
-    }
-    .stat-card {
-      background: var(--cw-surface-raised) !important;
-      border: 1px solid var(--cw-border) !important;
-    }
-    .stat-card h4 {
-      color: var(--cw-muted) !important;
-    }
-    .stat-card p {
-      color: var(--cw-accent) !important;
-    }
-  </style>
   <script src="../../.JS/i18n.js"></script>
   <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
 </head>
 <body class="dashboard dashboard--department">
 
   <header>
-    <h1 data-i18n="department_overview">Department Dashboard</h1>
-    <div style="display:flex;gap:12px;align-items:center;">
-      <select id="langSelector" style="padding: 8px 12px; background: var(--cw-bg); color: var(--cw-text); border: 1px solid var(--cw-border); border-radius: 8px; cursor: pointer;">
+    <div class="header-brand">
+      <h1 data-i18n="department_overview">Department Dashboard</h1>
+      <span class="role-badge">Department</span>
+    </div>
+    <div class="header-controls">
+      <select id="langSelector">
         <option value="en">English</option>
         <option value="sw">Swahili</option>
       </select>
-      <button id="resetAuthBtn" onclick="window.clearAccess && window.clearAccess('department')" style="background: var(--cw-accent); color: #111b21; padding: 8px 12px; border-radius: 8px; border: none; font-weight: 600; cursor: pointer;">Reset Auth</button>
+      <button id="resetAuthBtn" onclick="window.clearAccess && window.clearAccess('department')">Reset Auth</button>
     </div>
   </header>
 
   <nav>
-    <a href="DASHBOARD.HTML" data-i18n="welcome">Overview</a>
+    <a href="DASHBOARD.HTML" class="active" data-i18n="welcome">Overview</a>
     <a href="ASSIGNED.HTML" data-i18n="assigned_to">Assigned</a>
     <a href="ASSIGNED_REPORT.HTML" data-i18n="assigned_reports">Assigned Reports</a>
     <a href="TASKMANAGEMENT.HTML" data-i18n="task_mgmt">Tasks</a>
@@ -85,43 +36,42 @@
     <a href="ANALYTICS.HTML" data-i18n="analytics">Analytics</a>
     <a href="DEPARTMENT_SETTINGS.HTML" data-i18n="dept_settings">Settings</a>
     <a href="PROFILE.HTML">My Profile</a>
-    <a href="LOGOUT.HTML" style="color: #ef5350;" data-i18n="logout">Logout</a>
+    <a href="LOGOUT.HTML" class="nav-logout" data-i18n="logout">Logout</a>
   </nav>
 
   <main>
-    <div class="overview-box">
-      <h2>Overview</h2>
+    <section class="overview-box">
+      <h2>Department Overview</h2>
       <div class="department-info">
-        <h3>Role:</h3>
+        <h3>Role & Scope</h3>
         <p>Responsible for maintaining roads, traffic signage, public transport infrastructure and ensuring safe mobility across the city.</p>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card">
           <h4>Total Reports Assigned</h4>
-          <p>3</p>
+          <p id="deptTotalAssigned">3</p>
         </div>
         <div class="stat-card">
           <h4>Pending Cases</h4>
-          <p>1</p>
+          <p id="deptPendingCases">1</p>
         </div>
         <div class="stat-card">
           <h4>In-Progress Cases</h4>
-          <p>1</p>
+          <p id="deptInProgressCases">1</p>
         </div>
         <div class="stat-card">
           <h4>Resolved Cases</h4>
-          <p>0</p>
+          <p id="deptResolvedCases">0</p>
         </div>
         <div class="stat-card">
           <h4>Avg. Resolution Time</h4>
-          <p>3.2 days</p>
+          <p id="deptAvgTime">3.2 days</p>
         </div>
       </div>
-    </div>
+    </section>
   </main>
 
   <script src="../../.JS/DEPARTMENT.JS"></script>
-
 </body>
 </html>
