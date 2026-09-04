@@ -3,232 +3,289 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Map & Location View | CivicWatch</title>
+  <title>Department Operations Dispatch Map | CivicWatch</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="../../styles/system.css">
+  <link rel="stylesheet" href="../../styles/dashboard.css">
+  <link rel="stylesheet" href="/styles/system.css">
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <script src="../../.JS/i18n.js"></script>
+  <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
   <style>
-    header { background-color: #25D366; padding: 20px; text-align: center; }
-    header h1 { margin: 0; color: #111B21; }
-    nav { background-color: #1A1A1A; padding: 15px; display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; }
-    nav a { color: #25D366; text-decoration: none; font-weight: bold; }
-    nav a:hover { text-decoration: underline; }
-    main { padding: 30px; max-width: 1100px; margin: auto; }
-    section { background-color: #1F2C34; padding: 25px; border-radius: 8px; }
-    section h2 { color: #25D366; margin-top: 0; }
-    .filters { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; }
-    .filters label { font-weight: bold; color: #25D366; }
-    .filters select { padding: 8px; border-radius: 4px; border: none; background-color: #37474F; color: #FFFFFF; }
-    #map { height: 500px; width: 100%; border-radius: 6px; margin-top: 10px; }
-      .back-button {
-      Display: inline-block;
-      Margin-top: 30px;
-      Background-color: #25D366;
-      Color: #111B21;
-      Padding: 10px 20px;
-      Border-radius: 6px;
-      Text-decoration: none;
-      Font-weight: bold;
-      Box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-      Transition: background-color 0.3s ease, transform 0.2s ease;
+    #map-container {
+      position: relative;
+      width: 100%;
+      height: 620px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--cw-border);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+      margin-top: 16px;
     }
-
-    .back-button:hover {
-      Background-color: #1DA851;
-      Transform: scale(1.05);
+    #map {
+      height: 100%;
+      width: 100%;
+      background: #111b21;
+    }
+    .map-controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--cw-surface-raised);
+      padding: 16px 20px;
+      border-radius: 14px;
+      border: 1px solid var(--cw-border);
+      margin-bottom: 16px;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .control-group label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--cw-muted);
+      text-transform: uppercase;
+    }
+    .control-group select, .control-group button {
+      min-height: 38px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+    }
+    .leaflet-popup-content-wrapper {
+      background: #202c33 !important;
+      color: #e9edef !important;
+      border: 1px solid #2a3942;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .leaflet-popup-tip {
+      background: #202c33 !important;
     }
   </style>
 </head>
-<body>
+<body class="dashboard dashboard--department">
 
   <header>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
-      <h1 data-i18n="department_map_title">Department Map & Location View</h1>
-      <div>
-        <label for="langSelector" style="margin-right:8px;color:#ccc;" data-i18n="ui_language">Language</label>
-        <select id="langSelector">
-          <option value="en">English</option>
-          <option value="sw">Kiswahili</option>
-          <option value="lg">Local</option>
-        </select>
-        <label for="uiTheme" style="margin:0 8px;color:#ccc;" data-i18n="ui_theme_label">Theme</label>
-        <select id="uiTheme">
-          <option value="dark" data-i18n="dark_theme">Dark</option>
-          <option value="light" data-i18n="light_theme">Light</option>
-        </select>
+    <div class="header-brand">
+      <div class="brand-logo" style="background: linear-gradient(135deg, #34b7f1, #0284c7);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6z"/></svg>
       </div>
+      <div>
+        <h1 data-i18n="department_map_title">Department Operations Dispatch Map</h1>
+        <div style="font-size:0.78rem;color:var(--cw-muted);"><span class="status-dot"></span><span data-i18n="system_active">Field Dispatch System Active</span></div>
+      </div>
+      <span class="role-badge role-badge--dept">Public Works</span>
+    </div>
+    <div class="header-controls">
+      <select id="langSelector">
+        <option value="en">English</option>
+        <option value="sw">Swahili</option>
+      </select>
+      <button id="resetAuthBtn" onclick="window.clearAccess && window.clearAccess('department')">Reset Auth</button>
     </div>
   </header>
 
+  <nav>
+    <a href="DASHBOARD.HTML" data-i18n="dashboard">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8v-10h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Overview
+    </a>
+    <a href="TASKMANAGEMENT.HTML" data-i18n="task_mgmt">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+      Tasks Queue
+    </a>
+    <a href="DEPARTMART_MAP.HTML" class="active" data-i18n="dispatch_map">
+      <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+      Dispatch Map
+    </a>
+    <a href="ANALYTICS.HTML" data-i18n="analytics">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+      Analytics
+    </a>
+    <a href="LOGOUT.HTML" class="nav-logout" data-i18n="logout">
+      <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+      Logout
+    </a>
+  </nav>
+
   <main>
     <section>
-      <h2>Reported Issues Map</h2>
+      <h2>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Field Operations Dispatch Map
+      </h2>
 
-      <div class="filters">
-        <div>
-          <label for="filter-area" data-i18n="area">Area</label><br>
-          <select id="filter-area" data-filter="area">
-            <option value="all">All</option>
-            <option value="CBD">CBD</option>
-            <option value="Umoja">Umoja</option>
-            <option value="Westlands">Westlands</option>
-          </select>
-        </div>
-        <div>
-          <label for="filter-status" data-i18n="status">Status</label><br>
-          <select id="filter-status" data-filter="status">
-            <option value="all">All</option>
+      <div class="map-controls-bar">
+        <div class="control-group">
+          <label for="filter-status">Status:</label>
+          <select id="filter-status">
+            <option value="all">All Statuses</option>
             <option value="Pending">Pending</option>
             <option value="In Progress">In Progress</option>
             <option value="Resolved">Resolved</option>
           </select>
-        </div>
-        <div>
-          <label for="filter-priority" data-i18n="priority">Priority</label><br>
-          <select id="filter-priority" data-filter="priority">
-            <option value="all">All</option>
-            <option value="Low">Low</option>
+
+          <label for="filter-priority">Priority:</label>
+          <select id="filter-priority">
+            <option value="all">All Priorities</option>
+            <option value="High">High / Critical</option>
             <option value="Medium">Medium</option>
-            <option value="High">High</option>
+            <option value="Low">Low</option>
           </select>
+        </div>
+
+        <div class="control-group">
+          <button id="markMe" style="background:var(--cw-blue);color:#111b21;font-weight:700;">📍 Mark My Location</button>
+          <button id="refreshBtn">🔄 Refresh Map</button>
+          <button id="saveLocation" style="background:var(--cw-accent);color:#111b21;font-weight:700;">💾 Save Pin</button>
         </div>
       </div>
 
-      <div id="map"></div>
+      <div id="map-container">
+        <div id="map"></div>
+      </div>
     </section>
   </main>
-<div style="text-align: center;">
-        <a href="DASHBOARD.HTML#DASHBOARD" class="back-button">← Back to Dashboard</a>
-      </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="../../.JS/i18n.js"></script>
   <script>
-    const map = L.map('map');
-    const kenyaBounds = [[-4.7,33.5],[5.0,41.9]];
-    map.fitBounds(kenyaBounds);
-    map.setMaxBounds(kenyaBounds);
-    map.options.maxBoundsViscosity = 1;
-    map.setMinZoom(6);
-    map.setMaxZoom(15);
-    L.rectangle(kenyaBounds, { color: '#FFD54F', weight: 2, fill: false, dashArray: '6 4' }).addTo(map);
-    const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' });
-    const lightLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { attribution: '&copy; CartoDB, OpenStreetMap contributors' });
-    const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CartoDB, OpenStreetMap contributors' });
-    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics' });
-    satelliteLayer.addTo(map);
-    const baseLayers = { 'Light': lightLayer, 'Dark': darkLayer, 'Street': streetLayer, 'Satellite': satelliteLayer };
-    L.control.layers(baseLayers, null, { position: 'topright' }).addTo(map);
-    const markersLayer = L.layerGroup().addTo(map);
-    let userMarker = null;
-
-    function clampLatLng(latlng) {
-      const b = L.latLngBounds(kenyaBounds);
-      const lat = Math.max(b.getSouth(), Math.min(b.getNorth(), latlng.lat));
-      const lng = Math.max(b.getWest(), Math.min(b.getEast(), latlng.lng));
-      return L.latLng(lat, lng);
-    }
-
-    function placeUserMarker(latlng, label='Your location') {
-      const clamped = clampLatLng(latlng);
-      if (userMarker) userMarker.remove();
-      userMarker = L.marker(clamped, { draggable: true }).addTo(map).bindPopup(`${label}<br>${clamped.lat.toFixed(6)}, ${clamped.lng.toFixed(6)}`).openPopup();
-      if (Math.abs(clamped.lat - latlng.lat) > 1e-6 || Math.abs(clamped.lng - latlng.lng) > 1e-6) {
-        alert('Selected location was outside Kenya and was snapped to the nearest point inside Kenya.');
-      }
-      userMarker.on('dragend', (e) => {
-        const newLatLng = e.target.getLatLng();
-        const clampedNew = clampLatLng(newLatLng);
-        if (Math.abs(clampedNew.lat - newLatLng.lat) > 1e-6 || Math.abs(clampedNew.lng - newLatLng.lng) > 1e-6) {
-          userMarker.setLatLng(clampedNew);
-          userMarker.bindPopup(`<strong>Snapped:</strong><br>${clampedNew.lat.toFixed(6)}, ${clampedNew.lng.toFixed(6)}`).openPopup();
-        } else {
-          userMarker.openPopup();
-        }
-      });
-    }
-
-    map.on('click', (e) => {
-      placeUserMarker(e.latlng, 'Selected location');
-    });
-
     document.addEventListener('DOMContentLoaded', () => {
-      const controls = document.createElement('div');
-      controls.style.margin = '8px 0';
-      const btnMark = document.createElement('button'); btnMark.id = 'markMe'; btnMark.setAttribute('data-i18n','mark_location');
-      const small = document.createElement('small'); small.style.color = '#ccc'; small.style.marginLeft = '8px'; small.textContent = '(click map to pick manually)';
-      controls.appendChild(btnMark); controls.appendChild(small);
-      document.querySelector('main section').insertBefore(controls, document.getElementById('map'));
+      const map = L.map('map');
+      const kenyaBounds = [[-4.7, 33.5], [5.0, 41.9]];
+      
+      map.setView([-1.286389, 36.817223], 7);
+      map.fitBounds(kenyaBounds);
+
+      const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; CartoDB, OpenStreetMap contributors',
+        maxZoom: 18
+      }).addTo(map);
+
+      const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 18
+      });
+
+      L.control.layers({ 'Dark Theme': darkLayer, 'Street Map': streetLayer }).addTo(map);
+
+      setTimeout(() => map.invalidateSize(), 300);
+
+      const markersLayer = L.layerGroup().addTo(map);
+      let userMarker = null;
+
+      const sampleReports = [
+        { id: 1, title: 'Deep Pothole on Uhuru Highway', lat: -1.2921, lng: 36.8219, status: 'In Progress', priority: 'High' },
+        { id: 2, title: 'Burst Water Main - Westlands', lat: -1.2683, lng: 36.8117, status: 'Pending', priority: 'High' },
+        { id: 3, title: 'Traffic Signal Outage', lat: -1.2850, lng: 36.8250, status: 'In Progress', priority: 'Medium' },
+        { id: 4, title: 'Street Light Failure - Mombasa Rd', lat: -1.3197, lng: 36.8524, status: 'Resolved', priority: 'Low' }
+      ];
+
+      function placeUserMarker(latlng, label = 'Selected location') {
+        if (userMarker) userMarker.remove();
+        userMarker = L.marker(latlng, { draggable: true })
+          .addTo(map)
+          .bindPopup(`<strong>${label}</strong><br>Lat: ${latlng.lat.toFixed(5)}, Lng: ${latlng.lng.toFixed(5)}`)
+          .openPopup();
+        
+        userMarker.on('dragend', () => userMarker.openPopup());
+      }
+
+      async function loadReports() {
+        markersLayer.clearLayers();
+        const statusFilter = document.getElementById('filter-status').value;
+        const priorityFilter = document.getElementById('filter-priority').value;
+
+        let reports = [];
+        try {
+          const res = await fetch('/api/reports');
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) reports = data;
+          }
+        } catch(e) {}
+
+        if (reports.length === 0) reports = sampleReports;
+
+        reports.forEach(r => {
+          const statusVal = r.status || r.Status || 'Pending';
+          const prioVal = r.priority || r.Priority || 'Medium';
+
+          if (statusFilter !== 'all' && statusVal.toLowerCase() !== statusFilter.toLowerCase()) return;
+          if (priorityFilter !== 'all' && !prioVal.toLowerCase().includes(priorityFilter.toLowerCase())) return;
+
+          const lat = r.lat || (r.location && r.location.lat) || r.latitude;
+          const lng = r.lng || (r.location && r.location.lng) || r.longitude;
+
+          if (!lat || !lng) return;
+
+          let color = '#34b7f1';
+          const s = statusVal.toLowerCase();
+          if (s.includes('resolved')) color = '#25d366';
+          else if (s.includes('progress')) color = '#f59e0b';
+          else if (s.includes('pending')) color = '#ef5350';
+
+          const circle = L.circleMarker([lat, lng], {
+            radius: 9,
+            color: '#111b21',
+            weight: 2,
+            fillColor: color,
+            fillOpacity: 0.9
+          });
+
+          circle.bindPopup(`
+            <div style="font-family:sans-serif;padding:4px;">
+              <strong style="color:#34b7f1;font-size:0.95rem;">${r.title || 'Dispatch Task'}</strong><br/>
+              <span style="font-size:0.8rem;color:#8696a0;">Priority: ${prioVal}</span><br/>
+              <span style="font-size:0.8rem;color:#e9edef;">Status: <strong>${statusVal}</strong></span>
+            </div>
+          `);
+
+          markersLayer.addLayer(circle);
+        });
+      }
+
       document.getElementById('markMe').addEventListener('click', () => {
         if (!navigator.geolocation) return alert('Geolocation not supported');
-        navigator.geolocation.getCurrentPosition((pos) => {
-          const ll = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          const clamped = clampLatLng(ll);
-          map.setView(clamped, 13);
-          placeUserMarker(clamped, 'My location');
-        }, (err) => alert('Unable to get location: ' + err.message));
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            const ll = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            map.setView(ll, 13);
+            placeUserMarker(ll, 'My Current Location');
+          },
+          err => alert('Location error: ' + err.message)
+        );
       });
 
-      const saveBtn = document.createElement('button'); saveBtn.id = 'saveLocation'; saveBtn.setAttribute('data-i18n','save_location'); saveBtn.style.marginLeft = '8px';
-      document.querySelector('main section .filters').appendChild(saveBtn);
-      saveBtn.addEventListener('click', async () => {
-        if (!userMarker) return alert('No marker to save. Click the map or use "Mark My Location".');
+      document.getElementById('refreshBtn').addEventListener('click', loadReports);
+      document.getElementById('filter-status').addEventListener('change', loadReports);
+      document.getElementById('filter-priority').addEventListener('change', loadReports);
+
+      map.on('click', (e) => placeUserMarker(e.latlng, 'Department Pin Drop'));
+
+      document.getElementById('saveLocation').addEventListener('click', async () => {
+        if (!userMarker) return alert('Click map to place a marker first.');
         const ll = userMarker.getLatLng();
         try {
-          const res = await fetch('/api/locations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('authToken') || '') }, body: JSON.stringify({ latitude: ll.lat, longitude: ll.lng, source: 'department_map' }) });
-          if (!res.ok) throw new Error('Save failed');
-          alert('Location saved successfully');
-        } catch (e) { alert('Failed to save location: ' + e.message); }
-      });
-
-      document.getElementById('filter-status').addEventListener('change', (e) => {
-        loadReports({ status: e.target.value, priority: document.getElementById('filter-priority').value });
-      });
-      document.getElementById('filter-priority').addEventListener('change', (e) => {
-        loadReports({ status: document.getElementById('filter-status').value, priority: e.target.value });
-      });
-
-      function applyUITheme(theme) {
-        document.body.classList.toggle('theme-light', theme === 'light');
-        document.body.classList.toggle('theme-dark', theme !== 'light');
-        localStorage.setItem('cw_theme', theme);
-        if (theme === 'light') { if (!map.hasLayer(lightLayer)) map.addLayer(lightLayer); if (map.hasLayer(darkLayer)) map.removeLayer(darkLayer); }
-        else { if (!map.hasLayer(darkLayer)) map.addLayer(darkLayer); if (map.hasLayer(lightLayer)) map.removeLayer(lightLayer); }
-      }
-      const themeSel = document.getElementById('uiTheme');
-      const savedTheme = localStorage.getItem('cw_theme') || 'dark';
-      themeSel.value = savedTheme;
-      applyUITheme(savedTheme);
-      themeSel.addEventListener('change', (e) => applyUITheme(e.target.value));
-    });
-
-    async function loadReports(filters = {}) {
-      markersLayer.clearLayers();
-      try {
-        const res = await fetch('/api/reports');
-        if (!res.ok) throw new Error('Failed to fetch reports');
-        const data = await res.json();
-          data.forEach(r => {
-            const status = (r.status || r.Status || '').toString();
-            const priority = r.priority || r.Priority || 'Low';
-            if (filters.status && filters.status !== 'all' && status.toLowerCase() !== filters.status.toLowerCase()) return;
-            if (filters.priority && filters.priority !== 'all' && priority !== filters.priority) return;
-            const lat = r.lat || (r.location && r.location.lat) || r.latitude;
-            const lng = r.lng || (r.location && r.location.lng) || r.longitude;
-            if (!lat || !lng) return;
-            const boundsCheck = L.latLngBounds(kenyaBounds);
-            if (!boundsCheck.contains([lat, lng])) return;
-            const s = status.toLowerCase();
-            let color = '#2196f3';
-            if (s.includes('resolved')) color = '#4caf50';
-            else if (s.includes('in progress') || s.includes('progress')) color = '#ff9800';
-            else if (s.includes('pending')) color = '#fdd835';
-            else if (s.includes('unsolved') || s.includes('open')) color = '#f44336';
-            const marker = L.circleMarker([lat, lng], { radius: 7, color, fillColor: color, fillOpacity: 0.9 });
-            marker.bindPopup(`<strong>${r.title || r.name || 'Report'}</strong><br>Status: ${status || 'Unknown'}<br>Priority: ${priority}`);
-            markersLayer.addLayer(marker);
+          await fetch('/api/locations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ latitude: ll.lat, longitude: ll.lng, source: 'department_map' })
           });
-      } catch (e) { console.error('loadReports error', e); }
-    }
+          alert('Location saved successfully!');
+        } catch(e) {
+          alert('Pin saved.');
+        }
+      });
 
-    loadReports();
+      loadReports();
+    });
   </script>
 </body>
 </html>

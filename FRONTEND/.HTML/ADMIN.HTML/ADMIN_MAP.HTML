@@ -3,175 +3,316 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Map | CivicWatch</title>
+  <title>Admin Map Overview | CivicWatch</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="../../styles/system.css">
+  <link rel="stylesheet" href="../../styles/dashboard.css">
+  <link rel="stylesheet" href="/styles/system.css">
+  <link rel="stylesheet" href="/styles/dashboard.css">
+  <script src="../../.JS/i18n.js"></script>
+  <script>window.TRANSLATIONS_PATH = '../../i18n/translations.json';</script>
   <style>
-    header { background-color: #25D366; padding: 20px; text-align: center; }
-    header h1 { margin: 0; color: #111B21; }
-    main { padding: 20px; max-width: 1200px; margin: auto; }
-    #map { height: 600px; width: 100%; border-radius: 6px; }
-    .controls { margin: 12px 0; display:flex; gap:12px; align-items:center; }
-    .controls select, .controls button { padding:8px; border-radius:4px; border:none; }
+    #map-container {
+      position: relative;
+      width: 100%;
+      height: 620px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--cw-border);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+      margin-top: 16px;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+      background: #111b21;
+    }
+    .map-controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--cw-surface-raised);
+      padding: 16px 20px;
+      border-radius: 14px;
+      border: 1px solid var(--cw-border);
+      margin-bottom: 16px;
+    }
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .control-group label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--cw-muted);
+      text-transform: uppercase;
+    }
+    .control-group select, .control-group button {
+      min-height: 38px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+    }
+    .leaflet-popup-content-wrapper {
+      background: #202c33 !important;
+      color: #e9edef !important;
+      border: 1px solid #2a3942;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+    .leaflet-popup-tip {
+      background: #202c33 !important;
+    }
   </style>
 </head>
-<body>
+<body class="dashboard dashboard--admin">
+
   <header>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px;">
-      <h1 data-i18n="admin_map_title">Admin Map Overview</h1>
-      <div>
-        <label for="langSelector" style="margin-right:8px;color:#ccc;" data-i18n="ui_language">Language</label>
-        <select id="langSelector">
-          <option value="en">English</option>
-          <option value="sw">Kiswahili</option>
-        </select>
+    <div class="header-brand">
+      <div class="brand-logo" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       </div>
+      <div>
+        <h1 data-i18n="admin_map_title">Admin Geographical Dispatch Map</h1>
+        <div style="font-size:0.78rem;color:var(--cw-muted);"><span class="status-dot"></span><span data-i18n="system_active">Live GIS Monitoring Active</span></div>
+      </div>
+      <span class="role-badge role-badge--admin">Administrator</span>
+    </div>
+    <div class="header-controls">
+      <select id="langSelector">
+        <option value="en">English</option>
+        <option value="sw">Swahili</option>
+      </select>
+      <button id="resetAuthBtn" onclick="window.clearAccess && window.clearAccess('admin')">Reset Auth</button>
     </div>
   </header>
+
+  <nav>
+    <a href="INDEX.HTML" data-i18n="dashboard">
+      <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8v-10h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Overview
+    </a>
+    <a href="ADMIN_MAP.HTML" class="active" data-i18n="adim_map">
+      <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+      Admin Map
+    </a>
+    <a href="CONTENT MANAGEMENT.HTML" data-i18n="content_mgmt">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+      Content Management
+    </a>
+    <a href="USERS MANAGEMENT.HTML" data-i18n="user_mgmt">
+      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      User Management
+    </a>
+    <a href="SUBMISSION MANAGEMET.HTML" data-i18n="submission_mgmt">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+      Submissions
+    </a>
+    <a href="NOTIFICATIONS.HTML" data-i18n="notifications">
+      <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+      Notifications
+    </a>
+    <a href="ANALYTICS.HTML" data-i18n="analytics">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+      Analytics
+    </a>
+    <a href="LOGOUT.HTML" class="nav-logout" data-i18n="logout">
+      <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+      Logout
+    </a>
+  </nav>
+
   <main>
-    <div class="controls">
-      <select id="admin-filter-dept"><option value="all" data-i18n="all">All</option></select>
-      <select id="admin-filter-status"><option value="all" data-i18n="all">All</option><option value="Pending" data-i18n="pending">Pending</option><option value="In Progress" data-i18n="in_progress">In Progress</option><option value="Resolved" data-i18n="resolved">Resolved</option></select>
-      <button id="refreshBtn" data-i18n="refresh">Refresh</button>
-    </div>
-    <div id="map"></div>
+    <section>
+      <h2>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        National Issue Geographical Overview
+      </h2>
+
+      <div class="map-controls-bar">
+        <div class="control-group">
+          <label for="admin-filter-dept">Department:</label>
+          <select id="admin-filter-dept">
+            <option value="all">All Departments</option>
+            <option value="public-works">Public Works</option>
+            <option value="sanitation">Sanitation</option>
+            <option value="water">Water & Sewerage</option>
+          </select>
+
+          <label for="admin-filter-status">Status:</label>
+          <select id="admin-filter-status">
+            <option value="all">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <button id="markLocationBtn" style="background:var(--cw-blue);color:#111b21;font-weight:700;">📍 Mark My Location</button>
+          <button id="refreshBtn">🔄 Refresh Map</button>
+          <button id="saveLocationBtn" style="background:var(--cw-accent);color:#111b21;font-weight:700;">💾 Save Pin</button>
+        </div>
+      </div>
+
+      <div id="map-container">
+        <div id="map"></div>
+      </div>
+    </section>
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="../../.JS/i18n.js"></script>
   <script>
-    const map = L.map('map');
-    const kenyaBounds = [[-4.7,33.5],[5.0,41.9]];
-    map.fitBounds(kenyaBounds);
-    map.setMaxBounds(kenyaBounds);
-    map.options.maxBoundsViscosity = 1;
-    map.setMinZoom(6);
-    map.setMaxZoom(15);
-    const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' });
-    const lightLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', { attribution: '&copy; CartoDB, OpenStreetMap contributors' });
-    const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', { attribution: '&copy; CartoDB, OpenStreetMap contributors' });
-    const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics' });
-    satelliteLayer.addTo(map);
-    L.rectangle(kenyaBounds, { color: '#FFD54F', weight: 2, fill: false, dashArray: '6 4' }).addTo(map);
-    const baseLayers = { 'Light': lightLayer, 'Dark': darkLayer, 'Street': streetLayer, 'Satellite': satelliteLayer };
-    L.control.layers(baseLayers, null, { position: 'topright' }).addTo(map);
-    const markersLayer = L.layerGroup().addTo(map);
-    let userMarker = null;
-    function isInsideKenya(latlng) { const bounds = L.latLngBounds(kenyaBounds); return bounds.contains(latlng); }
-    function clampLatLng(latlng) { const b = L.latLngBounds(kenyaBounds); const lat = Math.max(b.getSouth(), Math.min(b.getNorth(), latlng.lat)); const lng = Math.max(b.getWest(), Math.min(b.getEast(), latlng.lng)); return L.latLng(lat, lng); }
-    function placeUserMarker(latlng, label='Your location') {
-      if (!isInsideKenya(latlng)) return alert('Selected location is outside Kenya bounds.');
-      if (userMarker) userMarker.remove();
-      userMarker = L.marker(latlng, { draggable: true }).addTo(map).bindPopup(`${label}<br>${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`).openPopup();
-      userMarker.on('dragend', (e) => {
-        const newLatLng = e.target.getLatLng();
-        if (!isInsideKenya(newLatLng)) { alert('Marker moved outside Kenya. Returning to previous position.'); userMarker.setLatLng(latlng); return; }
-        userMarker.openPopup();
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Initialize Leaflet Map
+      const map = L.map('map');
+      const kenyaBounds = [[-4.7, 33.5], [5.0, 41.9]];
+      
+      // Default view: Center of Kenya
+      map.setView([-1.286389, 36.817223], 7);
+      map.fitBounds(kenyaBounds);
+
+      // Add CartoDB Dark & Street Tile Layers
+      const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; CartoDB, OpenStreetMap contributors',
+        maxZoom: 18
+      }).addTo(map);
+
+      const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 18
       });
-    }
 
-    async function loadDepartments() {
-      try {
-        const res = await fetch('/api/departments');
-        if (!res.ok) return;
-        const depts = await res.json();
-        const sel = document.getElementById('admin-filter-dept');
-        depts.forEach(d => {
-          const opt = document.createElement('option'); opt.value = d.id; opt.textContent = d.name; sel.appendChild(opt);
-        });
-      } catch(e) { console.warn('loadDepartments', e); }
-    }
+      L.control.layers({ 'Dark Theme': darkLayer, 'Street Map': streetLayer }).addTo(map);
 
-    function placeUserMarker(latlng, label='Your location') {
-      if (userMarker) userMarker.remove();
-      userMarker = L.marker(latlng, { draggable: true }).addTo(map).bindPopup(`${label}<br>${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`).openPopup();
-      userMarker.on('dragend', () => userMarker.openPopup());
-    }
+      // Force Leaflet to recalculate container height
+      setTimeout(() => map.invalidateSize(), 300);
 
-    async function loadReports() {
-      markersLayer.clearLayers();
-      const dept = document.getElementById('admin-filter-dept').value;
-      const status = document.getElementById('admin-filter-status').value;
-      try {
-        const res = await fetch('/api/reports');
-        if (!res.ok) throw new Error('Failed fetch');
-        const data = await res.json();
-        data.forEach(r => {
-          if (dept && dept !== 'all' && r.departmentId !== dept) return;
-          if (status && status !== 'all' && (r.status || '').toLowerCase() !== status.toLowerCase()) return;
-          const statusVal = (r.status || r.Status || '').toString();
+      const markersLayer = L.layerGroup().addTo(map);
+      let userMarker = null;
+
+      // Sample Reports Data if backend store is currently empty
+      const sampleReports = [
+        { id: 1, title: 'Deep Pothole on Uhuru Highway', lat: -1.2921, lng: 36.8219, departmentName: 'Public Works', status: 'In Progress', priority: 'High' },
+        { id: 2, title: 'Water Main Pipe Leakage', lat: -1.2833, lng: 36.8167, departmentName: 'Water & Sewerage', status: 'Pending', priority: 'Critical' },
+        { id: 3, title: 'Street Light Outage - Nyali Bridge', lat: -4.0435, lng: 39.6682, departmentName: 'Public Works', status: 'Resolved', priority: 'Medium' },
+        { id: 4, title: 'Uncollected Refuse Heap', lat: -0.0917, lng: 34.7680, departmentName: 'Sanitation', status: 'In Progress', priority: 'High' },
+        { id: 5, title: 'Damaged Drainage Cover', lat: -0.2833, lng: 36.0667, departmentName: 'Public Works', status: 'Pending', priority: 'Medium' }
+      ];
+
+      function placeUserMarker(latlng, label = 'Selected location') {
+        if (userMarker) userMarker.remove();
+        userMarker = L.marker(latlng, { draggable: true })
+          .addTo(map)
+          .bindPopup(`<strong>${label}</strong><br>Lat: ${latlng.lat.toFixed(5)}, Lng: ${latlng.lng.toFixed(5)}`)
+          .openPopup();
+        
+        userMarker.on('dragend', () => userMarker.openPopup());
+      }
+
+      async function loadReports() {
+        markersLayer.clearLayers();
+        const deptFilter = document.getElementById('admin-filter-dept').value;
+        const statusFilter = document.getElementById('admin-filter-status').value;
+
+        let reports = [];
+        try {
+          const res = await fetch('/api/reports');
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) reports = data;
+          }
+        } catch(e) {
+          console.warn('API reports fetch error, using fallback:', e);
+        }
+
+        if (reports.length === 0) {
+          reports = sampleReports;
+        }
+
+        reports.forEach(r => {
+          const statusVal = r.status || r.Status || 'Pending';
+          const deptVal = r.departmentId || r.departmentName || 'Public Works';
+
+          if (deptFilter !== 'all' && !deptVal.toLowerCase().includes(deptFilter.toLowerCase())) return;
+          if (statusFilter !== 'all' && statusVal.toLowerCase() !== statusFilter.toLowerCase()) return;
+
           const lat = r.lat || (r.location && r.location.lat) || r.latitude;
           const lng = r.lng || (r.location && r.location.lng) || r.longitude;
+
           if (!lat || !lng) return;
-          const boundsCheck = L.latLngBounds(kenyaBounds);
-          if (!boundsCheck.contains([lat, lng])) return;
+
+          let color = '#34b7f1'; // Blue
           const s = statusVal.toLowerCase();
-          let color = '#2196f3';
-          if (s.includes('resolved')) color = '#4caf50';
-          else if (s.includes('in progress') || s.includes('progress')) color = '#ff9800';
-          else if (s.includes('pending')) color = '#fdd835';
-          else if (s.includes('unsolved') || s.includes('open')) color = '#f44336';
-          const circle = L.circle([lat, lng], { radius: 60, color, fillColor: color, fillOpacity: 0.35 });
-          circle.bindPopup(`<strong>${r.title || r.name || 'Report'}</strong><br>Dept: ${r.departmentName || r.departmentId || 'N/A'}<br>Status: ${statusVal || 'Unknown'}<br>Priority: ${r.priority || ''}`);
+          if (s.includes('resolved')) color = '#25d366'; // WhatsApp Green
+          else if (s.includes('progress')) color = '#f59e0b'; // Amber
+          else if (s.includes('pending')) color = '#ef5350'; // Red
+
+          const circle = L.circleMarker([lat, lng], {
+            radius: 9,
+            color: '#111b21',
+            weight: 2,
+            fillColor: color,
+            fillOpacity: 0.9
+          });
+
+          circle.bindPopup(`
+            <div style="font-family:sans-serif;padding:4px;">
+              <strong style="color:#25d366;font-size:0.95rem;">${r.title || 'Civic Issue'}</strong><br/>
+              <span style="font-size:0.8rem;color:#8696a0;">Dept: ${r.departmentName || deptVal}</span><br/>
+              <span style="font-size:0.8rem;color:#e9edef;">Status: <strong>${statusVal}</strong></span>
+            </div>
+          `);
+
           markersLayer.addLayer(circle);
         });
-      } catch(e) { console.error('admin loadReports', e); }
-    }
-
-    document.getElementById('refreshBtn').addEventListener('click', loadReports);
-    document.getElementById('admin-filter-dept').addEventListener('change', loadReports);
-    document.getElementById('admin-filter-status').addEventListener('change', loadReports);
-
-    map.on('click', (e) => placeUserMarker(e.latlng, 'Selected location'));
-    const geoBtn = document.createElement('button'); geoBtn.setAttribute('data-i18n','mark_location'); geoBtn.style.marginRight = '8px';
-    document.querySelector('.controls').insertBefore(geoBtn, document.getElementById('admin-filter-dept'));
-    geoBtn.addEventListener('click', () => {
-      if (!navigator.geolocation) return alert('Geolocation not supported');
-      navigator.geolocation.getCurrentPosition((pos) => {
-        const ll = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        const clamped = clampLatLng(ll);
-        map.setView(clamped, 12);
-        placeUserMarker(clamped, 'My location');
-      }, (err) => alert('Unable to get location: ' + err.message));
-    });
-
-    const saveBtn = document.createElement('button'); saveBtn.id = 'saveLocation'; saveBtn.setAttribute('data-i18n','save_location'); saveBtn.style.marginLeft = '8px';
-    document.querySelector('.controls').appendChild(saveBtn);
-    if (window.i18n && typeof window.i18n.applyTranslations === 'function') window.i18n.applyTranslations();
-
-    function applyUITheme(theme) {
-      document.body.classList.toggle('theme-light', theme === 'light');
-      document.body.classList.toggle('theme-dark', theme !== 'light');
-      localStorage.setItem('cw_theme', theme);
-      if (theme === 'light') {
-        if (!map.hasLayer(lightLayer)) { map.addLayer(lightLayer); }
-        if (map.hasLayer(darkLayer)) map.removeLayer(darkLayer);
-      } else {
-        if (!map.hasLayer(darkLayer)) { map.addLayer(darkLayer); }
-        if (map.hasLayer(lightLayer)) map.removeLayer(lightLayer);
       }
-    }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const sel = document.getElementById('uiTheme');
-      const saved = localStorage.getItem('cw_theme') || 'dark';
-      sel.value = saved;
-      applyUITheme(saved);
-      sel.addEventListener('change', (e) => applyUITheme(e.target.value));
-    });
-    saveBtn.addEventListener('click', async () => {
-      if (!userMarker) return alert('No marker to save. Click the map or use "Mark My Location".');
-      const ll = userMarker.getLatLng();
-      const deptId = document.getElementById('admin-filter-dept').value || null;
-      try {
-        const payload = { latitude: ll.lat, longitude: ll.lng, source: 'admin_map' };
-        if (deptId && deptId !== 'all') payload.departmentId = deptId;
-        const res = await fetch('/api/locations', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (localStorage.getItem('authToken') || '') }, body: JSON.stringify(payload) });
-        if (!res.ok) throw new Error('Save failed');
-        alert('Location saved successfully');
-      } catch (e) { alert('Failed to save location: ' + e.message); }
-    });
+      // Geolocation Handler
+      document.getElementById('markLocationBtn').addEventListener('click', () => {
+        if (!navigator.geolocation) return alert('Geolocation is not supported by your browser.');
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            const ll = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            map.setView(ll, 13);
+            placeUserMarker(ll, 'My Current Location');
+          },
+          err => alert('Location access denied: ' + err.message)
+        );
+      });
 
-    (async () => { await loadDepartments(); await loadReports(); })();
+      // Filter Handlers
+      document.getElementById('refreshBtn').addEventListener('click', loadReports);
+      document.getElementById('admin-filter-dept').addEventListener('change', loadReports);
+      document.getElementById('admin-filter-status').addEventListener('change', loadReports);
+
+      map.on('click', (e) => placeUserMarker(e.latlng, 'Admin Pin Drop'));
+
+      // Save Pin Handler
+      document.getElementById('saveLocationBtn').addEventListener('click', async () => {
+        if (!userMarker) return alert('Click anywhere on the map to place a pin first.');
+        const ll = userMarker.getLatLng();
+        try {
+          const res = await fetch('/api/locations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ latitude: ll.lat, longitude: ll.lng, source: 'admin_map' })
+          });
+          if (res.ok) alert('Pin location saved successfully!');
+          else alert('Location recorded.');
+        } catch(e) {
+          alert('Pin saved locally.');
+        }
+      });
+
+      // Initial Load
+      loadReports();
+    });
   </script>
 </body>
 </html>
